@@ -1,0 +1,28 @@
+.app-main {
+	// background-color: aquamarine;
+	flex-grow: 1;
+	max-width: 80rem;
+	display: flex;
+	flex-direction: column;
+
+	p {
+		font-size: 2rem;
+		line-height: 1.6;
+		font-weight: 500;
+		margin-top: 3rem;
+	}
+}
+
+.article-heading {
+	font-size: 5.6rem;
+	margin-bottom: 3.2rem;
+}
+
+.image {
+	max-width: 100%;
+}
+
+.article-thumb {
+	align-self: center;
+	// height: 36rem;
+}

@@ -1,0 +1,67 @@
+@use "assets/styles/general";
+
+.header {
+	position: sticky;
+	max-width: 80%;
+	top: 0;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	margin: 0 auto;
+	height: 7.2rem;
+
+	background-color: white;
+
+	&::after {
+		content: "";
+		background: #aaa;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 75%;
+		margin: 0 auto;
+		height: 2px;
+	}
+}
+
+.logo-el {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	ion-icon {
+		font-size: 2.4rem;
+		color: general.$primary-color;
+	}
+
+	.logo {
+		font-size: 2.4rem;
+		font-weight: 600;
+		letter-spacing: 2px;
+	}
+}
+
+.nav-items {
+	align-items: center;
+	gap: 3rem;
+	transition: all 0.3s ease;
+
+	.nav-link {
+		font-size: 1.8rem;
+
+		&:active,
+		&:hover {
+			color: general.$primary-color;
+		}
+
+		&:visited,
+		&:link {
+			// color: general.$primary-color;
+			color: inherit;
+			text-decoration: none;
+		}
+	}
+}

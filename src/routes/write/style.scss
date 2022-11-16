@@ -1,0 +1,58 @@
+@use "assets/styles/general";
+
+main {
+	max-width: 120rem;
+	margin: 4.8rem auto;
+}
+
+.form-input {
+	width: 100%;
+	transition: all 0.3s ease;
+	border-left: solid 3px #aaa;
+	padding: 0.8rem 1.6rem;
+
+	&:focus {
+		box-shadow: none;
+		border-left-color: general.$primary-color;
+	}
+
+	&[name="article-title"] {
+		font-size: 5.6rem;
+		margin-bottom: 2.4rem;
+	}
+
+	&[name="article-subtitle"] {
+		font-size: 2.4rem;
+		margin-bottom: 4.8rem;
+	}
+}
+
+.textarea-container {
+	display: grid;
+
+	textarea,
+	.textarea-replica {
+		grid-area: 1 / 1 / 2 / 2;
+		font-size: 1.8rem;
+	}
+
+	textarea {
+		display: block;
+		overflow: hidden;
+		resize: none;
+	}
+
+	.textarea-replica {
+		width: 100%;
+		padding: 0.8rem 1.6rem;
+		white-space: pre-wrap;
+		border-left: solid 3px #aaa;
+
+		visibility: hidden;
+		pointer-events: none;
+
+		&::after {
+			content: attr(data-replicated-value) " ";
+		}
+	}
+}
