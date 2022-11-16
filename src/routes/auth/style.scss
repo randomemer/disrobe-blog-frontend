@@ -1,7 +1,6 @@
 @use "assets/styles/general.scss";
 
 .form-container {
-	// background-color: red;
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -114,13 +113,13 @@
 }
 
 .inputs {
-	display: grid;
-	grid-template-columns: repeat(2, auto);
-	flex-wrap: wrap;
+	$input-gap: 1.8rem;
+	display: flex;
+	flex-direction: column;
+	border: none;
 	padding: 0 1.8rem;
-	gap: 1.8rem;
 
-	& input {
+	input {
 		border: 1px solid #aaa;
 		padding: 1rem 2rem;
 		width: 100%;
@@ -129,23 +128,24 @@
 		&:focus {
 			border-color: general.$primary-color-dim;
 		}
+	}
 
-		&::after {
-			content: "Invalid form";
+	.input-box + .input-box {
+		margin-top: $input-gap;
+	}
+
+	.name-inputs {
+		display: flex;
+		gap: $input-gap;
+
+		input {
+			flex-grow: 1 !important;
 		}
-	}
-
-	& .input-box {
-		width: 100%;
-	}
-
-	& .fill-grid-row {
-		grid-column: 1 / -1;
 	}
 }
 
 .password-options {
-	margin-top: 1.2rem;
+	margin-top: 2.8rem;
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
@@ -153,6 +153,7 @@
 	.remember-user-option {
 		display: flex;
 		font-size: 1.4rem;
+		white-space: nowrap;
 		gap: 5px;
 
 		input {

@@ -2,87 +2,8 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
-
-function LoginForm(props) {
-	return (
-		<form className="auth-form">
-			<div className="form-header">
-				<h1>Welcome back!</h1>
-			</div>
-
-			<div className="inputs">
-				<div className="input-box fill-grid-row">
-					<input name="email" type="email" placeholder="Email" />
-				</div>
-				<div className="input-box fill-grid-row">
-					<input
-						className="input-box"
-						autoComplete="on"
-						name="password"
-						type="password"
-						placeholder="Password"
-					/>
-					<div className="password-options">
-						<div className="remember-user-option">
-							<input type={"checkbox"} name="remember-user" />
-							<label htmlFor="remember-user">Remember Me</label>
-						</div>
-						<Link className="forgot-pwd-link" to="/">
-							Forgot Password?
-						</Link>
-					</div>
-				</div>
-			</div>
-
-			<button className="login-btn" type={"submit"}>
-				Login
-			</button>
-		</form>
-	);
-}
-
-function RegisterForm(props) {
-	return (
-		<form className="auth-form">
-			<div className="form-header">
-				<h1>Join us today!</h1>
-				<p>Share your stories with the world.</p>
-			</div>
-
-			<div className="inputs">
-				<div className="input-box">
-					<input
-						name="first-name"
-						type="text"
-						placeholder="First name"
-					/>
-				</div>
-				<div className="input-box">
-					<input
-						name="last-name"
-						type="text"
-						placeholder="Last name"
-					/>
-				</div>
-				<div className="input-box fill-grid-row">
-					<input name="email" type="email" placeholder="Email" />
-				</div>
-				<div className="input-box fill-grid-row">
-					<input
-						autoComplete="on"
-						name="password"
-						type="password"
-						placeholder="Password"
-					/>
-				</div>
-			</div>
-
-			<button className="submit-btn" type={"submit"}>
-				Sign up
-			</button>
-		</form>
-	);
-}
+import RegisterForm from "./register";
+import LoginForm from "./login";
 
 class Auth extends Component {
 	constructor(props) {
@@ -100,7 +21,6 @@ class Auth extends Component {
 
 	componentDidMount() {
 		this.tabContent = document.querySelector(".form-tab-content");
-
 		this.tabs = document.querySelectorAll(".form-tab-content li");
 
 		this.switchTabs(this.state.tab);
