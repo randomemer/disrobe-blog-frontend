@@ -12,34 +12,44 @@ export default class ValidatingInput extends Component {
 			message: "",
 		};
 
-		this.validator = props.validator;
+		this.validators = props.validators;
 	}
 
 	componentDidMount() {
 		this.input = this.inputWrapper.querySelector("input");
-		this.input.addEventListener("blur", this.validate);
+		this.messageEl = this.inputWrapper.querySelector(".message");
+
+		this.input.addEventListener("blur", this.onBlurValidate);
 	}
 
-	validate = (event) => {
-		const message = this.validator(this.input.value);
-		this.setState({ message });
+	validate = () => {
+		for (const validator of this.validators) {
+			const message = validator(this.input.value);
 
-		const messageEl = this.inputWrapper.querySelector(".message");
-		if (message) {
-			messageEl.classList.add("active");
-			gsap.to(messageEl, { opacity: 1, onComplete: () => {} });
-		} else {
-			gsap.to(messageEl, {
-				opacity: 0,
-				onComplete: () => {
-					messageEl.classList.remove("active");
-				},
-			});
+			if (message) {
+				// if any check failed
+				this.setState({ message });
+				this.messageEl.classList.add("active");
+				gsap.to(this.messageEl, { opacity: 1 });
+				return false;
+			}
 		}
+		// if all checks passed
+		this.messageEl.classList.remove("active");
+		return true;
+	};
+
+	onBlurValidate = (event) => {
+		// first time validation only on blur
+		this.validate();
+		// for subsequent validation, be more rigorous
+		this.input.removeEventListener("blur", this.onBlurValidate);
+		this.input.addEventListener("input", this.validate);
 	};
 
 	componentWillUnmount() {
-		this.input.removeEventListener("blur", this.validate);
+		this.input.removeEventListener("blur", this.onBlurValidate);
+		this.input.removeEventListener("input", this.validate);
 	}
 
 	render() {

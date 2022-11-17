@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import "./style.scss";
 import RegisterForm from "./register";
 import LoginForm from "./login";
+// import { delay } from "utils";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 class Auth extends Component {
 	constructor(props) {
@@ -11,6 +13,7 @@ class Auth extends Component {
 
 		this.state = {
 			tab: props.router.params.type,
+			isProcessing: false,
 		};
 
 		this.tabIndices = {
@@ -30,12 +33,29 @@ class Auth extends Component {
 		this.switchTabs(this.state.tab);
 	}
 
+	registerUser = async (data) => {
+		this.setState({ isProcessing: true });
+		try {
+			console.log(data);
+			const auth = getAuth();
+			const credentials = await createUserWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			);
+			console.log(credentials);
+		} catch (error) {
+			console.error(error);
+		}
+		this.setState({ isProcessing: false });
+	};
+
 	switchTabs(tab) {
 		const timeline = gsap.timeline();
 
 		const tabIndex = this.tabIndices[tab];
-		const previous = this.tabs[this.tabIndices[this.state.tab]];
-		const current = this.tabs[tabIndex];
+		const previous = this.getTabByName(this.state.tab);
+		const current = this.getTabByName(tab);
 
 		// un-observe previously active form
 		this.resizeObserver.unobserve(previous.querySelector("form"));
@@ -75,14 +95,14 @@ class Auth extends Component {
 	}
 
 	adjustFormHeight(entries) {
-		const tabIndex = this.tabIndices[this.state.tab];
-		const form = this.tabs[tabIndex].querySelector("form");
+		const form = this.currentForm();
 		const entry = entries.find((entry) => entry.target === form);
+		if (!entry) return;
 		// console.log(entry);
 		gsap.to(this.tabContent, {
 			height: entry.borderBoxSize[0].blockSize,
 			ease: "expo.out",
-			duration: 0.15,
+			duration: 0.3,
 		});
 	}
 
@@ -118,11 +138,28 @@ class Auth extends Component {
 						<LoginForm />
 					</li>
 					<li className="register">
-						<RegisterForm />
+						<RegisterForm
+							register={this.registerUser}
+							loading={this.state.isProcessing}
+						/>
 					</li>
 				</ul>
 			</div>
 		);
+	}
+
+	// helpers
+	getTabByName(name) {
+		return this.tabs[this.tabIndices[name]];
+	}
+
+	currentTab() {
+		return this.tabs[this.tabIndices[this.state.tab]];
+	}
+
+	currentForm() {
+		const tab = this.currentTab();
+		return tab.querySelector("form");
 	}
 }
 

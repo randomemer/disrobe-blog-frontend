@@ -101,16 +101,29 @@
 		align-self: flex-end;
 		font-weight: 500;
 
-		&:hover {
+		display: flex;
+		gap: 1.2rem;
+		align-items: center;
+
+		.loader {
+			transform: scale(0.5);
+		}
+
+		&:not(:disabled):hover {
 			color: general.$primary-color;
 			background: white;
 			box-shadow: inset 0 0 0 2px general.$primary-color;
+		}
+
+		&:disabled {
+			cursor: not-allowed;
+			background-color: rgb(255, 135, 135, 0.6);
 		}
 	}
 }
 
 .inputs {
-	$input-gap: 2.4rem;
+	$input-gap: 1.8rem;
 	display: flex;
 	flex-direction: column;
 	border: none;
