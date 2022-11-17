@@ -23,15 +23,22 @@ class Auth extends Component {
 		this.tabContent = document.querySelector(".form-tab-content");
 		this.tabs = document.querySelectorAll(".form-tab-content li");
 
+		this.resizeObserver = new ResizeObserver((entries) => {
+			this.adjustFormHeight(entries);
+		});
+
 		this.switchTabs(this.state.tab);
 	}
 
 	switchTabs(tab) {
 		const timeline = gsap.timeline();
-		const tabIndex = this.tabIndices[tab];
 
+		const tabIndex = this.tabIndices[tab];
 		const previous = this.tabs[this.tabIndices[this.state.tab]];
 		const current = this.tabs[tabIndex];
+
+		// un-observe previously active form
+		this.resizeObserver.unobserve(previous.querySelector("form"));
 
 		const tabLength = 100 / this.tabs.length;
 		gsap.to(".line", {
@@ -53,17 +60,35 @@ class Auth extends Component {
 			},
 		});
 
-		// // animate height of container
-		// timeline.to(this.tabContent, {
-		// 	height: current.offsetHeight,
-		// 	onComplete: () => console.log("done"),
-		// });
+		const form = current.querySelector("form");
+		// animate height of container
+		timeline.to(this.tabContent, {
+			height: form.offsetHeight,
+			onComplete: () => {
+				// observer for the current form to animate height changes
+				this.resizeObserver.observe(form);
+			},
+		});
 
 		// fade in current tab
-		timeline.to(current, { opacity: 1, onComplete: () => {} });
+		timeline.to(current, { opacity: 1, duration: 0.15 });
 	}
 
-	componentWillUnmount() {}
+	adjustFormHeight(entries) {
+		const tabIndex = this.tabIndices[this.state.tab];
+		const form = this.tabs[tabIndex].querySelector("form");
+		const entry = entries.find((entry) => entry.target === form);
+		// console.log(entry);
+		gsap.to(this.tabContent, {
+			height: entry.borderBoxSize[0].blockSize,
+			ease: "expo.out",
+			duration: 0.15,
+		});
+	}
+
+	componentWillUnmount() {
+		this.resizeObserver.disconnect();
+	}
 
 	componentDidUpdate(prevProps) {
 		const prevTab = prevProps.router.params.type;

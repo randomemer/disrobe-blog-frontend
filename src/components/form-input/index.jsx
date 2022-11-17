@@ -1,4 +1,7 @@
+/* eslint-disable no-undef */
 import { Component } from "react";
+import { IonIcon } from "@ionic/react";
+import { warningOutline } from "ionicons/icons";
 import "./style.scss";
 
 export default class ValidatingInput extends Component {
@@ -9,8 +12,6 @@ export default class ValidatingInput extends Component {
 			message: "",
 		};
 
-		// console.log();
-
 		this.validator = props.validator;
 	}
 
@@ -20,9 +21,23 @@ export default class ValidatingInput extends Component {
 	}
 
 	validate = (event) => {
-		console.log(event);
-		this.setState({ message: this.validator(this.input.value) });
+		const message = this.validator(this.input.value);
+		this.setState({ message });
+
+		const messageEl = this.inputWrapper.querySelector(".message");
+		if (message) {
+			messageEl.classList.add("active");
+			gsap.to(messageEl, { opacity: 1, onComplete: () => {} });
+		} else {
+			gsap.to(messageEl, {
+				opacity: 0,
+				onComplete: () => {
+					messageEl.classList.remove("active");
+				},
+			});
+		}
 	};
+
 	componentWillUnmount() {
 		this.input.removeEventListener("blur", this.validate);
 	}
@@ -34,7 +49,10 @@ export default class ValidatingInput extends Component {
 				ref={(el) => (this.inputWrapper = el)}
 			>
 				{this.props.children}
-				<span className="message">{this.state.message}</span>
+				<div className="message">
+					<IonIcon icon={warningOutline} className="message-icon" />
+					<span>{this.state.message}</span>
+				</div>
 			</div>
 		);
 	}

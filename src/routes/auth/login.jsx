@@ -33,7 +33,11 @@ export default class LoginForm extends Component {
 					</div>
 					<div className="password-options fill-grid-row">
 						<div className="remember-user-option">
-							<input type={"checkbox"} name="remember-user" />
+							<input
+								type={"checkbox"}
+								name="remember-user"
+								id="remember-user"
+							/>
 							<label htmlFor="remember-user">Remember Me</label>
 						</div>
 						<Link className="forgot-pwd-link" to="/">
