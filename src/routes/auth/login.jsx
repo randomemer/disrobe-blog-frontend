@@ -2,6 +2,7 @@ import ValidatingInput from "components/form-input";
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import { emailValidator, emptyValidator } from "utils";
+import Spinner from "components/spinner";
 
 export default class LoginForm extends Component {
 	constructor(props) {
@@ -10,27 +11,38 @@ export default class LoginForm extends Component {
 		this.fields = {};
 	}
 
-	handleSubmit(event) {
+	handleSubmit = (event) => {
 		event.preventDefault();
 
 		if (!this.isValid()) return;
-	}
+
+		const data = Object.fromEntries(
+			Object.entries(this.fields).map(([key, component]) => [
+				key,
+				component.input.value.trim(),
+			])
+		);
+
+		const shouldRemember = document.getElementById("remember-user").value;
+
+		this.props.login(data, shouldRemember);
+	};
 
 	isValid() {
 		for (const field of Object.values(this.fields)) {
-			if (!field.isValid()) return false;
+			if (!field.validate()) return false;
 		}
 		return true;
 	}
 
-	async registerUser() {
-		try {
-		} catch (error) {}
-	}
-
 	render() {
+		const isLoading = this.props.loading;
 		return (
-			<form className="auth-form" noValidate onSubmit={this.handleSubmit}>
+			<form
+				className="auth-form"
+				noValidate={true}
+				onSubmit={this.handleSubmit}
+			>
 				<div className="form-header">
 					<h1>Welcome back!</h1>
 				</div>
@@ -81,7 +93,8 @@ export default class LoginForm extends Component {
 					type={"submit"}
 					onClick={this.handleSubmit}
 				>
-					Login
+					{isLoading ? <Spinner radius={30} /> : undefined}
+					<span>Login</span>
 				</button>
 			</form>
 		);

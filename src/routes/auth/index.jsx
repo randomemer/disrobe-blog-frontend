@@ -5,7 +5,15 @@ import "./style.scss";
 import RegisterForm from "./register";
 import LoginForm from "./login";
 // import { delay } from "utils";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+	getAuth,
+	createUserWithEmailAndPassword,
+	setPersistence,
+	browserLocalPersistence,
+	browserSessionPersistence,
+	signInWithEmailAndPassword,
+} from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 class Auth extends Component {
 	constructor(props) {
@@ -46,6 +54,46 @@ class Auth extends Component {
 			console.log(credentials);
 		} catch (error) {
 			console.error(error);
+		}
+		this.setState({ isProcessing: false });
+	};
+
+	loginUser = async (data, shouldRemember) => {
+		this.setState({ isProcessing: true });
+		try {
+			const auth = getAuth();
+
+			if (shouldRemember) {
+				setPersistence(auth, browserLocalPersistence);
+			} else {
+				setPersistence(auth, browserSessionPersistence);
+			}
+
+			const result = await signInWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			);
+			console.log(result);
+		} catch (error) {
+			if (error instanceof FirebaseError) {
+				switch (error.code) {
+					case "auth/too-many-requests":
+						console.log(
+							"You have exceeded the number of login attempts. Please reset your password or try again later."
+						);
+						break;
+					case "auth/wrong-password":
+						console.log("Your password in incorrect");
+						break;
+					default:
+						break;
+				}
+			}
+			console.error(error);
+			console.log(
+				JSON.stringify(error, Object.getOwnPropertyNames(error))
+			);
 		}
 		this.setState({ isProcessing: false });
 	};
@@ -135,7 +183,10 @@ class Auth extends Component {
 
 				<ul className="form-tab-content">
 					<li className="login active-tab-content">
-						<LoginForm />
+						<LoginForm
+							login={this.loginUser}
+							loading={this.state.isProcessing}
+						/>
 					</li>
 					<li className="register">
 						<RegisterForm
