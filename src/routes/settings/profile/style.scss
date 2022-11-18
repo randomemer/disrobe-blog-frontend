@@ -1,0 +1,105 @@
+@use "assets/styles/general";
+
+.profile-edit-form {
+	display: flex;
+
+	.profile-img-contianer {
+		margin-right: 4.8rem;
+	}
+}
+
+.profile-img-contianer {
+	position: relative;
+	background-color: rgba(128, 128, 128, 0.25);
+	$size: 12.8rem;
+	width: $size;
+	height: $size;
+	border-radius: calc($size / 2);
+	overflow: hidden;
+
+	input,
+	img,
+	ion-icon {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+
+	ion-icon {
+		$offset: 15%;
+
+		top: $offset;
+		left: $offset;
+		right: $offset;
+		bottom: $offset;
+
+		width: auto;
+		height: auto;
+		color: #666;
+	}
+
+	input {
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	img {
+		object-fit: cover;
+	}
+}
+
+.profile-fields {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 3rem;
+
+	.profile-field {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+
+		label {
+			font-size: 1.4rem;
+			font-weight: 600;
+		}
+
+		input {
+			transition: all 0.3s ease-out;
+			font-size: 1.8rem;
+			border-bottom: solid 2px rgba(128, 128, 128, 0.7);
+			padding-bottom: 5px;
+
+			&:focus {
+				border-color: general.$secondary-color;
+				box-shadow: none;
+			}
+		}
+	}
+
+	.buttons {
+		align-self: flex-end;
+		display: flex;
+		gap: 1.8rem;
+
+		button {
+			padding: 0.6rem 1.2rem;
+			transition: all 0.15s ease-out;
+			font-size: 1.6rem;
+		}
+
+		.discard-btn {
+			background: none;
+			border: 2px solid;
+		}
+
+		.save-btn {
+			background-color: general.$secondary-color;
+			color: #ffffff;
+
+			&:hover {
+				background-color: rgb(168, 206, 138);
+			}
+		}
+	}
+}
