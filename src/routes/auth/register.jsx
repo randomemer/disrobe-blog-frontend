@@ -2,11 +2,74 @@ import ValidatingInput from "components/form-input";
 import { Component } from "react";
 import { emailValidator, emptyValidator, passwordValidator } from "utils";
 import Spinner from "components/spinner";
+import { keyOutline, mailOutline, personOutline } from "ionicons/icons";
 
 export default class RegisterForm extends Component {
 	constructor(props) {
 		super(props);
 		this.fields = {};
+	}
+
+	render() {
+		const isLoading = this.props.loading;
+		return (
+			<form className="auth-form" noValidate onSubmit={this.handleSubmit}>
+				<div className="form-header">
+					<h1>Join us today!</h1>
+					<p>Share your stories with the world.</p>
+				</div>
+
+				<fieldset className="inputs">
+					<div className="input-box">
+						<ValidatingInput
+							validators={[emptyValidator]}
+							ref={(cmp) => (this.fields.name = cmp)}
+							prefixIcon={personOutline}
+							inputOptions={{
+								name: "name",
+								type: "text",
+								placeholder: "Full Name",
+							}}
+						/>
+					</div>
+					<div className="input-box">
+						<ValidatingInput
+							validators={[emptyValidator, emailValidator]}
+							ref={(cmp) => (this.fields.email = cmp)}
+							prefixIcon={mailOutline}
+							inputOptions={{
+								name: "email",
+								type: "email",
+								placeholder: "Email",
+							}}
+						/>
+					</div>
+					<div className="input-box">
+						<ValidatingInput
+							validators={[emptyValidator, passwordValidator]}
+							ref={(cmp) => (this.fields.password = cmp)}
+							prefixIcon={keyOutline}
+							inputOptions={{
+								autoComplete: "on",
+								name: "password",
+								type: "password",
+								placeholder: "Password",
+							}}
+						/>
+					</div>
+				</fieldset>
+
+				<button
+					className="submit-btn"
+					type="submit"
+					onClick={this.handleSubmit}
+					disabled={isLoading}
+				>
+					{isLoading ? <Spinner radius={30} /> : undefined}
+					<span>Register</span>
+				</button>
+			</form>
+		);
 	}
 
 	handleSubmit = (event) => {
@@ -35,79 +98,5 @@ export default class RegisterForm extends Component {
 			}
 		}
 		return flag;
-	}
-
-	render() {
-		const isLoading = this.props.loading;
-		return (
-			<form className="auth-form" noValidate onSubmit={this.handleSubmit}>
-				<div className="form-header">
-					<h1>Join us today!</h1>
-					<p>Share your stories with the world.</p>
-				</div>
-
-				<fieldset className="inputs">
-					<div className="input-box name-inputs">
-						<ValidatingInput
-							validators={[emptyValidator]}
-							ref={(cmp) => (this.fields.firstName = cmp)}
-						>
-							<input
-								required
-								name="first-name"
-								type="text"
-								placeholder="First name"
-							/>
-						</ValidatingInput>
-						<ValidatingInput
-							validators={[emptyValidator]}
-							ref={(cmp) => (this.fields.lastName = cmp)}
-						>
-							<input
-								required
-								name="last-name"
-								type="text"
-								placeholder="Last name"
-							/>
-						</ValidatingInput>
-					</div>
-					<div className="input-box">
-						<ValidatingInput
-							validators={[emptyValidator, emailValidator]}
-							ref={(cmp) => (this.fields.email = cmp)}
-						>
-							<input
-								name="email"
-								type="email"
-								placeholder="Email"
-							/>
-						</ValidatingInput>
-					</div>
-					<div className="input-box">
-						<ValidatingInput
-							validators={[emptyValidator, passwordValidator]}
-							ref={(cmp) => (this.fields.password = cmp)}
-						>
-							<input
-								autoComplete="on"
-								name="password"
-								type="password"
-								placeholder="Password"
-							/>
-						</ValidatingInput>
-					</div>
-				</fieldset>
-
-				<button
-					className="submit-btn"
-					type="submit"
-					onClick={this.handleSubmit}
-					disabled={isLoading}
-				>
-					{isLoading ? <Spinner radius={30} /> : undefined}
-					<span>Register</span>
-				</button>
-			</form>
-		);
 	}
 }

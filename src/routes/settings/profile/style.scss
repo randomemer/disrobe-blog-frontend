@@ -3,9 +3,19 @@
 .profile-edit-form {
 	display: flex;
 
-	.profile-img-contianer {
+	.profile-left-pane {
 		margin-right: 4.8rem;
 	}
+}
+
+.profile-form-label {
+	display: block;
+	font-family: general.$sans-serif-font;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-size: 1.4rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
 }
 
 .profile-img-contianer {
@@ -16,6 +26,8 @@
 	height: $size;
 	border-radius: calc($size / 2);
 	overflow: hidden;
+	margin-bottom: 1.8rem;
+	cursor: pointer;
 
 	input,
 	img,
@@ -38,13 +50,30 @@
 		color: #666;
 	}
 
-	input {
-		opacity: 0;
-		cursor: pointer;
-	}
-
 	img {
 		object-fit: cover;
+	}
+}
+
+.pfp-edit-buttons {
+	display: flex;
+	align-items: flex-start;
+	gap: 1.2rem;
+
+	button {
+		display: block;
+		font-family: general.$sans-serif-font;
+		font-size: 1.6rem;
+		font-weight: 500;
+	}
+
+	.change-btn {
+		// color: general.$secondary-color;
+		color: rgb(168, 206, 138);
+	}
+
+	.remove-btn {
+		color: general.$error-color;
 	}
 }
 
@@ -57,12 +86,6 @@
 	.profile-field {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
-
-		label {
-			font-size: 1.4rem;
-			font-weight: 600;
-		}
 
 		input {
 			transition: all 0.3s ease-out;
@@ -84,6 +107,7 @@
 
 		button {
 			padding: 0.6rem 1.2rem;
+			font-family: general.$sans-serif-font;
 			transition: all 0.15s ease-out;
 			font-size: 1.6rem;
 		}

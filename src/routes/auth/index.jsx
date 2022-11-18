@@ -13,6 +13,8 @@ import {
 	browserSessionPersistence,
 	signInWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "firebase-mod";
 import { FirebaseError } from "firebase/app";
 
 class Auth extends Component {
@@ -41,10 +43,56 @@ class Auth extends Component {
 		this.switchTabs(this.state.tab);
 	}
 
+	componentWillUnmount() {
+		this.resizeObserver.disconnect();
+	}
+
+	componentDidUpdate(prevProps) {
+		const prevTab = prevProps.router.params.type;
+		const curTab = this.props.router.params.type;
+
+		if (prevTab !== curTab) {
+			this.setState({ tab: curTab });
+			this.switchTabs(curTab);
+		}
+	}
+
+	render() {
+		return (
+			<div className="form-container">
+				<ul className="form-tabs">
+					<li>
+						<Link to="/auth/login">Login</Link>
+					</li>
+					<li>
+						<Link to="/auth/register">Register</Link>
+					</li>
+					<div className="line"></div>
+				</ul>
+
+				<ul className="form-tab-content">
+					<li className="login active-tab-content">
+						<LoginForm
+							login={this.loginUser}
+							loading={this.state.isProcessing}
+						/>
+					</li>
+					<li className="register">
+						<RegisterForm
+							register={this.registerUser}
+							loading={this.state.isProcessing}
+						/>
+					</li>
+				</ul>
+			</div>
+		);
+	}
+
 	registerUser = async (data) => {
 		this.setState({ isProcessing: true });
 		try {
 			console.log(data);
+			// create new user
 			const auth = getAuth();
 			const credentials = await createUserWithEmailAndPassword(
 				auth,
@@ -52,7 +100,16 @@ class Auth extends Component {
 				data.password
 			);
 			console.log(credentials);
+
+			// add document to authors collection
+			const docRef = doc(db, "authors", credentials.user.uid);
+			await setDoc(docRef, {
+				name: data.name,
+			});
 		} catch (error) {
+			if (error instanceof FirebaseError) {
+				console.log(error.code, error.name, error.message);
+			}
 			console.error(error);
 		}
 		this.setState({ isProcessing: false });
@@ -152,51 +209,6 @@ class Auth extends Component {
 			ease: "expo.out",
 			duration: 0.3,
 		});
-	}
-
-	componentWillUnmount() {
-		this.resizeObserver.disconnect();
-	}
-
-	componentDidUpdate(prevProps) {
-		const prevTab = prevProps.router.params.type;
-		const curTab = this.props.router.params.type;
-
-		if (prevTab !== curTab) {
-			this.setState({ tab: curTab });
-			this.switchTabs(curTab);
-		}
-	}
-
-	render() {
-		return (
-			<div className="form-container">
-				<ul className="form-tabs">
-					<li>
-						<Link to="/auth/login">Login</Link>
-					</li>
-					<li>
-						<Link to="/auth/register">Register</Link>
-					</li>
-					<div className="line"></div>
-				</ul>
-
-				<ul className="form-tab-content">
-					<li className="login active-tab-content">
-						<LoginForm
-							login={this.loginUser}
-							loading={this.state.isProcessing}
-						/>
-					</li>
-					<li className="register">
-						<RegisterForm
-							register={this.registerUser}
-							loading={this.state.isProcessing}
-						/>
-					</li>
-				</ul>
-			</div>
-		);
 	}
 
 	// helpers

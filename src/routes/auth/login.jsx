@@ -3,36 +3,13 @@ import { Component } from "react";
 import { Link } from "react-router-dom";
 import { emailValidator, emptyValidator } from "utils";
 import Spinner from "components/spinner";
+import { keyOutline, mailOutline } from "ionicons/icons";
 
 export default class LoginForm extends Component {
 	constructor(props) {
 		super(props);
 
 		this.fields = {};
-	}
-
-	handleSubmit = (event) => {
-		event.preventDefault();
-
-		if (!this.isValid()) return;
-
-		const data = Object.fromEntries(
-			Object.entries(this.fields).map(([key, component]) => [
-				key,
-				component.input.value.trim(),
-			])
-		);
-
-		const shouldRemember = document.getElementById("remember-user").value;
-
-		this.props.login(data, shouldRemember);
-	};
-
-	isValid() {
-		for (const field of Object.values(this.fields)) {
-			if (!field.validate()) return false;
-		}
-		return true;
 	}
 
 	render() {
@@ -52,26 +29,26 @@ export default class LoginForm extends Component {
 						<ValidatingInput
 							validators={[emptyValidator, emailValidator]}
 							ref={(cmp) => (this.fields.email = cmp)}
-						>
-							<input
-								name="email"
-								type="email"
-								placeholder="Email"
-							/>
-						</ValidatingInput>
+							prefixIcon={mailOutline}
+							inputOptions={{
+								name: "email",
+								type: "email",
+								placeholder: "Email",
+							}}
+						/>
 					</div>
 					<div className="input-box fill-grid-row">
 						<ValidatingInput
 							validators={[emptyValidator]}
 							ref={(cmp) => (this.fields.password = cmp)}
-						>
-							<input
-								autoComplete="on"
-								name="password"
-								type="password"
-								placeholder="Password"
-							/>
-						</ValidatingInput>
+							prefixIcon={keyOutline}
+							inputOptions={{
+								autoComplete: "on",
+								name: "password",
+								type: "password",
+								placeholder: "Password",
+							}}
+						/>
 					</div>
 					<div className="password-options fill-grid-row">
 						<div className="remember-user-option">
@@ -98,5 +75,29 @@ export default class LoginForm extends Component {
 				</button>
 			</form>
 		);
+	}
+
+	handleSubmit = (event) => {
+		event.preventDefault();
+
+		if (!this.isValid()) return;
+
+		const data = Object.fromEntries(
+			Object.entries(this.fields).map(([key, component]) => [
+				key,
+				component.input.value.trim(),
+			])
+		);
+
+		const shouldRemember = document.getElementById("remember-user").value;
+
+		this.props.login(data, shouldRemember);
+	};
+
+	isValid() {
+		for (const field of Object.values(this.fields)) {
+			if (!field.validate()) return false;
+		}
+		return true;
 	}
 }

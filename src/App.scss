@@ -16,7 +16,7 @@ html {
 }
 
 body {
-	font-family: "Source Serif Pro", serif;
+	font-family: general.$serif-font;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
@@ -51,6 +51,7 @@ button {
 
 button {
 	cursor: pointer;
+	background: none;
 }
 
 a {
