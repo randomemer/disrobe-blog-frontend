@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import "./style.scss";
 import RegisterForm from "./register";
 import LoginForm from "./login";
@@ -106,6 +106,8 @@ class Auth extends Component {
 			await setDoc(docRef, {
 				name: data.name,
 			});
+
+			redirect("/settings/account");
 		} catch (error) {
 			if (error instanceof FirebaseError) {
 				console.log(error.code, error.name, error.message);
@@ -121,9 +123,9 @@ class Auth extends Component {
 			const auth = getAuth();
 
 			if (shouldRemember) {
-				setPersistence(auth, browserLocalPersistence);
+				await setPersistence(auth, browserLocalPersistence);
 			} else {
-				setPersistence(auth, browserSessionPersistence);
+				await setPersistence(auth, browserSessionPersistence);
 			}
 
 			const result = await signInWithEmailAndPassword(
@@ -132,6 +134,9 @@ class Auth extends Component {
 				data.password
 			);
 			console.log(result);
+			const res = this.props.router.navigate("/settings/account");
+
+			console.log(res);
 		} catch (error) {
 			if (error instanceof FirebaseError) {
 				switch (error.code) {

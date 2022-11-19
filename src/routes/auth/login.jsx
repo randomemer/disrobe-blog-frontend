@@ -1,4 +1,4 @@
-import ValidatingInput from "components/form-input";
+import TextInput from "components/text-input";
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import { emailValidator, emptyValidator } from "utils";
@@ -26,7 +26,7 @@ export default class LoginForm extends Component {
 
 				<fieldset className="inputs">
 					<div className="input-box fill-grid-row">
-						<ValidatingInput
+						<TextInput
 							validators={[emptyValidator, emailValidator]}
 							ref={(cmp) => (this.fields.email = cmp)}
 							prefixIcon={mailOutline}
@@ -38,7 +38,7 @@ export default class LoginForm extends Component {
 						/>
 					</div>
 					<div className="input-box fill-grid-row">
-						<ValidatingInput
+						<TextInput
 							validators={[emptyValidator]}
 							ref={(cmp) => (this.fields.password = cmp)}
 							prefixIcon={keyOutline}

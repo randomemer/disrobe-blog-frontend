@@ -6,14 +6,13 @@ class ProfileField extends Component {
 	render() {
 		return (
 			<div className="profile-field">
-				<label className="profile-form-label" htmlFor={this.props.name}>
+				<label
+					className="profile-form-label"
+					htmlFor={this.props.inputOptions.name}
+				>
 					{this.props.label}
 				</label>
-				<input
-					type={this.props.type}
-					name={this.props.name}
-					placeholder={this.props.placeholder}
-				/>
+				<input {...this.props.inputOptions} />
 				<span className="message"></span>
 			</div>
 		);
@@ -78,12 +77,21 @@ export default class EditForm extends Component {
 				</div>
 				<div className="profile-right-pane">
 					<div className="profile-fields">
-						<ProfileField type="text" name="name" label="Name *" />
 						<ProfileField
-							type="text"
-							name="bio"
+							label="Name *"
+							inputOptions={{
+								type: "text",
+								name: "name",
+								value: this.props.user,
+							}}
+						/>
+						<ProfileField
 							label="Bio"
-							placeholder="Describe yourself"
+							inputOptions={{
+								type: "text",
+								name: "bio",
+								placeholder: "Describe yourself",
+							}}
 						/>
 						<div className="buttons">
 							<button className="discard-btn">Reset</button>

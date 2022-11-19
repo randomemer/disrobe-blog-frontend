@@ -1,5 +1,9 @@
+import { auth, db } from "firebase-mod";
+import { doc, getDoc } from "firebase/firestore";
 import {
 	createBrowserRouter,
+	redirect,
+	useLoaderData,
 	useLocation,
 	useNavigate,
 	useParams,
@@ -15,7 +19,13 @@ export function withRouter(Component) {
 		let location = useLocation();
 		let navigate = useNavigate();
 		let params = useParams();
-		return <Component {...props} router={{ location, navigate, params }} />;
+		let loaderData = useLoaderData();
+		return (
+			<Component
+				{...props}
+				router={{ location, navigate, params, loaderData }}
+			/>
+		);
 	}
 
 	return <ComponentWithRouterProp />;
@@ -40,6 +50,15 @@ export default createBrowserRouter([
 	},
 	{
 		path: "/settings",
+		loader: async () => {
+			const user = auth.currentUser;
+			if (!user) throw redirect("/auth/login");
+
+			const userDoc = await getDoc(doc(db, "authors", user.uid));
+			console.log(userDoc);
+
+			return { userDoc };
+		},
 		element: withRouter(Settings),
 		children: [
 			{

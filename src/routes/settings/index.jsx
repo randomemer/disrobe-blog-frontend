@@ -4,9 +4,13 @@ import { Link, Outlet } from "react-router-dom";
 import "./style.scss";
 
 export default class Settings extends Component {
+	constructor(props) {
+		super(props);
+		console.log(props);
+	}
+
 	componentDidMount() {
 		this.links = document.querySelector(".settings-links");
-		console.log(this.links);
 
 		this.highlightLink();
 	}

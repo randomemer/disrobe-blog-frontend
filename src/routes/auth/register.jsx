@@ -1,4 +1,4 @@
-import ValidatingInput from "components/form-input";
+import TextInput from "components/text-input";
 import { Component } from "react";
 import { emailValidator, emptyValidator, passwordValidator } from "utils";
 import Spinner from "components/spinner";
@@ -21,7 +21,7 @@ export default class RegisterForm extends Component {
 
 				<fieldset className="inputs">
 					<div className="input-box">
-						<ValidatingInput
+						<TextInput
 							validators={[emptyValidator]}
 							ref={(cmp) => (this.fields.name = cmp)}
 							prefixIcon={personOutline}
@@ -33,7 +33,7 @@ export default class RegisterForm extends Component {
 						/>
 					</div>
 					<div className="input-box">
-						<ValidatingInput
+						<TextInput
 							validators={[emptyValidator, emailValidator]}
 							ref={(cmp) => (this.fields.email = cmp)}
 							prefixIcon={mailOutline}
@@ -45,7 +45,7 @@ export default class RegisterForm extends Component {
 						/>
 					</div>
 					<div className="input-box">
-						<ValidatingInput
+						<TextInput
 							validators={[emptyValidator, passwordValidator]}
 							ref={(cmp) => (this.fields.password = cmp)}
 							prefixIcon={keyOutline}
