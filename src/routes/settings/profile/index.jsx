@@ -1,4 +1,4 @@
-import { auth } from "firebase-mod";
+import { auth } from "@/firebase-mod";
 import { Component } from "react";
 import EditForm from "./edit-form";
 import "./style.scss";

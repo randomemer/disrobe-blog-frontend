@@ -1,4 +1,4 @@
-import AppHeader from "components/header";
+import AppHeader from "@/components/header";
 import { Component } from "react";
 import { Link, Outlet } from "react-router-dom";
 import "./style.scss";

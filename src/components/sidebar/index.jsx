@@ -1,5 +1,5 @@
 import { Component } from "react";
-import SuggestedArticle from "components/sugessted-article";
+import SuggestedArticle from "@/components/sugessted-article";
 import "./style.scss";
 
 const props = [

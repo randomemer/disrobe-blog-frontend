@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AppHeader from "components/header";
+import AppHeader from "@/components/header";
 import "./style.scss";
 
 export default class Write extends Component {

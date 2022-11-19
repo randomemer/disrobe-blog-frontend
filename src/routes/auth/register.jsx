@@ -1,7 +1,7 @@
-import TextInput from "components/text-input";
+import TextInput from "@/components/text-input";
 import { Component } from "react";
-import { emailValidator, emptyValidator, passwordValidator } from "utils";
-import Spinner from "components/spinner";
+import { emailValidator, emptyValidator, passwordValidator } from "@/utils";
+import Spinner from "@/components/spinner";
 import { keyOutline, mailOutline, personOutline } from "ionicons/icons";
 
 export default class RegisterForm extends Component {

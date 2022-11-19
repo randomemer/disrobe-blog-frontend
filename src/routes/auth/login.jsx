@@ -1,8 +1,8 @@
-import TextInput from "components/text-input";
+import TextInput from "@/components/text-input";
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import { emailValidator, emptyValidator } from "utils";
-import Spinner from "components/spinner";
+import { emailValidator, emptyValidator } from "@/utils";
+import Spinner from "@/components/spinner";
 import { keyOutline, mailOutline } from "ionicons/icons";
 
 export default class LoginForm extends Component {

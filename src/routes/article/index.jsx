@@ -2,8 +2,8 @@ import { Component } from "react";
 import "./style.scss";
 
 // images
-import thumbnail from "assets/images/article-images/IMG-20221112-WA0006.jpg";
-import image0 from "assets/images/article-images/IMG-20221112-WA0002.jpg";
+import thumbnail from "@/assets/images/article-images/IMG-20221112-WA0006.jpg";
+import image0 from "@/assets/images/article-images/IMG-20221112-WA0002.jpg";
 
 export default class Article extends Component {
 	constructor(props) {

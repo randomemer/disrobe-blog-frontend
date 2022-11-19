@@ -1,4 +1,4 @@
-import { auth, db } from "firebase-mod";
+import { auth, db } from "@/firebase-mod";
 import { doc, getDoc } from "firebase/firestore";
 import {
 	createBrowserRouter,
@@ -8,11 +8,11 @@ import {
 	useNavigate,
 	useParams,
 } from "react-router-dom";
-import Article from "routes/article";
-import Auth from "routes/auth";
-import Settings from "routes/settings";
-import Profile from "routes/settings/profile";
-import Write from "routes/write";
+import Article from "@/routes/article";
+import Auth from "@/routes/auth";
+import Settings from "@/routes/settings";
+import Profile from "@/routes/settings/profile";
+import Write from "@/routes/write";
 
 export function withRouter(Component) {
 	function ComponentWithRouterProp(props) {
