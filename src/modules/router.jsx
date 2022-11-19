@@ -31,22 +31,56 @@ export function withRouter(Component) {
 	return <ComponentWithRouterProp />;
 }
 
+async function privateRouteLoader() {
+	const user = auth.currentUser;
+	if (!user) throw redirect("/auth/login");
+
+	const userDoc = await getDoc(doc(db, "authors", user.uid));
+	console.log(userDoc);
+
+	return { userDoc };
+}
+
 export default createBrowserRouter([
+	// public routes
 	{
 		path: "/",
 		element: <div>Home under construction 🔨</div>,
 	},
 	{
-		path: "/write",
-		element: <Write />,
+		path: "/story/:id",
+		element: <Article />,
 	},
 	{
-		path: "/article/:id",
-		element: <Article />,
+		path: "/about",
+		element: <></>,
 	},
 	{
 		path: "/auth/:type",
 		element: withRouter(Auth),
+	},
+	{
+		path: "/author/:id",
+		element: <></>,
+	},
+	// private routes
+	{
+		path: "/write",
+		element: <Write />,
+	},
+	{
+		path: "/my-space",
+		element: <></>,
+		children: [
+			{
+				path: "/my-space/stories",
+				element: <></>,
+			},
+			{
+				path: "/my-space/stats",
+				element: <></>,
+			},
+		],
 	},
 	{
 		path: "/settings",
@@ -62,15 +96,7 @@ export default createBrowserRouter([
 		element: withRouter(Settings),
 		children: [
 			{
-				path: "/settings/profile",
-				element: withRouter(Profile),
-			},
-			{
 				path: "/settings/account",
-				element: withRouter(Profile),
-			},
-			{
-				path: "/settings/posts",
 				element: withRouter(Profile),
 			},
 			{
