@@ -14,7 +14,7 @@ import {
 	signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase-mod";
+import { db } from "@/modules/firebase";
 import { FirebaseError } from "firebase/app";
 
 class Auth extends Component {

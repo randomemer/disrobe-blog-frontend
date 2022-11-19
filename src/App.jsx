@@ -1,11 +1,17 @@
 // import AppHeader from "components/header";
 // import SideBar from "components/sidebar";
+import "@/assets/styles/App.scss";
+import reduxStore from "@/modules/redux-store";
+import router from "@/modules/router";
+import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-import router from "./router";
-import "./App.scss";
 
 function App() {
-	return <RouterProvider router={router} />;
+	return (
+		<Provider store={reduxStore}>
+			<RouterProvider router={router} />
+		</Provider>
+	);
 }
 
 export default App;

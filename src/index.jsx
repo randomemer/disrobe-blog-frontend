@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import "./firebase-mod";
+import reportWebVitals from "./modules/reportWebVitals";
+import "@/modules/firebase";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -1,4 +1,4 @@
-import { auth, db } from "@/firebase-mod";
+import { auth, db } from "@/modules/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import {
 	createBrowserRouter,
