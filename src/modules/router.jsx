@@ -11,7 +11,7 @@ import {
 import Article from "@/routes/article";
 import Auth from "@/routes/auth";
 import Settings from "@/routes/settings";
-import Profile from "@/routes/settings/profile";
+import Account from "@/routes/settings/account";
 import Write from "@/routes/write";
 
 export function withRouter(Component) {
@@ -46,6 +46,7 @@ export default createBrowserRouter([
 	{
 		path: "/",
 		element: <div>Home under construction 🔨</div>,
+		// children: {},
 	},
 	{
 		path: "/story/:id",
@@ -97,11 +98,11 @@ export default createBrowserRouter([
 		children: [
 			{
 				path: "/settings/account",
-				element: withRouter(Profile),
+				element: withRouter(Account),
 			},
 			{
 				path: "/settings/notifications",
-				element: withRouter(Profile),
+				element: withRouter(Account),
 			},
 		],
 	},

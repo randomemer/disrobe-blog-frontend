@@ -20,12 +20,6 @@
 		"start": "vite",
 		"build": "vite build"
 	},
-	"eslintConfig": {
-		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
-	},
 	"browserslist": {
 		"production": [
 			">0.2%",
@@ -41,6 +35,8 @@
 	"devDependencies": {
 		"@redux-devtools/core": "^3.13.1",
 		"@vitejs/plugin-react": "^2.2.0",
+		"eslint": "^8.28.0",
+		"eslint-plugin-react": "^7.31.11",
 		"sass": "^1.56.1",
 		"vite": "^3.2.4"
 	}
