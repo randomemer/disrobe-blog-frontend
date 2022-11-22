@@ -11,8 +11,13 @@
 		transition: all 0.15s ease-out;
 	}
 
-	& > input {
+	input {
 		align-self: stretch;
+		flex: 1;
+		&:focus {
+			border-color: general.$primary-color;
+			box-shadow: none;
+		}
 	}
 
 	.prefix-icon {

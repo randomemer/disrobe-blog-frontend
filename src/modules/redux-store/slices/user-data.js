@@ -1,11 +1,10 @@
-import { auth, db } from "@/modules/firebase";
+import { db } from "@/modules/firebase";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { doc, getDoc } from "firebase/firestore";
 
 export const fetchUserProfile = createAsyncThunk(
 	"user-profile/fetch-user",
-	async () => {
-		const uid = auth.currentUser.uid;
+	async (uid) => {
 		const docRef = doc(db, "authors", uid);
 		const fetchedDoc = await getDoc(docRef);
 		return fetchedDoc.data();
@@ -32,7 +31,6 @@ const userProfileSlice = createSlice({
 		builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
 			state.status = "fulfilled";
 			state.value = action.payload;
-			console.log("user logged in :", action.payload);
 		});
 
 		builder.addCase(fetchUserProfile.rejected, (state, action) => {

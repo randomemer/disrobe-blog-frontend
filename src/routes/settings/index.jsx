@@ -6,7 +6,6 @@ import "./style.scss";
 export default class Settings extends Component {
 	constructor(props) {
 		super(props);
-		console.log(props);
 	}
 
 	componentDidMount() {
@@ -16,7 +15,7 @@ export default class Settings extends Component {
 	}
 
 	componentDidUpdate() {
-		this.highlightLink();
+		// this.highlightLink();
 	}
 
 	highlightLink() {
@@ -25,9 +24,6 @@ export default class Settings extends Component {
 		const anchor = this.links.querySelector(
 			`a[href="${location.pathname}"]`
 		);
-		console.log(anchor);
-
-		console.log(JSON.stringify(anchor, Object.getOwnPropertyNames(anchor)));
 	}
 
 	render() {
@@ -38,9 +34,7 @@ export default class Settings extends Component {
 					<div className="settings-side-nav">
 						<div className="active-link-line"></div>
 						<ul className="settings-links">
-							<Link to="/settings/profile">Profile</Link>
 							<Link to="/settings/account">Account</Link>
-							<Link to="/settings/posts">Posts</Link>
 							<Link to="/settings/notifications">
 								Notifications
 							</Link>

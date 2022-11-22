@@ -1,19 +1,22 @@
-import { auth } from "@/modules/firebase";
 import { Component } from "react";
 import EditForm from "./edit-form";
+import { connect } from "react-redux";
 import "./style.scss";
 
-export default class Profile extends Component {
-	constructor(props) {
-		super(props);
-		console.log("profile props :", props);
-	}
-
+class Account extends Component {
 	render() {
-		return (
-			<div>
-				<EditForm user={auth.currentUser} />
-			</div>
-		);
+		if (this.props.userProfile.status === "fulfilled") {
+			return (
+				<div>
+					<EditForm profile={this.props.userProfile.value} />
+				</div>
+			);
+		} else {
+			<></>;
+		}
 	}
 }
+
+const mapStateToProps = (state) => ({ userProfile: state["user-profile"] });
+
+export default connect(mapStateToProps, null)(Account);

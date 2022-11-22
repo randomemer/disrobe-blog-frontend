@@ -133,14 +133,7 @@
 	padding: 0 1.8rem;
 
 	input {
-		width: 100%;
-		padding-bottom: 5px;
 		font-size: 1.6rem;
-
-		&:focus {
-			border-color: general.$primary-color;
-			box-shadow: none;
-		}
 	}
 
 	.input-box + .input-box {

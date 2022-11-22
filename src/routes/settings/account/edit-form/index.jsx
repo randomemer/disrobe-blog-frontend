@@ -1,37 +1,20 @@
-import { IonIcon } from "@ionic/react";
-import { personOutline } from "ionicons/icons";
 import { Component, Fragment } from "react";
-
-class ProfileField extends Component {
-	render() {
-		return (
-			<div className="profile-field">
-				<label
-					className="profile-form-label"
-					htmlFor={this.props.inputOptions.name}
-				>
-					{this.props.label}
-				</label>
-				<input {...this.props.inputOptions} />
-				<span className="message"></span>
-			</div>
-		);
-	}
-}
+import defaultPicture from "@/assets/images/default-pfp.jpg";
+import FormTextInput from "@/components/text-input";
+import { emptyValidator } from "@/utils";
 
 class ProfilePictureField extends Component {
-	openFileDialog(event) {
-		const input = document.querySelector('input[name="profile-image"]');
-		console.log(input);
+	state = {
+		localImgSrc: null,
+		value: null,
+	};
 
-		var clickEvent = new MouseEvent("click", {
-			view: window,
-			bubbles: true,
-			cancelable: false,
-		});
+	clickInput = () => this.input.click();
 
-		input.dispatchEvent(clickEvent);
-	}
+	onImageChange = (event) => {
+		const [file] = event.target.files;
+		this.setState({ localImgSrc: file ? URL.createObjectURL(file) : null });
+	};
 
 	render() {
 		return (
@@ -41,10 +24,12 @@ class ProfilePictureField extends Component {
 				</label>
 				<div
 					className="profile-img-contianer"
-					onClick={this.openFileDialog}
+					onClick={this.clickInput}
 				>
-					<img alt="profile" />
-					<IonIcon icon={personOutline} />
+					<img
+						alt="profile"
+						src={this.state.localImgSrc || defaultPicture}
+					/>
 					<input
 						type={"file"}
 						name="profile-image"
@@ -52,16 +37,20 @@ class ProfilePictureField extends Component {
 						accept={
 							"image/png, image/jpg, image/jpeg, image/bmp, image/webp"
 						}
+						ref={(el) => (this.input = el)}
+						onChange={this.onImageChange}
 					/>
 				</div>
 				<div className="pfp-edit-buttons">
-					<button
-						className="change-btn"
-						onClick={this.openFileDialog}
-					>
+					<button className="change-btn" onClick={this.clickInput}>
 						Change
 					</button>
-					<button className="remove-btn">Remove</button>
+					<button
+						className="remove-btn"
+						onClick={() => this.setState({ localImgSrc: null })}
+					>
+						Remove
+					</button>
 				</div>
 			</Fragment>
 		);
@@ -69,24 +58,41 @@ class ProfilePictureField extends Component {
 }
 
 export default class EditForm extends Component {
+	formFields = {};
+
+	onSubmit = (event) => {
+		const fields = Object.entries(this.formFields);
+		const isValid = fields.every(([name, field]) => field.isValid());
+		if (isValid) return;
+
+		const data = fields.map(([name, field]) => field.value);
+		console.log(data);
+	};
+
 	render() {
+		const profile = this.props.profile;
 		return (
 			<div className="profile-edit-form">
 				<div className="profile-left-pane">
-					<ProfilePictureField />
+					<ProfilePictureField
+						ref={(el) => (this.formFields.picture = el)}
+					/>
 				</div>
 				<div className="profile-right-pane">
 					<div className="profile-fields">
-						<ProfileField
+						<FormTextInput
 							label="Name *"
+							className="profile-field"
 							inputOptions={{
 								type: "text",
 								name: "name",
-								value: this.props.user,
+								defaultValue: profile.name,
 							}}
+							validators={[emptyValidator]}
 						/>
-						<ProfileField
+						<FormTextInput
 							label="Bio"
+							className="profile-field"
 							inputOptions={{
 								type: "text",
 								name: "bio",
@@ -95,7 +101,12 @@ export default class EditForm extends Component {
 						/>
 						<div className="buttons">
 							<button className="discard-btn">Reset</button>
-							<button className="save-btn">Update</button>
+							<button
+								className="save-btn"
+								onClick={this.onSubmit}
+							>
+								Update
+							</button>
 						</div>
 					</div>
 				</div>

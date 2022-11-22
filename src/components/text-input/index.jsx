@@ -3,24 +3,34 @@ import { Component } from "react";
 import { IonIcon } from "@ionic/react";
 import { warningOutline } from "ionicons/icons";
 import "./style.scss";
+import classNames from "classnames";
 
-export default class ValidatingInput extends Component {
+export default class FormTextInput extends Component {
+	state = {
+		message: "",
+		isFocused: false,
+	};
+
+	primaryColor = "rgb(255, 135, 135)";
+
+	// warningIcon = (<IonIcon icon={warningOutline} className="warning-icon" />);
+
+	label = this.props.label ? (
+		<label htmlFor={this.props.inputOptions.name}>{this.props.label}</label>
+	) : undefined;
+
+	prefixIcon = this.props.prefixIcon ? (
+		<span>
+			<IonIcon className="prefix-icon" icon={this.props.prefixIcon} />
+		</span>
+	) : undefined;
+
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			message: "",
-			isFocused: false,
-		};
-
-		this.validators = props.validators;
 
 		this.onFocusIn = this.onFocusChange.bind(this, true);
 		this.onFocusOut = this.onFocusChange.bind(this, false);
 	}
-
-	primaryColor = "rgb(255, 135, 135)";
-	warningIcon = (<IonIcon icon={warningOutline} className="warning-icon" />);
 
 	componentDidMount() {
 		this.input = this.inputWrapper.querySelector("input");
@@ -40,32 +50,40 @@ export default class ValidatingInput extends Component {
 	}
 
 	render() {
+		const warningIcon = (
+			<IonIcon
+				icon={warningOutline}
+				style={{ opacity: this.state.message ? 1 : 0 }}
+				className="warning-icon"
+			/>
+		);
 		return (
 			<div
-				className={[
-					"input-wrapper",
-					this.state.isFocused ? "input-focused" : "",
-				].join(" ")}
+				className={classNames(this.props.className, "input-wrapper", {
+					"input-focused": this.state.isFocused,
+				})}
 				ref={(el) => (this.inputWrapper = el)}
 			>
+				{this.label}
 				<div className="input-container">
-					<span className="prefix-icon">
-						<IonIcon icon={this.props.prefixIcon} />
-					</span>
+					{this.prefixIcon}
 					<input type={"text"} {...this.props.inputOptions} />
 					<span className="suffix-icon">
-						{!this.state.message ? undefined : this.warningIcon}
+						{this.props.inputOptions.type === "password" ? (
+							<div></div>
+						) : (
+							warningIcon
+						)}
 					</span>
 				</div>
-				<div className="message">
-					<span>{this.state.message}</span>
-				</div>
+				<div className="message">{this.state.message}</div>
 			</div>
 		);
 	}
 
 	validate = () => {
-		for (const validator of this.validators) {
+		if (!this.props.validators) return;
+		for (const validator of this.props.validators) {
 			const message = validator(this.input.value);
 
 			if (message) {

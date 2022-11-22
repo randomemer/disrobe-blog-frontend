@@ -1,24 +1,26 @@
-// import AppHeader from "components/header";
-// import SideBar from "components/sidebar";
 import "@/assets/styles/App.scss";
+import { auth } from "@/modules/firebase";
 import reduxStore from "@/modules/redux-store";
+import { fetchUserProfile } from "@/modules/redux-store/slices/user-data";
 import router from "@/modules/router";
+import { onAuthStateChanged } from "firebase/auth";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-import { fetchUserProfile } from "@/modules/redux-store/slices/user-data";
-import { auth } from "@/modules/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-
-new Promise((resolve) => {
-	onAuthStateChanged(auth, (user) => {
-		resolve(user);
-	});
-});
 
 function App() {
-	const unsubscribeAuthListener = onAuthStateChanged(auth, (user) => {
+	const currentUserID = localStorage.getItem("firebase-uid");
+	if (currentUserID) reduxStore.dispatch(fetchUserProfile(currentUserID));
+
+	// setup listener for auth state changes
+	onAuthStateChanged(auth, (user) => {
 		if (user) {
-			reduxStore.dispatch(fetchUserProfile());
+			localStorage.setItem("firebase-uid", user.uid);
+			reduxStore.dispatch(fetchUserProfile(user.uid));
+		} else {
+			localStorage.removeItem("firebase-uid");
+			// TODO : also set null value in redux store
+
+			// Logout of any private route
 		}
 	});
 

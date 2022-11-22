@@ -8,7 +8,7 @@
 	}
 }
 
-.profile-form-label {
+@mixin form-label {
 	display: block;
 	font-family: general.$sans-serif-font;
 	text-transform: uppercase;
@@ -16,6 +16,10 @@
 	font-size: 1.4rem;
 	font-weight: 600;
 	margin-bottom: 1rem;
+}
+
+.profile-form-label {
+	@include form-label();
 }
 
 .profile-img-contianer {
@@ -35,19 +39,6 @@
 		position: absolute;
 		width: 100%;
 		height: 100%;
-	}
-
-	ion-icon {
-		$offset: 15%;
-
-		top: $offset;
-		left: $offset;
-		right: $offset;
-		bottom: $offset;
-
-		width: auto;
-		height: auto;
-		color: #666;
 	}
 
 	img {
@@ -87,10 +78,12 @@
 		display: flex;
 		flex-direction: column;
 
+		label {
+			@include form-label();
+		}
+
 		input {
-			transition: all 0.3s ease-out;
 			font-size: 1.8rem;
-			border-bottom: solid 2px rgba(128, 128, 128, 0.7);
 			padding-bottom: 5px;
 
 			&:focus {

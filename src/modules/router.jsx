@@ -1,5 +1,3 @@
-import { auth, db } from "@/modules/firebase";
-import { doc, getDoc } from "firebase/firestore";
 import {
 	createBrowserRouter,
 	redirect,
@@ -29,16 +27,6 @@ export function withRouter(Component) {
 	}
 
 	return <ComponentWithRouterProp />;
-}
-
-async function privateRouteLoader() {
-	const user = auth.currentUser;
-	if (!user) throw redirect("/auth/login");
-
-	const userDoc = await getDoc(doc(db, "authors", user.uid));
-	console.log(userDoc);
-
-	return { userDoc };
 }
 
 export default createBrowserRouter([
@@ -86,18 +74,14 @@ export default createBrowserRouter([
 	{
 		path: "/settings",
 		loader: async () => {
-			const user = auth.currentUser;
-			if (!user) throw redirect("/auth/login");
-
-			const userDoc = await getDoc(doc(db, "authors", user.uid));
-			console.log(userDoc);
-
-			return { userDoc };
+			const uid = localStorage.getItem("firebase-uid");
+			if (!uid) throw redirect("/auth/login");
 		},
 		element: withRouter(Settings),
 		children: [
 			{
 				path: "/settings/account",
+				index: true,
 				element: withRouter(Account),
 			},
 			{
