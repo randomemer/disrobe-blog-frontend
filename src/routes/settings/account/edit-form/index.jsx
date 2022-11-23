@@ -2,19 +2,31 @@ import { Component, Fragment } from "react";
 import defaultPicture from "@/assets/images/default-pfp.jpg";
 import FormTextInput from "@/components/text-input";
 import { emptyValidator } from "@/utils";
+import { ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage } from "@/modules/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { extname } from "path";
 
 class ProfilePictureField extends Component {
 	state = {
-		localImgSrc: null,
 		value: null,
 	};
+
+	get value() {
+		return this.state.value;
+	}
 
 	clickInput = () => this.input.click();
 
 	onImageChange = (event) => {
 		const [file] = event.target.files;
-		this.setState({ localImgSrc: file ? URL.createObjectURL(file) : null });
+		console.log(file);
+		this.setState({ value: file });
 	};
+
+	validate() {
+		return true;
+	}
 
 	render() {
 		return (
@@ -28,7 +40,11 @@ class ProfilePictureField extends Component {
 				>
 					<img
 						alt="profile"
-						src={this.state.localImgSrc || defaultPicture}
+						src={
+							this.state.value
+								? URL.createObjectURL(this.state.value)
+								: defaultPicture
+						}
 					/>
 					<input
 						type={"file"}
@@ -47,7 +63,7 @@ class ProfilePictureField extends Component {
 					</button>
 					<button
 						className="remove-btn"
-						onClick={() => this.setState({ localImgSrc: null })}
+						onClick={() => this.setState({ value: null })}
 					>
 						Remove
 					</button>
@@ -60,13 +76,47 @@ class ProfilePictureField extends Component {
 export default class EditForm extends Component {
 	formFields = {};
 
-	onSubmit = (event) => {
+	onSubmit = async (event) => {
 		const fields = Object.entries(this.formFields);
-		const isValid = fields.every(([name, field]) => field.isValid());
-		if (isValid) return;
+		const isValid = fields.every(([name, field]) => field.validate());
 
-		const data = fields.map(([name, field]) => field.value);
+		const data = Object.fromEntries(
+			fields.map(([name, field]) => [name, field.value])
+		);
 		console.log(data);
+		if (!isValid) return;
+
+		this.setState({ isLoading: true });
+		try {
+			console.log(this.props);
+			// upload picture
+			const uid = auth.currentUser.uid;
+			if (data.picture) {
+				const path = `images/authors/${uid}${extname(
+					data.picture.name
+				)}`;
+				const locationRef = ref(storage, path);
+
+				const uploadResult = await uploadBytes(
+					locationRef,
+					data.picture
+				);
+
+				data.picture = uploadResult.ref.fullPath;
+			}
+
+			// set data in firestore
+			const document = doc(db, "authors", uid);
+			await setDoc(document, {
+				picture: data.picture || undefined,
+				name: data.name,
+				bio: data.bio,
+			});
+			console.log("changed document");
+		} catch (error) {
+			console.error(error);
+		}
+		this.setState({ isLoading: false });
 	};
 
 	render() {
@@ -75,6 +125,7 @@ export default class EditForm extends Component {
 			<div className="profile-edit-form">
 				<div className="profile-left-pane">
 					<ProfilePictureField
+						inputOptions={{ defaultValue: profile.picture }}
 						ref={(el) => (this.formFields.picture = el)}
 					/>
 				</div>
@@ -87,15 +138,19 @@ export default class EditForm extends Component {
 								type: "text",
 								name: "name",
 								defaultValue: profile.name,
+								placeholder: "Your name",
 							}}
+							ref={(el) => (this.formFields.name = el)}
 							validators={[emptyValidator]}
 						/>
 						<FormTextInput
 							label="Bio"
 							className="profile-field"
+							ref={(el) => (this.formFields.bio = el)}
 							inputOptions={{
 								type: "text",
 								name: "bio",
+								defaultValue: profile.bio,
 								placeholder: "Describe yourself",
 							}}
 						/>

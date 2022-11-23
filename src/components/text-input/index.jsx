@@ -9,21 +9,40 @@ export default class FormTextInput extends Component {
 	state = {
 		message: "",
 		isFocused: false,
+		value: this.props.inputOptions.defaultValue || "",
 	};
+
+	get value() {
+		return this.input.value;
+	}
 
 	primaryColor = "rgb(255, 135, 135)";
 
-	// warningIcon = (<IonIcon icon={warningOutline} className="warning-icon" />);
+	get label() {
+		return this.props.label ? (
+			<label htmlFor={this.props.inputOptions.name}>
+				{this.props.label}
+			</label>
+		) : undefined;
+	}
 
-	label = this.props.label ? (
-		<label htmlFor={this.props.inputOptions.name}>{this.props.label}</label>
-	) : undefined;
+	get prefixIcon() {
+		return this.props.prefixIcon ? (
+			<span>
+				<IonIcon className="prefix-icon" icon={this.props.prefixIcon} />
+			</span>
+		) : undefined;
+	}
 
-	prefixIcon = this.props.prefixIcon ? (
-		<span>
-			<IonIcon className="prefix-icon" icon={this.props.prefixIcon} />
-		</span>
-	) : undefined;
+	get warningIcon() {
+		return (
+			<IonIcon
+				icon={warningOutline}
+				style={{ opacity: this.state.message ? 1 : 0 }}
+				className="warning-icon"
+			/>
+		);
+	}
 
 	constructor(props) {
 		super(props);
@@ -35,7 +54,10 @@ export default class FormTextInput extends Component {
 	componentDidMount() {
 		this.input = this.inputWrapper.querySelector("input");
 		this.messageEl = this.inputWrapper.querySelector(".message");
+
+		// add event listeners
 		this.input.addEventListener("blur", this.onBlur);
+		// this.input.addEventListener("change", this.onInputChange);
 		// for knowing focus state
 		this.input.addEventListener("focusin", this.onFocusIn);
 		this.input.addEventListener("focusout", this.onFocusOut);
@@ -47,16 +69,10 @@ export default class FormTextInput extends Component {
 		// focus listeners
 		this.input.removeEventListener("focusin", this.onFocusIn);
 		this.input.removeEventListener("focusout", this.onFocusOut);
+		// this.input.removeEventListener("change", this.onInputChange);
 	}
 
 	render() {
-		const warningIcon = (
-			<IonIcon
-				icon={warningOutline}
-				style={{ opacity: this.state.message ? 1 : 0 }}
-				className="warning-icon"
-			/>
-		);
 		return (
 			<div
 				className={classNames(this.props.className, "input-wrapper", {
@@ -72,7 +88,7 @@ export default class FormTextInput extends Component {
 						{this.props.inputOptions.type === "password" ? (
 							<div></div>
 						) : (
-							warningIcon
+							this.warningIcon
 						)}
 					</span>
 				</div>
@@ -82,7 +98,7 @@ export default class FormTextInput extends Component {
 	}
 
 	validate = () => {
-		if (!this.props.validators) return;
+		if (!this.props.validators) return true;
 		for (const validator of this.props.validators) {
 			const message = validator(this.input.value);
 
@@ -103,6 +119,11 @@ export default class FormTextInput extends Component {
 	onFocusChange(isFocused, event) {
 		this.setState({ isFocused });
 	}
+
+	onInputChange = (event) => {
+		console.log(event.target.value);
+		this.setState({ value: event.target.value });
+	};
 
 	onBlur = (event) => {
 		// first time validation only on blur
