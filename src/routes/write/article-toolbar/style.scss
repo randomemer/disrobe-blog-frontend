@@ -1,0 +1,61 @@
+@use "@/assets/styles/general";
+
+$toolbar-section-gap: 4.8rem;
+
+.article-toolbar {
+	display: flex;
+	flex-direction: column;
+	gap: $toolbar-section-gap;
+}
+
+.toolbar-section {
+	width: 100%;
+	position: relative;
+
+	&:not(:last-child)::after {
+		content: "";
+		position: absolute;
+		transform: translateY(calc($toolbar-section-gap / 2));
+		bottom: 0;
+		left: 0;
+		right: 0;
+		border: 1px solid rgba(170, 170, 170, 0.3);
+	}
+}
+
+.section-title {
+	display: block;
+	text-transform: uppercase;
+	font-family: general.$sans-serif-font;
+	font-size: 1.4rem;
+	font-weight: 700;
+	margin-bottom: 1.4rem;
+	letter-spacing: 0.5px;
+}
+
+.section-buttons {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+
+	.editor-menu-button {
+		$size: 3rem;
+		width: $size;
+		height: $size;
+		position: relative;
+		border-radius: 1px;
+		transition: all 0.15s ease;
+
+		&:hover {
+			background-color: rgb(255, 135, 135, 0.3);
+		}
+
+		.material-symbols-sharp {
+			font-size: 2.8rem;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+}

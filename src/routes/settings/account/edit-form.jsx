@@ -1,15 +1,15 @@
-import { Component, Fragment } from "react";
 import defaultPicture from "@/assets/images/default-pfp.jpg";
 import FormTextInput from "@/components/text-input";
-import { emptyValidator } from "@/utils";
-import { ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "@/modules/firebase";
+import { emptyValidator } from "@/utils";
 import { doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
 import { extname } from "path";
+import { Component, Fragment } from "react";
 
 class ProfilePictureField extends Component {
 	state = {
-		value: null,
+		value: this.props.inputOptions.defaultValue,
 	};
 
 	get value() {
@@ -28,7 +28,16 @@ class ProfilePictureField extends Component {
 		return true;
 	}
 
+	reset() {
+		this.setState({ value: this.props.inputOptions.defaultValue });
+	}
+
 	render() {
+		let image = this.state.value;
+		if (this.state.value instanceof File) {
+			image = URL.createObjectURL(image);
+		}
+
 		return (
 			<Fragment>
 				<label htmlFor="profile-image" className="profile-form-label">
@@ -38,14 +47,7 @@ class ProfilePictureField extends Component {
 					className="profile-img-contianer"
 					onClick={this.clickInput}
 				>
-					<img
-						alt="profile"
-						src={
-							this.state.value
-								? URL.createObjectURL(this.state.value)
-								: defaultPicture
-						}
-					/>
+					<img alt="profile" src={image || defaultPicture} />
 					<input
 						type={"file"}
 						name="profile-image"
@@ -119,6 +121,13 @@ export default class EditForm extends Component {
 		this.setState({ isLoading: false });
 	};
 
+	onReset = () => {
+		Object.values(this.formFields).forEach((field) => {
+			field.reset();
+			field.validate();
+		});
+	};
+
 	render() {
 		const profile = this.props.profile;
 		return (
@@ -155,7 +164,12 @@ export default class EditForm extends Component {
 							}}
 						/>
 						<div className="buttons">
-							<button className="discard-btn">Reset</button>
+							<button
+								className="discard-btn"
+								onClick={this.onReset}
+							>
+								Reset
+							</button>
 							<button
 								className="save-btn"
 								onClick={this.onSubmit}

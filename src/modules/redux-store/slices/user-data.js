@@ -1,13 +1,22 @@
-import { db } from "@/modules/firebase";
+import { db, storage } from "@/modules/firebase";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { doc, getDoc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 
 export const fetchUserProfile = createAsyncThunk(
 	"user-profile/fetch-user",
 	async (uid) => {
 		const docRef = doc(db, "authors", uid);
 		const fetchedDoc = await getDoc(docRef);
-		return fetchedDoc.data();
+		const data = fetchedDoc.data();
+
+		if (data.picture) {
+			const storageRef = ref(storage, data.picture);
+			data.picture = await getDownloadURL(storageRef);
+		}
+
+		console.log(data);
+		return data;
 	}
 );
 

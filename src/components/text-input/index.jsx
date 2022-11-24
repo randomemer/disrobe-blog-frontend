@@ -9,7 +9,6 @@ export default class FormTextInput extends Component {
 	state = {
 		message: "",
 		isFocused: false,
-		value: this.props.inputOptions.defaultValue || "",
 	};
 
 	get value() {
@@ -57,7 +56,6 @@ export default class FormTextInput extends Component {
 
 		// add event listeners
 		this.input.addEventListener("blur", this.onBlur);
-		// this.input.addEventListener("change", this.onInputChange);
 		// for knowing focus state
 		this.input.addEventListener("focusin", this.onFocusIn);
 		this.input.addEventListener("focusout", this.onFocusOut);
@@ -69,7 +67,6 @@ export default class FormTextInput extends Component {
 		// focus listeners
 		this.input.removeEventListener("focusin", this.onFocusIn);
 		this.input.removeEventListener("focusout", this.onFocusOut);
-		// this.input.removeEventListener("change", this.onInputChange);
 	}
 
 	render() {
@@ -97,6 +94,10 @@ export default class FormTextInput extends Component {
 		);
 	}
 
+	reset() {
+		this.input.value = this.props.inputOptions.defaultValue;
+	}
+
 	validate = () => {
 		if (!this.props.validators) return true;
 		for (const validator of this.props.validators) {
@@ -116,6 +117,7 @@ export default class FormTextInput extends Component {
 		return true;
 	};
 
+	// event handlers
 	onFocusChange(isFocused, event) {
 		this.setState({ isFocused });
 	}
