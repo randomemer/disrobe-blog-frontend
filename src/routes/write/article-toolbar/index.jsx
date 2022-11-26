@@ -1,9 +1,12 @@
 import classNames from "classnames";
-import { useSlateStatic } from "slate-react";
-import { getActiveStyles, toggleStyle } from "../article-editor/modules/utils";
+import { useSlate } from "slate-react";
+import {
+	getActiveStyles,
+	isLinkNodeAtSelection,
+	toggleLink,
+	toggleStyle,
+} from "../article-editor/modules/utils";
 import "./style.scss";
-
-const sections = [{}];
 
 const characterStyles = [
 	{ style: "bold", icon: "format_bold" },
@@ -16,7 +19,7 @@ const characterStyles = [
 export default function ArticleToolbar(props) {
 	const { selection, previousSelection } = props;
 
-	const editor = useSlateStatic();
+	const editor = useSlate();
 
 	return (
 		<div className="article-toolbar">
@@ -56,7 +59,14 @@ export default function ArticleToolbar(props) {
 			<div className="toolbar-section">
 				<span className="section-title">Other</span>
 				<div className="section-buttons">
-					<MenuButton iconName="link" />
+					<MenuButton
+						iconName="link"
+						isActive={isLinkNodeAtSelection(
+							editor,
+							editor.selection
+						)}
+						onMouseDown={() => toggleLink(editor)}
+					/>
 					<MenuButton iconName="format_quote" />
 					<MenuButton iconName="image" />
 					<MenuButton iconName="code_blocks" />

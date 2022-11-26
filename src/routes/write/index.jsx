@@ -12,9 +12,22 @@ const example = [
 		type: "paragraph",
 		children: [
 			{ text: "A line of text in a paragraph." },
-			{ text: "lol", bold: true },
-			{ text: "lol", italic: true },
-			{ text: "variableFoo", code: true },
+			{ text: " lol", bold: true },
+			{ text: " lol", italic: true },
+			{ text: " variableFoo", code: true },
+		],
+	},
+	{
+		type: "paragraph",
+		children: [
+			{
+				type: "link",
+				url: "https://www.google.com",
+				children: [
+					{ text: "Link text" },
+					{ text: "Bold text inside link", bold: true },
+				],
+			},
 		],
 	},
 	{
@@ -43,13 +56,13 @@ export default function Write(props) {
 	return (
 		<Fragment>
 			<AppHeader />
-			<div id="app">
+			<div id="write-app">
 				<Slate
 					editor={editor}
 					value={content}
 					onChange={onChangeHandler}
 				>
-					<main className="app-main">
+					<main className="article-area">
 						<input
 							className="form-input"
 							type="text"

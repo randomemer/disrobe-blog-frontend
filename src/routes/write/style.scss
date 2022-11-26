@@ -1,8 +1,23 @@
 @use "@/assets/styles/general";
 
-main {
+#write-app {
+	width: 100%;
 	max-width: 120rem;
-	margin: 4.8rem auto;
+	margin: 0 auto;
+
+	display: flex;
+	gap: 4.8rem;
+
+	.article-area {
+		margin-top: 4.8rem;
+	}
+
+	.article-toolbar {
+		width: 32rem;
+		height: 100%;
+		position: sticky;
+		top: calc(var(--app-header-height) + 4.8rem);
+	}
 }
 
 .form-input {
@@ -27,36 +42,25 @@ main {
 	}
 }
 
-.textarea-container {
-	display: grid;
-
-	textarea,
-	.textarea-replica {
-		grid-area: 1 / 1 / 2 / 2;
-		font-size: 1.8rem;
-	}
-
-	textarea {
-		display: block;
-		overflow: hidden;
-		resize: none;
-	}
-
-	.textarea-replica {
-		width: 100%;
-		padding: 0.8rem 1.6rem;
-		white-space: pre-wrap;
-		border-left: solid 3px #aaa;
-
-		visibility: hidden;
-		pointer-events: none;
-
-		&::after {
-			content: attr(data-replicated-value) " ";
-		}
-	}
-}
-
 .slate-editor {
 	font-size: 1.8rem;
+
+	&:focus {
+		box-shadow: none;
+	}
+
+	& > * {
+		// background-color: aquamarine;
+		padding: 0.8rem 1.6rem;
+		border-left: solid 3px #aaa;
+		margin-bottom: 4.8rem;
+
+		&:focus {
+			border-color: general.$primary-color;
+		}
+	}
+
+	.link {
+		color: general.$primary-color;
+	}
 }

@@ -12,6 +12,13 @@ export function renderElement(props) {
 				</p>
 			);
 
+		case "link":
+			return (
+				<a {...attributes} href={element.url} className="link	">
+					{children}
+				</a>
+			);
+
 		case "h1":
 			return <h1 {...attributes}>{children}</h1>;
 
