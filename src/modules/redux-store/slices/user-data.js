@@ -15,7 +15,8 @@ export const fetchUserProfile = createAsyncThunk(
 			data.picture = await getDownloadURL(storageRef);
 		}
 
-		console.log(data);
+		// console.table(data);
+		console.log("fetched user profile");
 		return data;
 	}
 );
