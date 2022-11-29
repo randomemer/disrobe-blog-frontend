@@ -5,7 +5,7 @@ import {
 	isLinkNodeAtSelection,
 	toggleLink,
 	toggleStyle,
-} from "../article-editor/modules/utils";
+} from "@/utils/editor-utils";
 import "./style.scss";
 
 const characterStyles = [

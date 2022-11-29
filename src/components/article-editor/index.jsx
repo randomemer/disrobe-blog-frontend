@@ -1,8 +1,8 @@
 import LinkEditor from "@/components/link-editor";
 import { useEffect, useCallback, Fragment } from "react";
 import { Editable, useSlate } from "slate-react";
-import { renderLeaf, renderElement } from "./modules/rendering";
-import { isLinkNodeAtSelection, KeyBindings } from "./modules/utils";
+import { renderLeaf, renderElement } from "./rendering";
+import { KeyBindings } from "@/utils/editor-utils";
 
 export default function ArticleEditable() {
 	const editor = useSlate();

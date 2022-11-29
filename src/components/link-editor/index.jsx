@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { isLinkNodeAtSelection } from "@/routes/write/article-editor/modules/utils";
+import { isLinkNodeAtSelection } from "@/utils/editor-utils";
 import { IonIcon } from "@ionic/react";
 import { createPopper } from "@popperjs/core";
 import { linkSharp } from "ionicons/icons";
@@ -14,17 +14,21 @@ export default function LinkEditor(props) {
 	const linkEditorRef = useRef(null);
 	const linkNodeRef = useRef(null);
 
-	const [linkNode, setLinkNode] = useState(null);
 	const [linkUrl, setLinkUrl] = useState("");
 
 	const isActive = isLinkNodeAtSelection(editor, editor.selection);
 
-	const saveLink = (url) => {
-		Transforms.setNodes(editor, { url }, { at: linkNodeRef.current.path });
-	};
-
 	useEffect(() => {
 		const linkEditorEl = linkEditorRef.current;
+
+		const saveLink = (url) => {
+			if (!linkNodeRef.current) return;
+			Transforms.setNodes(
+				editor,
+				{ url },
+				{ at: linkNodeRef.current.path }
+			);
+		};
 
 		// show link editor
 		if (isActive) {
@@ -52,7 +56,6 @@ export default function LinkEditor(props) {
 				],
 			});
 
-			// setLinkUrl(linkNode.url);
 			linkEditorEl.classList.add("active");
 			// entry animation for the link editor
 			gsap.to(linkEditorEl, {
@@ -63,18 +66,16 @@ export default function LinkEditor(props) {
 		// hide link editor
 		else {
 			// save the link if valid
+			saveLink(linkUrl);
 
 			gsap.to(linkEditorEl, {
 				ease: "expo.out",
 				opacity: 0,
-				onComplete: () => {
-					linkEditorEl.classList.remove("active");
-				},
+				onComplete: () => linkEditorEl.classList.remove("active"),
 			});
 		}
 
 		return () => {
-			// console.log("unmounted link editor");
 			// is there anything to clean up here?
 			saveLink(linkUrl);
 		};

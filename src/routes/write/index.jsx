@@ -1,11 +1,12 @@
-import { Fragment, useMemo, useCallback, useState } from "react";
 import AppHeader from "@/components/header";
-import "./style.scss";
-import { Slate, withReact } from "slate-react";
-import ArticleEditable from "./article-editor";
-import ArticleToolbar from "./article-toolbar";
+import { findLinkInSelection } from "@/utils/editor-utils";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { createEditor } from "slate";
-import useSelection from "./article-editor/modules/use-selection";
+import { Slate, withReact } from "slate-react";
+import ArticleEditable from "@/components/article-editor";
+import useSelection from "@/hooks/use-selection";
+import ArticleToolbar from "@/components/article-toolbar";
+import "./style.scss";
 
 const example = [
 	{
@@ -30,14 +31,6 @@ const example = [
 			},
 		],
 	},
-	{
-		type: "h1",
-		children: [{ text: "Heading 1" }],
-	},
-	{
-		type: "h2",
-		children: [{ text: "Heading 2" }],
-	},
 ];
 
 export default function Write(props) {
@@ -48,9 +41,10 @@ export default function Write(props) {
 	const onChangeHandler = useCallback(
 		(content) => {
 			updateContent(content);
+			// findLinkInSelection(editor);
 			setSelectionOptimized(editor.selection);
 		},
-		[editor.selection, updateContent, setSelectionOptimized]
+		[editor, updateContent, setSelectionOptimized]
 	);
 
 	return (
