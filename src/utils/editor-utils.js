@@ -1,5 +1,6 @@
 import { Editor, Element, Range, Transforms, Text, Point } from "slate";
 import isHotkey from "is-hotkey";
+import isUrl from "is-url";
 
 export const KeyBindings = {
 	onKeyDown: (editor, event) => {
@@ -90,7 +91,7 @@ export function findLinkInSelection(editor) {
 	const [curNode, curNodePath] = Editor.node(editor, editor.selection);
 	if (!Text.isText(curNode)) return;
 
-	let start = Range.edges(editor.selection);
+	let [start] = Range.edges(editor.selection);
 	const cursorPoint = start;
 
 	const lastCharStart = Editor.before(editor, editor.selection, {
@@ -112,7 +113,7 @@ export function findLinkInSelection(editor) {
 	});
 
 	while (
-		Editor.string((editor, Editor.range(editor, start, end))) !== " " &&
+		Editor.string(editor, Editor.range(editor, start, end)) !== " " &&
 		!Point.isBefore(start, textNodeStart)
 	) {
 		end = start;
@@ -123,4 +124,21 @@ export function findLinkInSelection(editor) {
 	const lastWord = Editor.string(editor, lastWordRange);
 
 	console.log(lastWord);
+
+	if (isUrl(lastWord)) {
+		Promise.resolve().then(() => {
+			Transforms.wrapNodes(
+				editor,
+				{
+					type: "link",
+					url: lastWord,
+					children: [{ text: lastWord }],
+				},
+				{
+					split: true,
+					at: lastWordRange,
+				}
+			);
+		});
+	}
 }
