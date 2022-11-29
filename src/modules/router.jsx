@@ -1,3 +1,10 @@
+import Article from "@/routes/article";
+import Auth from "@/routes/auth";
+import ErrorDevelopmentPage from "@/routes/error-dev";
+import Home from "@/routes/home";
+import Settings from "@/routes/settings";
+import Account from "@/routes/settings/account";
+import Write from "@/routes/write";
 import {
 	createBrowserRouter,
 	Outlet,
@@ -7,12 +14,6 @@ import {
 	useNavigate,
 	useParams,
 } from "react-router-dom";
-import Article from "@/routes/article";
-import Auth from "@/routes/auth";
-import Settings from "@/routes/settings";
-import Account from "@/routes/settings/account";
-import Write from "@/routes/write";
-import Home from "@/routes/home";
 
 export function withRouter(Component) {
 	function ComponentWithRouterProp(props) {
@@ -36,6 +37,10 @@ export default createBrowserRouter([
 	{
 		path: "/",
 		element: <Outlet />,
+		errorElement:
+			process.env.NODE_ENV === "development" ? (
+				<ErrorDevelopmentPage />
+			) : null,
 		children: [
 			{
 				index: true,

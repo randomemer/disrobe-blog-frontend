@@ -43,14 +43,14 @@ const example = [
 export default function Write(props) {
 	const [content, updateContent] = useState(example);
 	const editor = useMemo(() => withReact(createEditor()), []);
-	const [selection, setSelection] = useSelection(editor);
+	const [selection, setSelectionOptimized] = useSelection(editor);
 
 	const onChangeHandler = useCallback(
 		(content) => {
 			updateContent(content);
-			setSelection(editor.selection);
+			setSelectionOptimized(editor.selection);
 		},
-		[editor.selection, updateContent, setSelection]
+		[editor.selection, updateContent, setSelectionOptimized]
 	);
 
 	return (

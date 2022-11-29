@@ -53,6 +53,15 @@ button {
 	color: inherit;
 }
 
+::placeholder,
+::-moz-placeholder,
+:-ms-input-placeholder,
+::-ms-input-placeholder {
+	// opacity: 1;
+	// color: rgba(128, 128, 128, 0);
+	color: red;
+}
+
 button {
 	cursor: pointer;
 	background: none;
