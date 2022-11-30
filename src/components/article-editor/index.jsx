@@ -16,6 +16,11 @@ export default function ArticleEditable() {
 		return element.type === "link" ? true : isInline(element);
 	};
 
+	const { isVoid } = editor;
+	editor.isVoid = (element) => {
+		return element.type === "image" ? true : isVoid(element);
+	};
+
 	const onKeyDown = useCallback(
 		(event) => KeyBindings.onKeyDown(editor, event),
 		[editor]

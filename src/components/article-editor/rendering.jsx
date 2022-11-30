@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { DefaultElement } from "slate-react";
+import ArticleImage from "../article-image";
 
 export function renderElement(props) {
 	const { attributes, element, children } = props;
@@ -18,6 +19,9 @@ export function renderElement(props) {
 					{children}
 				</a>
 			);
+
+		case "image":
+			return <ArticleImage {...props} />;
 
 		case "h1":
 			return <h1 {...attributes}>{children}</h1>;
