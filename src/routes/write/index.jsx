@@ -1,5 +1,8 @@
 import AppHeader from "@/components/header";
-import { findLinkInSelection } from "@/utils/editor-utils";
+import {
+	findLinkInSelection,
+	highlightCurrentBlock,
+} from "@/utils/editor-utils";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { createEditor } from "slate";
 import { Slate, withReact } from "slate-react";
@@ -32,19 +35,19 @@ const example = [
 		],
 	},
 	{
+		type: "image",
+		url: "https://th.bing.com/th/id/OIP.NpMf0V4UZ5npgdNh1fCoQwHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+		caption: "Puppy",
+		// empty text node as child for the Void element.
+		children: [{ text: "" }],
+	},
+	{
 		type: "paragraph",
 		children: [
 			{
 				text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 			},
 		],
-	},
-	{
-		type: "image",
-		url: "https://th.bing.com/th/id/OIP.NpMf0V4UZ5npgdNh1fCoQwHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-		caption: "Puppy",
-		// empty text node as child for the Void element.
-		children: [{ text: "" }],
 	},
 ];
 
@@ -58,6 +61,7 @@ export default function Write(props) {
 			updateContent(content);
 			findLinkInSelection(editor);
 			setSelectionOptimized(editor.selection);
+			highlightCurrentBlock(editor, editor.selection);
 		},
 		[editor, updateContent, setSelectionOptimized]
 	);

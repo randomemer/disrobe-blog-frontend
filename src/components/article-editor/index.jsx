@@ -1,30 +1,28 @@
 import LinkEditor from "@/components/link-editor";
-import { useEffect, useCallback, Fragment } from "react";
-import { Editable, useSlate } from "slate-react";
-import { renderLeaf, renderElement } from "./rendering";
-import { KeyBindings } from "@/utils/editor-utils";
+import useEditorConfig from "@/hooks/use-editor-config";
+import { Fragment, useEffect } from "react";
+import { Editable, ReactEditor, useSlate } from "slate-react";
+import { RenderElement, RenderLeaf } from "./rendering";
 
 export default function ArticleEditable() {
 	const editor = useSlate();
 
 	useEffect(() => {
-		// console.log("editor : ", editor);
-	});
+		const children = editor.children;
 
-	const { isInline } = editor;
-	editor.isInline = (element) => {
-		return element.type === "link" ? true : isInline(element);
-	};
+		for (const child of children) {
+			const el = ReactEditor.toDOMNode(editor, child);
+			if (child.type === "paragraph") {
+				el.classList.add("editor-block--para");
+			}
 
-	const { isVoid } = editor;
-	editor.isVoid = (element) => {
-		return element.type === "image" ? true : isVoid(element);
-	};
+			if (child.type === "image") {
+				el.classList.add("editor-block--image");
+			}
+		}
+	}, [editor]);
 
-	const onKeyDown = useCallback(
-		(event) => KeyBindings.onKeyDown(editor, event),
-		[editor]
-	);
+	const { onKeyDown } = useEditorConfig(editor);
 
 	return (
 		<Fragment>
@@ -32,8 +30,8 @@ export default function ArticleEditable() {
 			<Editable
 				className="slate-editor"
 				onKeyDown={onKeyDown}
-				renderElement={renderElement}
-				renderLeaf={renderLeaf}
+				renderElement={RenderElement}
+				renderLeaf={RenderLeaf}
 			/>
 		</Fragment>
 	);

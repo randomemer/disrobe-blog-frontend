@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { DefaultElement } from "slate-react";
 import ArticleImage from "../article-image";
 
-export function renderElement(props) {
+export function RenderElement(props) {
 	const { attributes, element, children } = props;
 
 	switch (element.type) {
@@ -15,7 +15,7 @@ export function renderElement(props) {
 
 		case "link":
 			return (
-				<a {...attributes} href={element.url} className="link	">
+				<a {...attributes} href={element.url} className="link">
 					{children}
 				</a>
 			);
@@ -40,7 +40,7 @@ export function renderElement(props) {
 	}
 }
 
-export function renderLeaf({ attributes, children, leaf }) {
+export function RenderLeaf({ attributes, children, leaf }) {
 	let el = <Fragment>{children}</Fragment>;
 
 	if (leaf.bold) {

@@ -1,6 +1,7 @@
-import { Editor, Element, Range, Transforms, Text, Point } from "slate";
+import { Editor, Element, Range, Transforms, Text, Point, Node } from "slate";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
+import { ReactEditor } from "slate-react";
 
 export const KeyBindings = {
 	onKeyDown: (editor, event) => {
@@ -34,6 +35,27 @@ export function toggleStyle(editor, style) {
 	} else {
 		Editor.addMark(editor, style, true);
 	}
+}
+
+export function highlightCurrentBlock(editor, selection) {
+	if (!selection) return;
+
+	for (const child of editor.children) {
+		const childEl = ReactEditor.toDOMNode(editor, child);
+		childEl.classList.remove("editor-block--active");
+	}
+
+	const blockIndex = selection.focus.path[0];
+	const blockNode = editor.children[blockIndex];
+	const el = ReactEditor.toDOMNode(editor, blockNode);
+	el.classList.add("editor-block--active");
+	console.log(el);
+
+	// const [node] = Editor.parent(editor, selection.focus.path);
+	// const el = ReactEditor.toDOMNode(editor, node);
+	// console.log(el);
+	// console.log("descendants : ", Node.ancestor(editor, selection.focus.path));
+	// el.classList.add("editor-block--active");
 }
 
 export function isLinkNodeAtSelection(editor, selection) {
@@ -122,8 +144,6 @@ export function findLinkInSelection(editor) {
 
 	const lastWordRange = Editor.range(editor, end, lastCharStart);
 	const lastWord = Editor.string(editor, lastWordRange);
-
-	console.log(lastWord);
 
 	if (isUrl(lastWord)) {
 		Promise.resolve().then(() => {
