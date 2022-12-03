@@ -8,7 +8,7 @@ export function RenderElement(props) {
 	switch (element.type) {
 		case "paragraph":
 			return (
-				<p className="paragraph" {...attributes}>
+				<p className="editor-block" {...attributes}>
 					{children}
 				</p>
 			);
@@ -20,20 +20,67 @@ export function RenderElement(props) {
 				</a>
 			);
 
+		case "bulleted-list":
+			return (
+				<ul className="editor-block" {...attributes}>
+					{children}
+				</ul>
+			);
+
+		case "numbered-list":
+			return (
+				<ol className="editor-block" {...attributes}>
+					{children}
+				</ol>
+			);
+
+		case "list-item":
+			return <li {...attributes}>{children}</li>;
+
 		case "image":
 			return <ArticleImage {...props} />;
 
 		case "h1":
-			return <h1 {...attributes}>{children}</h1>;
+			return (
+				<h1 className="editor-block" {...attributes}>
+					{children}
+				</h1>
+			);
 
 		case "h2":
-			return <h2 {...attributes}>{children}</h2>;
+			return (
+				<h2 className="editor-block" {...attributes}>
+					{children}
+				</h2>
+			);
 
 		case "h3":
-			return <h3 {...attributes}>{children}</h3>;
+			return (
+				<h3 className="editor-block" {...attributes}>
+					{children}
+				</h3>
+			);
 
 		case "h4":
-			return <h4 {...attributes}>{children}</h4>;
+			return (
+				<h4 className="editor-block" {...attributes}>
+					{children}
+				</h4>
+			);
+
+		case "h5":
+			return (
+				<h5 className="editor-block" {...attributes}>
+					{children}
+				</h5>
+			);
+
+		case "h6":
+			return (
+				<h6 className="editor-block" {...attributes}>
+					{children}
+				</h6>
+			);
 
 		default:
 			return <DefaultElement {...attributes}>{children}</DefaultElement>;
@@ -53,6 +100,10 @@ export function RenderLeaf({ attributes, children, leaf }) {
 
 	if (leaf.italic) {
 		el = <em>{el}</em>;
+	}
+
+	if (leaf.strikethrough) {
+		el = <s>{el}</s>;
 	}
 
 	if (leaf.underline) {

@@ -1,7 +1,9 @@
-import { Editor, Element, Range, Transforms, Text, Point, Node } from "slate";
+import { Editor, Element, Range, Transforms, Text, Point } from "slate";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
 import { ReactEditor } from "slate-react";
+
+export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
 export const KeyBindings = {
 	onKeyDown: (editor, event) => {
@@ -40,6 +42,8 @@ export function toggleStyle(editor, style) {
 export function highlightCurrentBlock(editor, selection) {
 	if (!selection) return;
 
+	const BLOCK_TYPES = ["paragraph", "numbered-list", "bulleted-list"];
+
 	for (const child of editor.children) {
 		const childEl = ReactEditor.toDOMNode(editor, child);
 		childEl.classList.remove("editor-block--active");
@@ -50,12 +54,6 @@ export function highlightCurrentBlock(editor, selection) {
 	const el = ReactEditor.toDOMNode(editor, blockNode);
 	el.classList.add("editor-block--active");
 	console.log(el);
-
-	// const [node] = Editor.parent(editor, selection.focus.path);
-	// const el = ReactEditor.toDOMNode(editor, node);
-	// console.log(el);
-	// console.log("descendants : ", Node.ancestor(editor, selection.focus.path));
-	// el.classList.add("editor-block--active");
 }
 
 export function isLinkNodeAtSelection(editor, selection) {
@@ -160,5 +158,46 @@ export function findLinkInSelection(editor) {
 				}
 			);
 		});
+	}
+}
+
+// experimenting
+export function isBlockActive(editor, format) {
+	const { selection } = editor;
+	if (!selection) return false;
+
+	const [match] = Array.from(
+		Editor.nodes(editor, {
+			at: Editor.unhangRange(editor, selection),
+			match: (node) =>
+				!Editor.isEditor(node) &&
+				Element.isElement(node) &&
+				node.type === format,
+		})
+	);
+
+	return match;
+}
+
+export function toggleBlock(editor, format) {
+	const isActive = isBlockActive(editor, format);
+	const isList = LIST_TYPES.includes(format);
+
+	Transforms.unwrapNodes(editor, {
+		match: (node) =>
+			!Editor.isEditor(node) &&
+			Element.isElement(node) &&
+			LIST_TYPES.includes(node.type),
+		split: true,
+	});
+
+	const newProperties = {
+		type: isActive ? "paragraph" : isList ? "list-item" : format,
+	};
+	Transforms.setNodes(editor, newProperties);
+
+	if (!isActive && isList) {
+		const block = { type: format, children: [] };
+		Transforms.wrapNodes(editor, block);
 	}
 }

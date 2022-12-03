@@ -54,24 +54,34 @@
 		box-shadow: none;
 	}
 
-	& > .editor-block--para {
-		padding: 0.8rem 1.6rem;
-		border-left: solid 3px #aaa;
-		margin-bottom: 4.8rem;
-
-		// when the cursor is in that block
-		&.editor-block--active {
-			border-color: general.$primary-color;
-		}
-	}
-
-	& > .editor-block--image {
-		align-self: center;
-		$spacing: 4.8rem;
-		margin: $spacing 0;
-	}
-
 	.link {
 		color: general.$primary-color;
 	}
+}
+
+.editor-block {
+	padding: 0.8rem 1.6rem;
+	border-left: solid 3px #aaa;
+	margin-bottom: 4.8rem;
+
+	// when the cursor is in that block
+	&.editor-block--active {
+		border-color: general.$primary-color;
+	}
+}
+
+ol.editor-block,
+ul.editor-block {
+	padding-inline-start: 4.8rem;
+	display: block;
+}
+
+ul.editor-block {
+	list-style: disc;
+}
+
+.editor-block--image {
+	align-self: center;
+	$spacing: 4.8rem;
+	margin: $spacing 0;
 }

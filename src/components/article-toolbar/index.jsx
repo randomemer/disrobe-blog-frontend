@@ -2,18 +2,33 @@ import classNames from "classnames";
 import { useSlate } from "slate-react";
 import {
 	getActiveStyles,
+	isBlockActive,
 	isLinkNodeAtSelection,
+	toggleBlock,
 	toggleLink,
 	toggleStyle,
 } from "@/utils/editor-utils";
 import "./style.scss";
 
-const characterStyles = [
+const CHARACTER_STYLES = [
 	{ style: "bold", icon: "format_bold" },
 	{ style: "italic", icon: "format_italic" },
 	{ style: "strikethrough", icon: "format_strikethrough" },
 	{ style: "underline", icon: "format_underlined" },
 	{ style: "code", icon: "code" },
+];
+
+const LIST_STYLES = [
+	{ style: "numbered-list", icon: "format_list_numbered" },
+	{ style: "bulleted-list", icon: "format_list_bulleted" },
+];
+
+const HEADING_STYLES = [
+	{ style: "h2", icon: "format_h2" },
+	{ style: "h3", icon: "format_h3" },
+	{ style: "h4", icon: "format_h4" },
+	{ style: "h5", icon: "format_h5" },
+	{ style: "h6", icon: "format_h6" },
 ];
 
 export default function ArticleToolbar(props) {
@@ -26,17 +41,20 @@ export default function ArticleToolbar(props) {
 			<div className="toolbar-section">
 				<span className="section-title">Headings</span>
 				<div className="section-buttons">
-					<MenuButton iconName="format_h2" />
-					<MenuButton iconName="format_h3" />
-					<MenuButton iconName="format_h4" />
-					<MenuButton iconName="format_h5" />
-					<MenuButton iconName="format_h6" />
+					{HEADING_STYLES.map((item) => (
+						<BlockStyleButton
+							key={item.style}
+							format={item.style}
+							iconName={item.icon}
+						/>
+					))}
 				</div>
 			</div>
+
 			<div className="toolbar-section">
 				<span className="section-title">Character</span>
 				<div className="section-buttons">
-					{characterStyles.map((item) => (
+					{CHARACTER_STYLES.map((item) => (
 						<MenuButton
 							key={item.style}
 							isActive={getActiveStyles(editor).has(item.style)}
@@ -49,13 +67,20 @@ export default function ArticleToolbar(props) {
 					))}
 				</div>
 			</div>
+
 			<div className="toolbar-section">
 				<span className="section-title">Lists</span>
 				<div className="section-buttons">
-					<MenuButton iconName="format_list_bulleted" />
-					<MenuButton iconName="format_list_numbered" />
+					{LIST_STYLES.map((item) => (
+						<BlockStyleButton
+							key={item.style}
+							format={item.style}
+							iconName={item.icon}
+						/>
+					))}
 				</div>
 			</div>
+
 			<div className="toolbar-section">
 				<span className="section-title">Other</span>
 				<div className="section-buttons">
@@ -76,6 +101,12 @@ export default function ArticleToolbar(props) {
 	);
 }
 
+// Toolbar Components
+
+function MaterialIcon(props) {
+	return <span className="material-symbols-sharp">{props.iconName}</span>;
+}
+
 function MenuButton(props) {
 	const { isActive, iconName, ...otherProps } = props;
 	return (
@@ -88,6 +119,16 @@ function MenuButton(props) {
 	);
 }
 
-function MaterialIcon(props) {
-	return <span className="material-symbols-sharp">{props.iconName}</span>;
-}
+const BlockStyleButton = ({ format, iconName }) => {
+	const editor = useSlate();
+	return (
+		<MenuButton
+			isActive={isBlockActive(editor, format)}
+			iconName={iconName}
+			onMouseDown={(event) => {
+				// event.preventDefault();
+				toggleBlock(editor, format);
+			}}
+		/>
+	);
+};

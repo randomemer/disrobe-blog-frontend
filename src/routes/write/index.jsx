@@ -15,15 +15,12 @@ const example = [
 	{
 		type: "paragraph",
 		children: [
-			{ text: "A line of text in a paragraph." },
-			{ text: " lol", bold: true },
-			{ text: " lol", italic: true },
-			{ text: " variableFoo", code: true },
-		],
-	},
-	{
-		type: "paragraph",
-		children: [
+			{ text: "A line of text in a paragraph.\n" },
+			{ text: "bold\n", bold: true },
+			{ text: "italic\n", italic: true },
+			{ text: "strikethrough\n", strikethrough: true },
+			{ text: "underlined\n", underline: true },
+			{ text: "variableFoo\n", code: true },
 			{
 				type: "link",
 				url: "https://www.google.com",
