@@ -47,8 +47,6 @@
 
 .slate-editor {
 	font-size: 1.8rem;
-	display: flex;
-	flex-direction: column;
 
 	&:focus {
 		box-shadow: none;
@@ -72,16 +70,22 @@
 
 ol.editor-block,
 ul.editor-block {
-	padding-inline-start: 4.8rem;
-	display: block;
+	padding-inline-start: 4rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.8rem;
 }
 
 ul.editor-block {
 	list-style: disc;
 }
 
-.editor-block--image {
-	align-self: center;
+.editor-image {
 	$spacing: 4.8rem;
 	margin: $spacing 0;
+}
+
+blockquote.editor-block {
+	background-color: rgba(128, 128, 128, 0.15);
+	font-style: italic;
 }

@@ -49,7 +49,7 @@ class ProfilePictureField extends Component {
 				>
 					<img alt="profile" src={image || defaultPicture} />
 					<input
-						type={"file"}
+						type="file"
 						name="profile-image"
 						hidden={true}
 						accept={

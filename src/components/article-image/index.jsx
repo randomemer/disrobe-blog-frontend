@@ -1,3 +1,4 @@
+import { isImageNodeAtSelection } from "@/utils/editor-utils";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { useCallback, useState } from "react";
@@ -10,6 +11,8 @@ export default function ArticleImage({ attributes, children, element }) {
 	const [caption, setCaption] = useState(element.caption);
 
 	const editor = useSlate();
+
+	const isSelected = isImageNodeAtSelection(editor, editor.selection);
 
 	const applyCaptionChange = useCallback(
 		(caption) => {
@@ -57,8 +60,13 @@ export default function ArticleImage({ attributes, children, element }) {
 	);
 
 	return (
-		<div contentEditable={false} {...attributes}>
-			<div className={classNames({ "image-container": true })}>
+		<div className="editor-image" contentEditable={false} {...attributes}>
+			<div
+				className={classNames({
+					"image-container": true,
+					selected: isSelected,
+				})}
+			>
 				<img
 					src={String(element.url)}
 					alt={element.caption}

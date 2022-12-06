@@ -1,6 +1,24 @@
+@use "@/assets/styles/general";
+
 .image-container {
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+
+	.image {
+		transition: all 0.3s;
+		align-self: center;
+	}
+
 	.image-caption-read-mode,
 	.image-caption-input {
 		text-align: center;
+	}
+
+	&.selected {
+		.image {
+			box-shadow: 0px 0px 0px 5px general.$primary-color;
+		}
 	}
 }

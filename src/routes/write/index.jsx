@@ -13,6 +13,12 @@ import "./style.scss";
 
 const example = [
 	{
+		type: "image",
+		url: "https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bmF0dXJhbHxlbnwwfHwwfHw%3D&w=1000&q=80",
+		caption: "Random Ass Image",
+		children: [{ text: "" }],
+	},
+	{
 		type: "paragraph",
 		children: [
 			{ text: "A line of text in a paragraph.\n" },
@@ -33,9 +39,8 @@ const example = [
 	},
 	{
 		type: "image",
-		url: "https://th.bing.com/th/id/OIP.NpMf0V4UZ5npgdNh1fCoQwHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-		caption: "Puppy",
-		// empty text node as child for the Void element.
+		url: "https://images2.alphacoders.com/870/thumb-1920-870886.jpg",
+		caption: "A still from BladeRunner 2049",
 		children: [{ text: "" }],
 	},
 	{
@@ -57,10 +62,10 @@ export default function Write(props) {
 		(content) => {
 			updateContent(content);
 			findLinkInSelection(editor);
-			setSelectionOptimized(editor.selection);
+			setSelectionOptimized(selection);
 			highlightCurrentBlock(editor, editor.selection);
 		},
-		[editor, updateContent, setSelectionOptimized]
+		[editor, updateContent, selection, setSelectionOptimized]
 	);
 
 	return (

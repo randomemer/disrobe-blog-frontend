@@ -9,6 +9,9 @@ import {
 	toggleStyle,
 } from "@/utils/editor-utils";
 import "./style.scss";
+import { Fragment, useState } from "react";
+import ReactModal from "react-modal";
+import ImageEditor from "@/components/image-editor";
 
 const CHARACTER_STYLES = [
 	{ style: "bold", icon: "format_bold" },
@@ -34,70 +37,92 @@ const HEADING_STYLES = [
 export default function ArticleToolbar(props) {
 	const { selection, previousSelection } = props;
 
+	const [isImageModalOpen, setImageModalOpen] = useState(false);
+
 	const editor = useSlate();
 
 	return (
-		<div className="article-toolbar">
-			<div className="toolbar-section">
-				<span className="section-title">Headings</span>
-				<div className="section-buttons">
-					{HEADING_STYLES.map((item) => (
-						<BlockStyleButton
-							key={item.style}
-							format={item.style}
-							iconName={item.icon}
-						/>
-					))}
+		<Fragment>
+			<div className="article-toolbar">
+				<div className="toolbar-section">
+					<span className="section-title">Headings</span>
+					<div className="section-buttons">
+						{HEADING_STYLES.map((item) => (
+							<BlockStyleButton
+								key={item.style}
+								format={item.style}
+								iconName={item.icon}
+							/>
+						))}
+					</div>
 				</div>
-			</div>
 
-			<div className="toolbar-section">
-				<span className="section-title">Character</span>
-				<div className="section-buttons">
-					{CHARACTER_STYLES.map((item) => (
+				<div className="toolbar-section">
+					<span className="section-title">Character</span>
+					<div className="section-buttons">
+						{CHARACTER_STYLES.map((item) => (
+							<MenuButton
+								key={item.style}
+								isActive={getActiveStyles(editor).has(
+									item.style
+								)}
+								iconName={item.icon}
+								onMouseDown={(event) => {
+									event.preventDefault();
+									toggleStyle(editor, item.style);
+								}}
+							/>
+						))}
+					</div>
+				</div>
+
+				<div className="toolbar-section">
+					<span className="section-title">Lists</span>
+					<div className="section-buttons">
+						{LIST_STYLES.map((item) => (
+							<BlockStyleButton
+								key={item.style}
+								format={item.style}
+								iconName={item.icon}
+							/>
+						))}
+					</div>
+				</div>
+
+				<div className="toolbar-section">
+					<span className="section-title">Other</span>
+					<div className="section-buttons">
 						<MenuButton
-							key={item.style}
-							isActive={getActiveStyles(editor).has(item.style)}
-							iconName={item.icon}
-							onMouseDown={(event) => {
-								event.preventDefault();
-								toggleStyle(editor, item.style);
-							}}
+							iconName="link"
+							isActive={isLinkNodeAtSelection(
+								editor,
+								editor.selection
+							)}
+							onMouseDown={() => toggleLink(editor)}
 						/>
-					))}
-				</div>
-			</div>
-
-			<div className="toolbar-section">
-				<span className="section-title">Lists</span>
-				<div className="section-buttons">
-					{LIST_STYLES.map((item) => (
 						<BlockStyleButton
-							key={item.style}
-							format={item.style}
-							iconName={item.icon}
+							format="blockquote"
+							iconName="format_quote"
 						/>
-					))}
+						<MenuButton
+							iconName="image"
+							onMouseDown={() => setImageModalOpen(true)}
+						/>
+						<MenuButton iconName="code_blocks" />
+					</div>
 				</div>
 			</div>
-
-			<div className="toolbar-section">
-				<span className="section-title">Other</span>
-				<div className="section-buttons">
-					<MenuButton
-						iconName="link"
-						isActive={isLinkNodeAtSelection(
-							editor,
-							editor.selection
-						)}
-						onMouseDown={() => toggleLink(editor)}
-					/>
-					<MenuButton iconName="format_quote" />
-					<MenuButton iconName="image" />
-					<MenuButton iconName="code_blocks" />
-				</div>
-			</div>
-		</div>
+			{/* Image Editor Dialog */}
+			<ReactModal
+				isOpen={isImageModalOpen}
+				onRequestClose={(event) => {
+					event.preventDefault();
+					setImageModalOpen(false);
+				}}
+			>
+				<ImageEditor closeModal={() => setImageModalOpen(false)} />
+			</ReactModal>
+		</Fragment>
 	);
 }
 

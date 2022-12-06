@@ -42,8 +42,6 @@ export function toggleStyle(editor, style) {
 export function highlightCurrentBlock(editor, selection) {
 	if (!selection) return;
 
-	const BLOCK_TYPES = ["paragraph", "numbered-list", "bulleted-list"];
-
 	for (const child of editor.children) {
 		const childEl = ReactEditor.toDOMNode(editor, child);
 		childEl.classList.remove("editor-block--active");
@@ -53,7 +51,6 @@ export function highlightCurrentBlock(editor, selection) {
 	const blockNode = editor.children[blockIndex];
 	const el = ReactEditor.toDOMNode(editor, blockNode);
 	el.classList.add("editor-block--active");
-	console.log(el);
 }
 
 export function isLinkNodeAtSelection(editor, selection) {
@@ -63,6 +60,17 @@ export function isLinkNodeAtSelection(editor, selection) {
 		Editor.above(editor, {
 			at: selection,
 			match: (n) => n.type === "link",
+		}) != null
+	);
+}
+
+export function isImageNodeAtSelection(editor, selection) {
+	if (selection == null) return;
+
+	return (
+		Editor.above(editor, {
+			at: selection,
+			match: (node) => node.type === "image",
 		}) != null
 	);
 }

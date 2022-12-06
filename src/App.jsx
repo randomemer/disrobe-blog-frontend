@@ -7,6 +7,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 
+import "@/utils/modal-utils";
+
 function App() {
 	const currentUserID = localStorage.getItem("firebase-uid");
 	if (currentUserID) reduxStore.dispatch(fetchUserProfile(currentUserID));

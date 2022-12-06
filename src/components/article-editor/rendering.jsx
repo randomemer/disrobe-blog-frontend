@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { DefaultElement } from "slate-react";
-import ArticleImage from "../article-image";
+import ArticleImage from "@/components/article-image";
 
 export function RenderElement(props) {
 	const { attributes, element, children } = props;
@@ -11,6 +11,13 @@ export function RenderElement(props) {
 				<p className="editor-block" {...attributes}>
 					{children}
 				</p>
+			);
+
+		case "blockquote":
+			return (
+				<blockquote className="editor-block" {...attributes}>
+					{children}
+				</blockquote>
 			);
 
 		case "link":
