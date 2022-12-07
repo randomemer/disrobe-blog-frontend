@@ -115,6 +115,7 @@ export default function ArticleToolbar(props) {
 			{/* Image Editor Dialog */}
 			<ReactModal
 				isOpen={isImageModalOpen}
+				closeTimeoutMS={150}
 				onRequestClose={(event) => {
 					event.preventDefault();
 					setImageModalOpen(false);

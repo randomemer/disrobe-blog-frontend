@@ -1,18 +1,16 @@
-import { isImageNodeAtSelection } from "@/utils/editor-utils";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { useCallback, useState } from "react";
 import { Editor, Transforms } from "slate";
-import { useSlate } from "slate-react";
+import { useFocused, useSelected, useSlate } from "slate-react";
 import "./style.scss";
 
 export default function ArticleImage({ attributes, children, element }) {
-	const [isEditingCaption, setEditingCaption] = useState(false);
-	const [caption, setCaption] = useState(element.caption);
-
 	const editor = useSlate();
+	const isSelected = useSelected();
+	const isFocused = useFocused();
 
-	const isSelected = isImageNodeAtSelection(editor, editor.selection);
+	const [caption, setCaption] = useState(element.caption);
 
 	const applyCaptionChange = useCallback(
 		(caption) => {
@@ -32,10 +30,8 @@ export default function ArticleImage({ attributes, children, element }) {
 	);
 
 	const onCaptionChange = useCallback(
-		(event) => {
-			setCaption(event.target.value);
-		},
-		[setCaption, editor.selection]
+		(event) => setCaption(event.target.value),
+		[setCaption]
 	);
 
 	const onKeyDown = useCallback(
@@ -45,50 +41,38 @@ export default function ArticleImage({ attributes, children, element }) {
 			}
 
 			applyCaptionChange(event.target.value);
-			setEditingCaption(false);
 		},
-		[applyCaptionChange, setEditingCaption]
+		[applyCaptionChange]
 	);
 
-	const onToggleCaptionEditMode = useCallback(
+	const onCaptionBlur = useCallback(
 		(event) => {
-			const wasEditing = isEditingCaption;
-			setEditingCaption(!isEditingCaption);
-			wasEditing && applyCaptionChange(caption);
+			applyCaptionChange(caption);
 		},
-		[caption, isEditingCaption, applyCaptionChange, editor.selection]
+		[caption, applyCaptionChange]
 	);
 
 	return (
-		<div className="editor-image" contentEditable={false} {...attributes}>
-			<div
-				className={classNames({
-					"image-container": true,
-					selected: isSelected,
-				})}
-			>
+		<div
+			className={classNames("editor-image", {
+				"image-selected": isFocused && isSelected,
+			})}
+			contentEditable={false}
+			{...attributes}
+		>
+			<div className="image-container">
 				<img
 					src={String(element.url)}
 					alt={element.caption}
 					className="image"
 				/>
-				{isEditingCaption ? (
-					<input
-						autoFocus={true}
-						className="image-caption-input"
-						defaultValue={element.caption}
-						onKeyDown={onKeyDown}
-						onChange={onCaptionChange}
-						onBlur={onToggleCaptionEditMode}
-					/>
-				) : (
-					<div
-						className="image-caption-read-mode"
-						onClick={onToggleCaptionEditMode}
-					>
-						{caption}
-					</div>
-				)}
+				<input
+					className="image-caption-input"
+					defaultValue={element.caption}
+					onKeyDown={onKeyDown}
+					onChange={onCaptionChange}
+					onBlur={onCaptionBlur}
+				/>
 			</div>
 			{children}
 		</div>

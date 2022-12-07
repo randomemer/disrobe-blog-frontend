@@ -131,3 +131,18 @@ img {
 		box-shadow: inset 0 0 0 3px general.$primary-color;
 	}
 }
+
+// react modal
+
+.ReactModal__Overlay {
+	transition: opacity 150ms ease-in-out;
+	opacity: 0;
+}
+
+.ReactModal__Overlay--after-open {
+	opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+	opacity: 0;
+}

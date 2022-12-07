@@ -1,7 +1,6 @@
 import { Editor, Element, Range, Transforms, Text, Point } from "slate";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
-import { ReactEditor } from "slate-react";
 
 export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
@@ -39,20 +38,6 @@ export function toggleStyle(editor, style) {
 	}
 }
 
-export function highlightCurrentBlock(editor, selection) {
-	if (!selection) return;
-
-	for (const child of editor.children) {
-		const childEl = ReactEditor.toDOMNode(editor, child);
-		childEl.classList.remove("editor-block--active");
-	}
-
-	const blockIndex = selection.focus.path[0];
-	const blockNode = editor.children[blockIndex];
-	const el = ReactEditor.toDOMNode(editor, blockNode);
-	el.classList.add("editor-block--active");
-}
-
 export function isLinkNodeAtSelection(editor, selection) {
 	if (selection == null) return false;
 
@@ -60,17 +45,6 @@ export function isLinkNodeAtSelection(editor, selection) {
 		Editor.above(editor, {
 			at: selection,
 			match: (n) => n.type === "link",
-		}) != null
-	);
-}
-
-export function isImageNodeAtSelection(editor, selection) {
-	if (selection == null) return;
-
-	return (
-		Editor.above(editor, {
-			at: selection,
-			match: (node) => node.type === "image",
 		}) != null
 	);
 }

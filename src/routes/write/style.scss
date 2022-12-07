@@ -63,7 +63,7 @@
 	margin-bottom: 4.8rem;
 
 	// when the cursor is in that block
-	&.editor-block--active {
+	&.editor-block--selected {
 		border-color: general.$primary-color;
 	}
 }

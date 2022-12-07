@@ -1,23 +1,15 @@
 import AppHeader from "@/components/header";
-import {
-	findLinkInSelection,
-	highlightCurrentBlock,
-} from "@/utils/editor-utils";
+import { findLinkInSelection } from "@/utils/editor-utils";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { createEditor } from "slate";
 import { Slate, withReact } from "slate-react";
+import { withHistory } from "slate-history";
 import ArticleEditable from "@/components/article-editor";
 import useSelection from "@/hooks/use-selection";
 import ArticleToolbar from "@/components/article-toolbar";
 import "./style.scss";
 
 const example = [
-	{
-		type: "image",
-		url: "https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bmF0dXJhbHxlbnwwfHwwfHw%3D&w=1000&q=80",
-		caption: "Random Ass Image",
-		children: [{ text: "" }],
-	},
 	{
 		type: "paragraph",
 		children: [
@@ -31,7 +23,7 @@ const example = [
 				type: "link",
 				url: "https://www.google.com",
 				children: [
-					{ text: "Link text" },
+					{ text: "Link text. " },
 					{ text: "Bold text inside link", bold: true },
 				],
 			},
@@ -55,7 +47,7 @@ const example = [
 
 export default function Write(props) {
 	const [content, updateContent] = useState(example);
-	const editor = useMemo(() => withReact(createEditor()), []);
+	const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 	const [selection, setSelectionOptimized] = useSelection(editor);
 
 	const onChangeHandler = useCallback(
@@ -63,7 +55,6 @@ export default function Write(props) {
 			updateContent(content);
 			findLinkInSelection(editor);
 			setSelectionOptimized(selection);
-			highlightCurrentBlock(editor, editor.selection);
 		},
 		[editor, updateContent, selection, setSelectionOptimized]
 	);

@@ -1,21 +1,42 @@
 import { Fragment } from "react";
-import { DefaultElement } from "slate-react";
+import { DefaultElement, useFocused, useSelected } from "slate-react";
 import ArticleImage from "@/components/article-image";
+import classNames from "classnames";
+
+const BLOCK_ELEMENTS = new Set([
+	"paragraph",
+	"blockquote",
+	"bulleted-list",
+	"numbered-list",
+	"h1",
+	"h2",
+	"h3",
+	"h4",
+	"h5",
+	"h6",
+]);
 
 export function RenderElement(props) {
 	const { attributes, element, children } = props;
+	const isFocused = useFocused();
+	const isSelected = useSelected();
+
+	const classes = classNames({
+		"editor-block": BLOCK_ELEMENTS.has(element.type),
+		"editor-block--selected": isFocused && isSelected,
+	});
 
 	switch (element.type) {
 		case "paragraph":
 			return (
-				<p className="editor-block" {...attributes}>
+				<p className={classes} {...attributes}>
 					{children}
 				</p>
 			);
 
 		case "blockquote":
 			return (
-				<blockquote className="editor-block" {...attributes}>
+				<blockquote className={classes} {...attributes}>
 					{children}
 				</blockquote>
 			);
@@ -29,14 +50,14 @@ export function RenderElement(props) {
 
 		case "bulleted-list":
 			return (
-				<ul className="editor-block" {...attributes}>
+				<ul className={classes} {...attributes}>
 					{children}
 				</ul>
 			);
 
 		case "numbered-list":
 			return (
-				<ol className="editor-block" {...attributes}>
+				<ol className={classes} {...attributes}>
 					{children}
 				</ol>
 			);
@@ -49,42 +70,42 @@ export function RenderElement(props) {
 
 		case "h1":
 			return (
-				<h1 className="editor-block" {...attributes}>
+				<h1 className={classes} {...attributes}>
 					{children}
 				</h1>
 			);
 
 		case "h2":
 			return (
-				<h2 className="editor-block" {...attributes}>
+				<h2 className={classes} {...attributes}>
 					{children}
 				</h2>
 			);
 
 		case "h3":
 			return (
-				<h3 className="editor-block" {...attributes}>
+				<h3 className={classes} {...attributes}>
 					{children}
 				</h3>
 			);
 
 		case "h4":
 			return (
-				<h4 className="editor-block" {...attributes}>
+				<h4 className={classes} {...attributes}>
 					{children}
 				</h4>
 			);
 
 		case "h5":
 			return (
-				<h5 className="editor-block" {...attributes}>
+				<h5 className={classes} {...attributes}>
 					{children}
 				</h5>
 			);
 
 		case "h6":
 			return (
-				<h6 className="editor-block" {...attributes}>
+				<h6 className={classes} {...attributes}>
 					{children}
 				</h6>
 			);
