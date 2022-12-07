@@ -29,11 +29,6 @@ export default function ArticleImage({ attributes, children, element }) {
 		[editor, setCaption]
 	);
 
-	const onCaptionChange = useCallback(
-		(event) => setCaption(event.target.value),
-		[setCaption]
-	);
-
 	const onKeyDown = useCallback(
 		(event) => {
 			if (!isHotkey("enter", event)) {
@@ -45,34 +40,37 @@ export default function ArticleImage({ attributes, children, element }) {
 		[applyCaptionChange]
 	);
 
+	const onCaptionChange = useCallback(
+		(event) => setCaption(event.target.value),
+		[setCaption]
+	);
+
 	const onCaptionBlur = useCallback(
-		(event) => {
-			applyCaptionChange(caption);
-		},
+		(event) => applyCaptionChange(caption),
 		[caption, applyCaptionChange]
 	);
 
 	return (
+		// Need `contentEditable={false}` or Firefox has issues with certain input types.
 		<div
+			{...attributes}
 			className={classNames("editor-image", {
-				"image-selected": isFocused && isSelected,
+				"editor-image--selected": isFocused && isSelected,
 			})}
 			contentEditable={false}
-			{...attributes}
 		>
 			<div className="image-container">
-				<img
-					src={String(element.url)}
-					alt={element.caption}
-					className="image"
-				/>
-				<input
-					className="image-caption-input"
-					defaultValue={element.caption}
-					onKeyDown={onKeyDown}
-					onChange={onCaptionChange}
-					onBlur={onCaptionBlur}
-				/>
+				<img src={String(element.url)} alt={element.caption} />
+				<div className="image-caption">
+					<div className="auto-expand-element"></div>
+					<input
+						type="text"
+						defaultValue={element.caption}
+						onChange={onCaptionChange}
+						onKeyDown={onKeyDown}
+						onBlur={onCaptionBlur}
+					/>
+				</div>
 			</div>
 			{children}
 		</div>

@@ -4,7 +4,7 @@ import { auth, db, storage } from "@/modules/firebase";
 import { emptyValidator } from "@/utils";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
-import { extname } from "path";
+import { extname } from "path-browserify";
 import { Component, Fragment } from "react";
 
 class ProfilePictureField extends Component {

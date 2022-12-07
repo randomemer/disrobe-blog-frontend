@@ -4,6 +4,7 @@
 	pointer-events: none;
 	visibility: hidden;
 	opacity: 0;
+	background-color: white;
 
 	&.active {
 		visibility: visible;

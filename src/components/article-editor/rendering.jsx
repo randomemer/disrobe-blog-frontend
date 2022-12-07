@@ -29,14 +29,14 @@ export function RenderElement(props) {
 	switch (element.type) {
 		case "paragraph":
 			return (
-				<p className={classes} {...attributes}>
+				<p {...attributes} className={classes}>
 					{children}
 				</p>
 			);
 
 		case "blockquote":
 			return (
-				<blockquote className={classes} {...attributes}>
+				<blockquote {...attributes} className={classes}>
 					{children}
 				</blockquote>
 			);

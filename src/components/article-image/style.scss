@@ -1,28 +1,51 @@
 @use "@/assets/styles/general";
 
-.image-selected {
-	.image {
-		box-shadow: 0px 0px 0px 5px general.$primary-color;
-	}
-}
-
-.image-container {
+.editor-image {
 	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	gap: 0.8rem;
 	// background-color: red;
 
-	.image {
-		transition: all 0.3s;
-		max-height: 40rem;
-		align-self: center;
-		object-fit: cover;
+	.image-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
-	.image-caption-input {
-		align-self: center;
-		border-bottom: 2px solid #aaa;
-		font-size: 1.6rem;
+	img {
+		transition: all 0.3s;
+		max-height: 40rem;
+		object-fit: cover;
+		margin-bottom: 1.2rem;
+	}
+
+	.image-caption {
+		display: grid;
+		grid-template-columns: 1fr;
+
+		input {
+			border-bottom: 2px solid #aaa;
+			text-align: center;
+			font-size: 1.6rem;
+			padding-bottom: 3px;
+			display: block;
+
+			&:focus {
+				box-shadow: none;
+				border-color: general.$primary-color;
+			}
+		}
+
+		& > * {
+			grid-area: 1 / 1 / 2 / 2;
+		}
+	}
+
+	&--#{"selected"} {
+		.image {
+			box-shadow: 0px 0px 0px 5px general.$primary-color;
+		}
 	}
 }
