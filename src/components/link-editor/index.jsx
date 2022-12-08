@@ -2,7 +2,8 @@
 import { isLinkNodeAtSelection } from "@/utils/editor-utils";
 import { IonIcon } from "@ionic/react";
 import { createPopper } from "@popperjs/core";
-import { linkSharp } from "ionicons/icons";
+import { linkSharp, save } from "ionicons/icons";
+import { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Editor, Transforms } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
@@ -16,19 +17,19 @@ export default function LinkEditor(props) {
 
 	const [linkUrl, setLinkUrl] = useState("");
 
+	const saveLink = useCallback(() => {
+		if (!linkNodeRef.current) return;
+		Transforms.setNodes(
+			editor,
+			{ url: linkUrl },
+			{ at: linkNodeRef.current.path }
+		);
+	}, [editor, linkUrl]);
+
 	const isActive = isLinkNodeAtSelection(editor, editor.selection);
 
 	useEffect(() => {
 		const linkEditorEl = linkEditorRef.current;
-
-		const saveLink = (url) => {
-			if (!linkNodeRef.current) return;
-			Transforms.setNodes(
-				editor,
-				{ url },
-				{ at: linkNodeRef.current.path }
-			);
-		};
 
 		// show link editor
 		if (isActive) {
@@ -66,7 +67,7 @@ export default function LinkEditor(props) {
 		// hide link editor
 		else {
 			// save the link if valid
-			saveLink(linkUrl);
+			saveLink();
 
 			gsap.to(linkEditorEl, {
 				ease: "expo.out",
@@ -74,12 +75,7 @@ export default function LinkEditor(props) {
 				onComplete: () => linkEditorEl.classList.remove("active"),
 			});
 		}
-
-		return () => {
-			// is there anything to clean up here?
-			saveLink(linkUrl);
-		};
-	}, [editor, isActive]);
+	}, [isActive, editor, editor.selection, saveLink]);
 
 	return (
 		<div ref={linkEditorRef} className="link-editor">

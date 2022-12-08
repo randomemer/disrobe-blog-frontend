@@ -21,7 +21,7 @@ const example = [
 			{ text: "variableFoo\n", code: true },
 			{
 				type: "link",
-				url: "https://www.google.com",
+				url: "https://www.slatejs.org/examples/images",
 				children: [
 					{ text: "Link text. " },
 					{ text: "Bold text inside link", bold: true },
@@ -39,7 +39,19 @@ const example = [
 		type: "paragraph",
 		children: [
 			{
-				text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ",
+			},
+			{
+				type: "link",
+				url: "https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/",
+				children: [
+					{
+						text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+					},
+				],
+			},
+			{
+				text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 			},
 		],
 	},
@@ -55,6 +67,7 @@ export default function Write(props) {
 			updateContent(content);
 			findLinkInSelection(editor);
 			setSelectionOptimized(selection);
+			console.log(content);
 		},
 		[editor, updateContent, selection, setSelectionOptimized]
 	);

@@ -53,14 +53,27 @@ button {
 	color: inherit;
 }
 
-::placeholder,
-::-moz-placeholder,
-:-ms-input-placeholder,
-::-ms-input-placeholder {
-	// opacity: 1;
-	// color: rgba(128, 128, 128, 0);
-	color: red;
+/* 
+* apply placeholder styles to all pseudo selectors
+* because applying styles to all of them at once doesn't work
+*/
+
+@mixin placeholder-style($selectors...) {
+	@each $selector in $selectors {
+		#{$selector} {
+			color: #bbb;
+			opacity: 1;
+		}
+	}
 }
+
+@include placeholder-style(
+	"::placeholder",
+	"::-webkit-input-placeholder",
+	"::-moz-placeholder",
+	":-ms-input-placeholder",
+	"::-ms-input-placeholder"
+);
 
 button {
 	cursor: pointer;

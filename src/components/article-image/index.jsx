@@ -65,6 +65,7 @@ export default function ArticleImage({ attributes, children, element }) {
 					<div className="auto-expand-element"></div>
 					<input
 						type="text"
+						placeholder="A caption for your image"
 						defaultValue={element.caption}
 						onChange={onCaptionChange}
 						onKeyDown={onKeyDown}

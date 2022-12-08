@@ -43,8 +43,9 @@
 		}
 	}
 
+	// editor-image--selected
 	&--#{"selected"} {
-		.image {
+		img {
 			box-shadow: 0px 0px 0px 5px general.$primary-color;
 		}
 	}
