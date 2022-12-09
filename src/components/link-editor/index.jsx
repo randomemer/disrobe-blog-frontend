@@ -2,7 +2,7 @@
 import { isLinkNodeAtSelection } from "@/utils/editor-utils";
 import { IonIcon } from "@ionic/react";
 import { createPopper } from "@popperjs/core";
-import { linkSharp, save } from "ionicons/icons";
+import { linkSharp } from "ionicons/icons";
 import { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Editor, Transforms } from "slate";

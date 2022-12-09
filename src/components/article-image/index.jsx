@@ -1,9 +1,44 @@
+import { IonIcon } from "@ionic/react";
 import classNames from "classnames";
+import { trashOutline, createOutline } from "ionicons/icons";
 import isHotkey from "is-hotkey";
 import { useCallback, useState } from "react";
 import { Editor, Transforms } from "slate";
 import { useFocused, useSelected, useSlate } from "slate-react";
 import "./style.scss";
+
+function ImageButtons(props) {
+	const editor = useSlate();
+
+	const onDeleteImage = (event) => {
+		event.preventDefault();
+
+		Transforms.removeNodes(editor, {
+			match: (node) => node.type === "image",
+		});
+	};
+
+	const onUpdateImage = (event) => {
+		event.preventDefault();
+
+		const [imageNode] = Editor.above(editor, {
+			match: (node) => node.type === "image",
+		});
+
+		console.log(imageNode);
+	};
+
+	return (
+		<div className="image-buttons">
+			<button onClick={onDeleteImage}>
+				<IonIcon icon={trashOutline} />
+			</button>
+			<button onClick={onUpdateImage}>
+				<IonIcon icon={createOutline} />
+			</button>
+		</div>
+	);
+}
 
 export default function ArticleImage({ attributes, children, element }) {
 	const editor = useSlate();
@@ -60,7 +95,10 @@ export default function ArticleImage({ attributes, children, element }) {
 			contentEditable={false}
 		>
 			<div className="image-container">
-				<img src={String(element.url)} alt={element.caption} />
+				<div className="image-wrapper">
+					<ImageButtons isActive={isFocused && isSelected} />
+					<img src={String(element.url)} alt={element.caption} />
+				</div>
 				<div className="image-caption">
 					<div className="auto-expand-element"></div>
 					<input

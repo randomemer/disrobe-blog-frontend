@@ -130,7 +130,7 @@ export default function ArticleToolbar(props) {
 // Toolbar Components
 
 function MaterialIcon(props) {
-	return <span className="material-symbols-sharp">{props.iconName}</span>;
+	return <span className="material-symbols-rounded">{props.iconName}</span>;
 }
 
 function MenuButton(props) {

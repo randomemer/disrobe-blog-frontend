@@ -6,7 +6,48 @@
 	flex-direction: column;
 	align-items: center;
 	gap: 0.8rem;
-	// background-color: red;
+	width: 100%;
+
+	.image-wrapper {
+		position: relative;
+	}
+
+	.image-buttons {
+		$offset: 15px;
+
+		display: flex;
+		gap: $offset;
+		flex-direction: row-reverse;
+		transition: all 0.3s ease;
+
+		position: absolute;
+		top: $offset;
+		right: $offset;
+
+		visibility: hidden;
+		pointer-events: none;
+		opacity: 0;
+
+		button {
+			background-color: white;
+			box-shadow: 0px 0px 5px 0px rgba($color: #000000, $alpha: 0.1);
+			transition: all 0.15s ease-in-out;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0.6rem;
+
+			&:hover,
+			&:active {
+				background-color: rgb(228, 228, 228);
+			}
+		}
+
+		ion-icon {
+			font-size: 2.4rem;
+			color: general.$primary-color;
+		}
+	}
 
 	.image-container {
 		display: flex;
@@ -16,7 +57,8 @@
 
 	img {
 		transition: all 0.3s;
-		max-height: 40rem;
+		// max-height: 40rem;
+		max-width: 100%;
 		object-fit: cover;
 		margin-bottom: 1.2rem;
 	}
@@ -47,6 +89,12 @@
 	&--#{"selected"} {
 		img {
 			box-shadow: 0px 0px 0px 5px general.$primary-color;
+		}
+
+		.image-buttons {
+			visibility: visible;
+			pointer-events: all;
+			opacity: 1;
 		}
 	}
 }
