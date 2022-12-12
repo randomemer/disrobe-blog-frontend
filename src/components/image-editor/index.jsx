@@ -1,29 +1,27 @@
 import FormTextInput from "@/components/text-input";
+import { storage } from "@/modules/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { linkOutline } from "ionicons/icons";
 import isUrl from "is-url";
-import { useRef } from "react";
+import { extname } from "path-browserify";
+import { useRef, useState } from "react";
 import { Transforms } from "slate";
 import { useSlate } from "slate-react";
+import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 
 // https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bmF0dXJhbHxlbnwwfHwwfHw%3D&w=1000&q=80
 
-const createImageNode = (url) => ({
-	type: "image",
-	url,
-	caption: "",
-	// empty text node as child for the Void element.
-	children: [{ text: "" }],
-});
-
-function addImageNode(editor, node) {
-	const index = editor.selection
-		? editor.selection.focus.path[0]
-		: editor.children.length;
-
-	console.log("inserting image..", node);
-	Transforms.insertNodes(editor, node, { at: [index] });
-	console.log("inserted image", index);
+function createImageNode(source_type, url, bucket_path) {
+	return {
+		type: "image",
+		url,
+		caption: "",
+		source_type,
+		...(bucket_path && { bucket_path }),
+		// empty text node as child for the Void element.
+		children: [{ text: "" }],
+	};
 }
 
 export default function ImageEditor(props) {
@@ -31,24 +29,49 @@ export default function ImageEditor(props) {
 
 	const inputImageRef = useRef(null);
 	const inputUrlRef = useRef(null);
-	// const [image, setImage] = useState(props.url || null);
 
-	const onImageUpload = (event) => {
-		const [file] = event.target.files;
-		const node = createImageNode(URL.createObjectURL(file));
-		addImageNode(editor, node);
-		props.closeModal();
+	const [isUploading, setUploading] = useState(false);
+
+	const addImageNode = (editor, node) => {
+		const index = editor.selection
+			? editor.selection.focus.path[0]
+			: editor.children.length;
+
+		Transforms.insertNodes(editor, node, { at: [index] });
+		console.log("inserted image", index, node);
 	};
 
+	// For local images
+	const onImageUpload = async (event) => {
+		setUploading(true);
+		try {
+			const [file] = event.target.files;
+			const articleId = editor.docRef.id;
+			const imageId = uuidv4();
+			const ext = extname(file.name);
+			const path = `images/articles/${articleId}/${imageId}${ext}`;
+
+			const locationRef = ref(storage, path);
+			await uploadBytes(locationRef, file);
+			const url = await getDownloadURL(locationRef);
+
+			const node = createImageNode("local", url, path);
+			addImageNode(editor, node);
+			props.closeModal();
+		} catch (error) {
+			console.error(error);
+		}
+		setUploading(false);
+	};
+
+	// For network images
 	const onImageSubmit = (event) => {
 		event.preventDefault();
 
-		console.log(inputUrlRef);
 		const url = inputUrlRef.current.value;
 		if (!url) return;
-		console.log(url);
 
-		const node = createImageNode(url);
+		const node = createImageNode("network", url);
 		addImageNode(editor, node);
 		props.closeModal();
 	};

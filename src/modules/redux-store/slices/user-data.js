@@ -6,6 +6,7 @@ import { getDownloadURL, ref } from "firebase/storage";
 export const fetchUserProfile = createAsyncThunk(
 	"user-profile/fetch-user",
 	async (uid) => {
+		console.log("fetching user ...");
 		const docRef = doc(db, "authors", uid);
 		const fetchedDoc = await getDoc(docRef);
 		const data = fetchedDoc.data();
@@ -15,7 +16,6 @@ export const fetchUserProfile = createAsyncThunk(
 			data.picture = await getDownloadURL(storageRef);
 		}
 
-		// console.table(data);
 		console.log("fetched user profile");
 		return data;
 	}

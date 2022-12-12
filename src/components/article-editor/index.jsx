@@ -1,13 +1,11 @@
 import LinkEditor from "@/components/link-editor";
 import useEditorConfig from "@/hooks/use-editor-config";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Editable, useSlate } from "slate-react";
 import { RenderElement, RenderLeaf } from "./rendering";
 
 export default function ArticleEditable() {
 	const editor = useSlate();
-
-	useEffect(() => {}, [editor]);
 
 	const { onKeyDown } = useEditorConfig(editor);
 

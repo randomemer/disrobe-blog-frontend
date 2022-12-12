@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 
-process.env.BROWSER = "msedge";
+process.env.BROWSER = "firefox";
 
 export default defineConfig({
 	plugins: [react()],

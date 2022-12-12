@@ -49,6 +49,15 @@ export default createBrowserRouter([
 			{
 				path: "/story/:id",
 				element: <Article />,
+				children: [
+					{
+						path: "/story/:id/edit",
+						element: <Write />,
+						loader: (args) => {
+							console.log(args);
+						},
+					},
+				],
 			},
 			{
 				path: "/about",

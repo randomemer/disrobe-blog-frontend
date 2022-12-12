@@ -68,9 +68,9 @@ export function RenderElement(props) {
 		case "image":
 			return <ArticleImage {...props} />;
 
-		case "h1":
+		case "title":
 			return (
-				<h1 className={classes} {...attributes}>
+				<h1 dataPlaceholder="Title" className={classes} {...attributes}>
 					{children}
 				</h1>
 			);
