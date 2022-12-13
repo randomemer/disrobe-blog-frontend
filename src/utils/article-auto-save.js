@@ -41,7 +41,7 @@ export async function saveArticleDraft(editor) {
 	}
 }
 
-export function withAutoSave(editor) {
+export default function withAutoSave(editor) {
 	const { onChange } = editor;
 
 	const autoSaveCallback = () => {

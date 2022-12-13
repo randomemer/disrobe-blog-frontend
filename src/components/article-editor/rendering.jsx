@@ -8,7 +8,7 @@ const BLOCK_ELEMENTS = new Set([
 	"blockquote",
 	"bulleted-list",
 	"numbered-list",
-	"h1",
+	"title",
 	"h2",
 	"h3",
 	"h4",
@@ -70,7 +70,7 @@ export function RenderElement(props) {
 
 		case "title":
 			return (
-				<h1 dataPlaceholder="Title" className={classes} {...attributes}>
+				<h1 className={classes} {...attributes}>
 					{children}
 				</h1>
 			);

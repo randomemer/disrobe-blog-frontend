@@ -94,4 +94,9 @@ blockquote.editor-block {
 h1.editor-block {
 	font-size: 5.6rem;
 	margin-bottom: 2.4rem;
+
+	&:empty:before {
+		content: "Title";
+		color: gray;
+	}
 }

@@ -1,7 +1,7 @@
 import { Editor, Element, Range, Transforms, Text, Point } from "slate";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
-import { saveArticleDraft } from "./article-auto-save";
+import { saveArticleDraft } from "@/utils/article-auto-save";
 
 export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
@@ -29,18 +29,14 @@ export const KeyBindings = {
 		}
 		if (isHotkey("shift+enter", event)) {
 			console.log("Soft Break");
-			// Editor
+			Editor.insertSoftBreak(editor);
 			return;
 		}
 	},
 };
 
 export function withPlugins(editor, plugins) {
-	let modifiedEditor = editor;
-	for (const plugin of plugins) {
-		modifiedEditor = plugin(modifiedEditor);
-	}
-	[].reduce((prev, cur) => null);
+	return plugins.reduce((prev, plugin) => plugin(prev), editor);
 }
 
 export function getActiveStyles(editor) {

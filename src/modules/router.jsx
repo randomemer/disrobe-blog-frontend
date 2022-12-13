@@ -5,6 +5,7 @@ import Home from "@/routes/home";
 import Settings from "@/routes/settings";
 import Account from "@/routes/settings/account";
 import Write from "@/routes/write";
+import { doc, getDoc } from "firebase/firestore";
 import {
 	createBrowserRouter,
 	Outlet,
@@ -14,6 +15,7 @@ import {
 	useNavigate,
 	useParams,
 } from "react-router-dom";
+import { db } from "./firebase";
 
 export function withRouter(Component) {
 	function ComponentWithRouterProp(props) {
@@ -49,15 +51,16 @@ export default createBrowserRouter([
 			{
 				path: "/story/:id",
 				element: <Article />,
-				children: [
-					{
-						path: "/story/:id/edit",
-						element: <Write />,
-						loader: (args) => {
-							console.log(args);
-						},
-					},
-				],
+			},
+			{
+				path: "/story/:id/edit",
+				element: <Write />,
+				loader: async ({ params }) => {
+					const docRef = doc(db, "articles", params.id);
+					const docSnapshot = await getDoc(docRef);
+
+					return { article: docSnapshot };
+				},
 			},
 			{
 				path: "/about",
