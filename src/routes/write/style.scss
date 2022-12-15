@@ -21,6 +21,7 @@
 		height: 100%;
 		position: sticky;
 		top: calc(var(--app-header-height) + 4.8rem);
+		padding-top: 4.8rem;
 	}
 }
 
@@ -95,8 +96,6 @@ h1.editor-block {
 	font-size: 5.6rem;
 	margin-bottom: 2.4rem;
 
-	&:empty:before {
-		content: "Title";
-		color: gray;
-	}
+	// content: "Title";
+	// color: gray;
 }

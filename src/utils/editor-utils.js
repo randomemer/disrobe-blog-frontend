@@ -1,7 +1,7 @@
 import { Editor, Element, Range, Transforms, Text, Point } from "slate";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
-import { saveArticleDraft } from "@/utils/article-auto-save";
+import { saveArticleDraft } from "@/modules/article/auto-save";
 
 export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
@@ -24,6 +24,7 @@ export const KeyBindings = {
 			return;
 		}
 		if (isHotkey("mod+s", event)) {
+			event.preventDefault();
 			saveArticleDraft(editor);
 			return;
 		}

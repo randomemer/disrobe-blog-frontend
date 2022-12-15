@@ -17,6 +17,8 @@ export default function ArticleEditable() {
 				onKeyDown={onKeyDown}
 				renderElement={RenderElement}
 				renderLeaf={RenderLeaf}
+				spellCheck={true}
+				autoFocus={true}
 			/>
 		</Fragment>
 	);

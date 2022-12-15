@@ -1,11 +1,12 @@
 import { auth, db } from "@/modules/firebase";
 import { addDoc, collection, Timestamp, updateDoc } from "firebase/firestore";
+import { Node } from "slate";
 
 const AUTO_SAVE_TIMEOUT = 5000;
 
 function createArticleContent(editor) {
 	return {
-		title: editor.titleInputRef.current.value,
+		title: Node.string(editor.children[0]),
 		content: JSON.stringify(editor.children),
 		timestamp: Timestamp.now(),
 	};
@@ -15,7 +16,7 @@ export async function saveArticleDraft(editor) {
 	const articles = collection(db, "articles");
 	try {
 		const content = createArticleContent(editor);
-		console.log("saving draft ...");
+		console.log("saving draft ...", content);
 		if (!editor.docRef) {
 			// create article in firestore
 			editor.docRef = await addDoc(articles, {
