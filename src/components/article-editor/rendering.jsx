@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { DefaultElement, useFocused, useSelected } from "slate-react";
 import ArticleImage from "@/components/article-image";
 import classNames from "classnames";
+import { Node } from "slate";
 
 const BLOCK_ELEMENTS = new Set([
 	"paragraph",
@@ -27,6 +28,17 @@ export function RenderElement(props) {
 	});
 
 	switch (element.type) {
+		case "title":
+			const titleText = Node.string(element);
+			const titleClasses = classNames(classes, {
+				"title-placeholder": titleText === "",
+			});
+			return (
+				<h1 className={titleClasses} {...attributes}>
+					{children}
+				</h1>
+			);
+
 		case "paragraph":
 			return (
 				<p {...attributes} className={classes}>
@@ -67,13 +79,6 @@ export function RenderElement(props) {
 
 		case "image":
 			return <ArticleImage {...props} />;
-
-		case "title":
-			return (
-				<h1 className={classes} {...attributes}>
-					{children}
-				</h1>
-			);
 
 		case "h2":
 			return (

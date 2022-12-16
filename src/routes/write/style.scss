@@ -93,9 +93,16 @@ blockquote.editor-block {
 }
 
 h1.editor-block {
-	font-size: 5.6rem;
+	position: relative;
+	font-size: 4.8rem;
 	margin-bottom: 2.4rem;
 
-	// content: "Title";
-	// color: gray;
+	&.title-placeholder:after {
+		content: "Title";
+		padding: 0.8rem 0;
+		color: #bbb;
+		position: absolute;
+		pointer-events: none;
+		top: 0;
+	}
 }
