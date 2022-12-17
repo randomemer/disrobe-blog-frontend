@@ -8,19 +8,23 @@ export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 export const KeyBindings = {
 	onKeyDown: (editor, event) => {
 		if (isHotkey("mod+b", event)) {
-			toggleStyle(editor, "bold");
+			event.preventDefault();
+			toggleMark(editor, "bold");
 			return;
 		}
 		if (isHotkey("mod+i", event)) {
-			toggleStyle(editor, "italic");
+			event.preventDefault();
+			toggleMark(editor, "italic");
 			return;
 		}
 		if (isHotkey("mod+c", event)) {
-			toggleStyle(editor, "code");
+			event.preventDefault();
+			toggleMark(editor, "code");
 			return;
 		}
 		if (isHotkey("mod+u", event)) {
-			toggleStyle(editor, "underline");
+			event.preventDefault();
+			toggleMark(editor, "underline");
 			return;
 		}
 		if (isHotkey("mod+s", event)) {
@@ -29,6 +33,7 @@ export const KeyBindings = {
 			return;
 		}
 		if (isHotkey("shift+enter", event)) {
+			event.preventDefault();
 			console.log("Soft Break");
 			Editor.insertSoftBreak(editor);
 			return;
@@ -40,16 +45,18 @@ export function withPlugins(editor, plugins) {
 	return plugins.reduce((prev, plugin) => plugin(prev), editor);
 }
 
-export function getActiveStyles(editor) {
-	return new Set(Object.keys(Editor.marks(editor) ?? {}));
+export function isMarkActive(editor, format) {
+	const marks = Editor.marks(editor);
+	return marks ? marks[format] === true : false;
 }
 
-export function toggleStyle(editor, style) {
-	const activeStyles = getActiveStyles(editor);
-	if (activeStyles.has(style)) {
-		Editor.removeMark(editor, style);
+export function toggleMark(editor, format) {
+	const isActive = isMarkActive(editor, format);
+
+	if (isActive) {
+		Editor.removeMark(editor, format);
 	} else {
-		Editor.addMark(editor, style, true);
+		Editor.addMark(editor, format, true);
 	}
 }
 

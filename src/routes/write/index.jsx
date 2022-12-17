@@ -1,21 +1,21 @@
+import ArticleEditable from "@/components/article-editor";
+import ArticleToolbar from "@/components/article-toolbar";
 import AppHeader from "@/components/header";
+import useSelection from "@/hooks/use-selection";
 import { findLinkInSelection, withPlugins } from "@/utils/editor-utils";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { createEditor } from "slate";
-import { Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
-import ArticleEditable from "@/components/article-editor";
-import useSelection from "@/hooks/use-selection";
-import ArticleToolbar from "@/components/article-toolbar";
+import { Slate, withReact } from "slate-react";
 // import withAutoSave from "@/modules/article/auto-save";
-import "./style.scss";
-
-// import sampleOne from "@/../references/sample-article-1";
-import { useLoaderData } from "react-router-dom";
 import withLayout, {
 	DEFAULT_PARAGRAPH,
 	DEFAULT_TITLE,
 } from "@/modules/article/layout";
+import { useLoaderData } from "react-router-dom";
+import "./style.scss";
+
+// import sampleOne from "@/../references/sample-article-1";
 // import sampleTwo from "@/../references/kailash-article";
 
 export default function Write(props) {

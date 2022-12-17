@@ -17,7 +17,7 @@ const BLOCK_ELEMENTS = new Set([
 	"h6",
 ]);
 
-export function RenderElement(props) {
+export function EditorElement(props) {
 	const { attributes, element, children } = props;
 	const isFocused = useFocused();
 	const isSelected = useSelected();
@@ -120,7 +120,7 @@ export function RenderElement(props) {
 	}
 }
 
-export function RenderLeaf({ attributes, children, leaf }) {
+export function EditorLeaf({ attributes, children, leaf }) {
 	let el = <Fragment>{children}</Fragment>;
 
 	if (leaf.bold) {

@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import { useSlate } from "slate-react";
 import {
-	getActiveStyles,
 	isBlockActive,
 	isLinkNodeAtSelection,
+	isMarkActive,
 	toggleBlock,
 	toggleLink,
-	toggleStyle,
+	toggleMark,
 } from "@/utils/editor-utils";
 import "./style.scss";
 import { Fragment, useState } from "react";
@@ -44,6 +44,7 @@ export default function ArticleToolbar(props) {
 	return (
 		<Fragment>
 			<div className="article-toolbar">
+				{/* HEADING STYLES */}
 				<div className="toolbar-section">
 					<span className="section-title">Headings</span>
 					<div className="section-buttons">
@@ -56,26 +57,20 @@ export default function ArticleToolbar(props) {
 						))}
 					</div>
 				</div>
-
+				{/* CHARACTER STYLES */}
 				<div className="toolbar-section">
 					<span className="section-title">Character</span>
 					<div className="section-buttons">
 						{CHARACTER_STYLES.map((item) => (
-							<MenuButton
+							<MarkButton
 								key={item.style}
-								isActive={getActiveStyles(editor).has(
-									item.style
-								)}
+								format={item.style}
 								iconName={item.icon}
-								onMouseDown={(event) => {
-									event.preventDefault();
-									toggleStyle(editor, item.style);
-								}}
 							/>
 						))}
 					</div>
 				</div>
-
+				{/* LIST STYLES */}
 				<div className="toolbar-section">
 					<span className="section-title">Lists</span>
 					<div className="section-buttons">
@@ -88,7 +83,7 @@ export default function ArticleToolbar(props) {
 						))}
 					</div>
 				</div>
-
+				{/* OTHER ACTIONS */}
 				<div className="toolbar-section">
 					<span className="section-title">Other</span>
 					<div className="section-buttons">
@@ -129,6 +124,8 @@ export default function ArticleToolbar(props) {
 
 // Toolbar Components
 
+// Base Components
+
 function MaterialIcon(props) {
 	return <span className="material-symbols-rounded">{props.iconName}</span>;
 }
@@ -145,16 +142,32 @@ function MenuButton(props) {
 	);
 }
 
-const BlockStyleButton = ({ format, iconName }) => {
+// Higher Components
+
+function MarkButton({ format, iconName }) {
+	const editor = useSlate();
+	return (
+		<MenuButton
+			isActive={isMarkActive(editor, format)}
+			iconName={iconName}
+			onMouseDown={(event) => {
+				event.preventDefault();
+				toggleMark(editor, format);
+			}}
+		/>
+	);
+}
+
+function BlockStyleButton({ format, iconName }) {
 	const editor = useSlate();
 	return (
 		<MenuButton
 			isActive={isBlockActive(editor, format)}
 			iconName={iconName}
 			onMouseDown={(event) => {
-				// event.preventDefault();
+				event.preventDefault();
 				toggleBlock(editor, format);
 			}}
 		/>
 	);
-};
+}
