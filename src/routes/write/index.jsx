@@ -2,12 +2,13 @@ import ArticleEditable from "@/components/article-editor";
 import ArticleToolbar from "@/components/article-toolbar";
 import AppHeader from "@/components/header";
 import useSelection from "@/hooks/use-selection";
-import { findLinkInSelection, withPlugins } from "@/utils/editor-utils";
+import { withPlugins } from "@/utils/editor-utils";
 import { Fragment, useCallback, useMemo, useState } from "react";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
 // import withAutoSave from "@/modules/article/auto-save";
+import withInlines from "@/modules/article/inlines";
 import withLayout, {
 	DEFAULT_PARAGRAPH,
 	DEFAULT_TITLE,
@@ -15,7 +16,7 @@ import withLayout, {
 import { useLoaderData } from "react-router-dom";
 import "./style.scss";
 
-import sampleOne from "@/../references/sample-article-1";
+// import sampleOne from "@/../references/sample-article-1";
 // import sampleTwo from "@/../references/kailash-article";
 
 export default function Write(props) {
@@ -23,6 +24,7 @@ export default function Write(props) {
 		return withPlugins(createEditor(), [
 			withHistory,
 			withReact,
+			withInlines,
 			withLayout,
 			// withAutoSave,
 		]);
@@ -40,15 +42,14 @@ export default function Write(props) {
 		articleContent = JSON.parse(draft.content);
 	}
 
-	const [content, updateContent] = useState(sampleOne);
+	const [content, updateContent] = useState(articleContent);
 
 	const onChangeHandler = useCallback(
 		(content) => {
 			updateContent(content);
-			findLinkInSelection(editor);
 			setSelectionOptimized(selection);
 		},
-		[updateContent, setSelectionOptimized, editor, selection]
+		[updateContent, setSelectionOptimized, selection]
 	);
 
 	return (

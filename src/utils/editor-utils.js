@@ -1,42 +1,47 @@
-import { Editor, Element, Range, Transforms, Text, Point } from "slate";
-import isHotkey from "is-hotkey";
-import isUrl from "is-url";
+import { Editor, Element, Range, Transforms } from "slate";
+import isHotkey, { isKeyHotkey } from "is-hotkey";
 import { saveArticleDraft } from "@/modules/article/auto-save";
 
 export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
-export const KeyBindings = {
+const KEY_BINDINGS = {
+	"mod+b": (editor) => toggleMark(editor, "bold"),
+	"mod+i": (editor) => toggleMark(editor, "italic"),
+	"mod+u": (editor) => toggleMark(editor, "underline"),
+	"mod+`": (editor) => toggleMark(editor, "code"),
+	"shift+enter": (editor) => Editor.insertSoftBreak(editor),
+	"mod+s": (editor) => saveArticleDraft(editor),
+};
+const KEY_BINDINGS_ENTRIES = Object.entries(KEY_BINDINGS);
+
+export const EditorEvents = {
 	onKeyDown: (editor, event) => {
-		if (isHotkey("mod+b", event)) {
-			event.preventDefault();
-			toggleMark(editor, "bold");
-			return;
+		// Default left/right behavior is unit:'character'.
+		// This fails to distinguish between two cursor positions, such as
+		// <inline>foo<cursor/></inline> vs <inline>foo</inline><cursor/>.
+		// Here we modify the behavior to unit:'offset'.
+		// This lets the user step into and out of the inline without stepping over characters.
+		// You may wish to customize this further to only use unit:'offset' in specific cases.
+		if (editor.selection && Range.isCollapsed(editor.selection)) {
+			const { nativeEvent } = event;
+			if (isKeyHotkey("left", nativeEvent)) {
+				event.preventDefault();
+				Transforms.move(editor, { unit: "offset", reverse: true });
+			} else if (isKeyHotkey("right", nativeEvent)) {
+				event.preventDefault();
+				Transforms.move(editor, { unit: "offset" });
+			}
 		}
-		if (isHotkey("mod+i", event)) {
+
+		// Check for registered key bindings
+		const index = KEY_BINDINGS_ENTRIES.findIndex(([key]) =>
+			isHotkey(key, event)
+		);
+
+		if (index !== -1) {
+			const [key, func] = KEY_BINDINGS_ENTRIES[index];
 			event.preventDefault();
-			toggleMark(editor, "italic");
-			return;
-		}
-		if (isHotkey("mod+c", event)) {
-			event.preventDefault();
-			toggleMark(editor, "code");
-			return;
-		}
-		if (isHotkey("mod+u", event)) {
-			event.preventDefault();
-			toggleMark(editor, "underline");
-			return;
-		}
-		if (isHotkey("mod+s", event)) {
-			event.preventDefault();
-			saveArticleDraft(editor);
-			return;
-		}
-		if (isHotkey("shift+enter", event)) {
-			event.preventDefault();
-			console.log("Soft Break");
-			Editor.insertSoftBreak(editor);
-			return;
+			func(editor);
 		}
 	},
 };
@@ -70,97 +75,44 @@ export function isLinkActive(editor) {
 	return !!link;
 }
 
-export function toggleLink(editor) {
-	if (!isLinkActive(editor)) {
-		const isSectionCollapsed = Range.isCollapsed(editor.selection);
-		if (isSectionCollapsed) {
-			// nothing is selected currently
-			Transforms.insertNodes(
-				editor,
-				{
-					type: "link",
-					url: "#",
-					children: [{ text: "link" }],
-				},
-				{ at: editor.selection }
-			);
-		} else {
-			// there is a selection spanning some node(s), so wrap with a link
-			Transforms.wrapNodes(
-				editor,
-				{ type: "link", url: "#", children: [{ text: "" }] },
-				{ split: true, at: editor.selection }
-			);
-		}
+export function wrapLink(editor, url) {
+	if (isLinkActive(editor)) {
+		unwrapLink(editor);
+	}
+
+	const { selection } = editor;
+	const isCollapsed = selection && Range.isCollapsed(selection);
+	const link = {
+		type: "link",
+		url,
+		children: isCollapsed ? [{ text: url }] : [],
+	};
+
+	if (isCollapsed) {
+		Transforms.insertNodes(editor, link);
 	} else {
-		// find the nearest ancestor element of type link and unwrap its nodes
-		Transforms.unwrapNodes(editor, {
-			match: (n) => Element.isElement(n) && n.type === "link",
-		});
+		Transforms.wrapNodes(editor, link, { split: true });
+		Transforms.collapse(editor, { edge: "end" });
 	}
 }
 
-export function findLinkInSelection(editor) {
-	// if selection is not collapsed, we do not proceed with the link detection
-	if (editor.selection == null || !Range.isCollapsed(editor.selection)) {
-		return;
-	}
-
-	// if we are already inside a link, exit early.
-	const [node] = Editor.parent(editor, editor.selection);
-	if (node.type === "link") return;
-
-	// if we are not inside a text node, exit early.
-	const [curNode, curNodePath] = Editor.node(editor, editor.selection);
-	if (!Text.isText(curNode)) return;
-
-	let [start] = Range.edges(editor.selection);
-	const cursorPoint = start;
-
-	const lastCharStart = Editor.before(editor, editor.selection, {
-		unit: "character",
+export function unwrapLink(editor) {
+	// find the nearest ancestor element of type link and unwrap its nodes
+	Transforms.unwrapNodes(editor, {
+		match: (node) =>
+			!Editor.isEditor(node) &&
+			Element.isElement(node) &&
+			node.type === "link",
 	});
+}
 
-	const lastChar = Editor.string(
-		editor,
-		Editor.range(editor, lastCharStart, cursorPoint)
-	);
-
-	if (lastChar !== " ") return;
-
-	let end = lastCharStart;
-	start = Editor.before(editor, end, { unit: "character" });
-
-	const textNodeStart = Editor.point(editor, curNodePath, {
-		edge: "start",
-	});
-
-	while (
-		Editor.string(editor, Editor.range(editor, start, end)) !== " " &&
-		!Point.isBefore(start, textNodeStart)
-	) {
-		end = start;
-		start = Editor.before(editor, end, { unit: "character" });
-	}
-
-	const lastWordRange = Editor.range(editor, end, lastCharStart);
-	const lastWord = Editor.string(editor, lastWordRange);
-
-	if (isUrl(lastWord)) {
-		Promise.resolve().then(() => {
-			Transforms.wrapNodes(
-				editor,
-				{
-					type: "link",
-					url: lastWord,
-					children: [{ text: lastWord }],
-				},
-				{
-					split: true,
-					at: lastWordRange,
-				}
-			);
-		});
+export function toggleLink(editor) {
+	if (!isLinkActive(editor)) {
+		if (editor.selection) {
+			wrapLink(editor, "https://www.google.com");
+		}
+	} else {
+		unwrapLink(editor);
 	}
 }
 

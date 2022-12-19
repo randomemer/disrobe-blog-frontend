@@ -4,6 +4,16 @@ import ArticleImage from "@/components/article-image";
 import classNames from "classnames";
 import { Node } from "slate";
 
+// Put this at the start and end of an inline component to work around this Chromium bug:
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1249405
+function InlineChromiumBugfix() {
+	return (
+		<span contentEditable={false} style={{ fontSize: 0 }}>
+			${String.fromCodePoint(160) /* Non-breaking space */}
+		</span>
+	);
+}
+
 const BLOCK_ELEMENTS = new Set([
 	"paragraph",
 	"blockquote",
@@ -56,7 +66,9 @@ export function EditorElement(props) {
 		case "link":
 			return (
 				<a {...attributes} href={element.url} className="link">
+					<InlineChromiumBugfix />
 					{children}
+					<InlineChromiumBugfix />
 				</a>
 			);
 
@@ -123,6 +135,13 @@ export function EditorElement(props) {
 export function EditorLeaf({ attributes, children, leaf }) {
 	let el = <Fragment>{children}</Fragment>;
 
+	// The following is a workaround for a Chromium bug where,
+	// if you have an inline at the end of a block,
+	// clicking the end of a block puts the cursor inside the inline
+	// instead of inside the final {text: ''} node
+	// https://github.com/ianstormtaylor/slate/issues/4704#issuecomment-1006696364
+	const style = leaf.text ? { paddingRight: "0.001em" } : null;
+
 	if (leaf.bold) {
 		el = <strong>{el}</strong>;
 	}
@@ -143,5 +162,9 @@ export function EditorLeaf({ attributes, children, leaf }) {
 		el = <u>{el}</u>;
 	}
 
-	return <span {...attributes}>{el}</span>;
+	return (
+		<span style={style} {...attributes}>
+			{el}
+		</span>
+	);
 }
