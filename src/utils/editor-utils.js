@@ -60,19 +60,18 @@ export function toggleMark(editor, format) {
 	}
 }
 
-export function isLinkNodeAtSelection(editor, selection) {
-	if (selection == null) return false;
-
-	return (
-		Editor.above(editor, {
-			at: selection,
-			match: (n) => n.type === "link",
-		}) != null
-	);
+export function isLinkActive(editor) {
+	const [link] = Editor.nodes(editor, {
+		match: (node) =>
+			!Editor.isEditor(node) &&
+			Element.isElement(node) &&
+			node.type === "link",
+	});
+	return !!link;
 }
 
 export function toggleLink(editor) {
-	if (!isLinkNodeAtSelection(editor, editor.selection)) {
+	if (!isLinkActive(editor)) {
 		const isSectionCollapsed = Range.isCollapsed(editor.selection);
 		if (isSectionCollapsed) {
 			// nothing is selected currently
@@ -165,7 +164,6 @@ export function findLinkInSelection(editor) {
 	}
 }
 
-// experimenting
 export function isBlockActive(editor, format) {
 	const { selection } = editor;
 	if (!selection) return false;
@@ -180,7 +178,7 @@ export function isBlockActive(editor, format) {
 		})
 	);
 
-	return match;
+	return !!match;
 }
 
 export function toggleBlock(editor, format) {

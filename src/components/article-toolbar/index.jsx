@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useSlate } from "slate-react";
 import {
 	isBlockActive,
-	isLinkNodeAtSelection,
+	isLinkActive,
 	isMarkActive,
 	toggleBlock,
 	toggleLink,
@@ -35,7 +35,7 @@ const HEADING_STYLES = [
 ];
 
 export default function ArticleToolbar(props) {
-	const { selection, previousSelection } = props;
+	// const { selection, previousSelection } = props;
 
 	const [isImageModalOpen, setImageModalOpen] = useState(false);
 
@@ -49,7 +49,7 @@ export default function ArticleToolbar(props) {
 					<span className="section-title">Headings</span>
 					<div className="section-buttons">
 						{HEADING_STYLES.map((item) => (
-							<BlockStyleButton
+							<BlockButton
 								key={item.style}
 								format={item.style}
 								iconName={item.icon}
@@ -75,7 +75,7 @@ export default function ArticleToolbar(props) {
 					<span className="section-title">Lists</span>
 					<div className="section-buttons">
 						{LIST_STYLES.map((item) => (
-							<BlockStyleButton
+							<BlockButton
 								key={item.style}
 								format={item.style}
 								iconName={item.icon}
@@ -89,13 +89,13 @@ export default function ArticleToolbar(props) {
 					<div className="section-buttons">
 						<MenuButton
 							iconName="link"
-							isActive={isLinkNodeAtSelection(
-								editor,
-								editor.selection
-							)}
-							onMouseDown={() => toggleLink(editor)}
+							isActive={isLinkActive(editor)}
+							onMouseDown={(event) => {
+								event.preventDefault();
+								toggleLink(editor);
+							}}
 						/>
-						<BlockStyleButton
+						<BlockButton
 							format="blockquote"
 							iconName="format_quote"
 						/>
@@ -158,7 +158,7 @@ function MarkButton({ format, iconName }) {
 	);
 }
 
-function BlockStyleButton({ format, iconName }) {
+function BlockButton({ format, iconName }) {
 	const editor = useSlate();
 	return (
 		<MenuButton

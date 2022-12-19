@@ -15,7 +15,7 @@ import withLayout, {
 import { useLoaderData } from "react-router-dom";
 import "./style.scss";
 
-// import sampleOne from "@/../references/sample-article-1";
+import sampleOne from "@/../references/sample-article-1";
 // import sampleTwo from "@/../references/kailash-article";
 
 export default function Write(props) {
@@ -40,7 +40,7 @@ export default function Write(props) {
 		articleContent = JSON.parse(draft.content);
 	}
 
-	const [content, updateContent] = useState(articleContent);
+	const [content, updateContent] = useState(sampleOne);
 
 	const onChangeHandler = useCallback(
 		(content) => {

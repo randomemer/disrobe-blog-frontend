@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { isLinkNodeAtSelection } from "@/utils/editor-utils";
+import { isLinkActive } from "@/utils/editor-utils";
 import { IonIcon } from "@ionic/react";
 import { createPopper } from "@popperjs/core";
 import { linkSharp } from "ionicons/icons";
@@ -26,7 +26,7 @@ export default function LinkEditor(props) {
 		);
 	}, [editor, linkUrl]);
 
-	const isActive = isLinkNodeAtSelection(editor, editor.selection);
+	const isActive = isLinkActive(editor, editor.selection);
 
 	useEffect(() => {
 		const linkEditorEl = linkEditorRef.current;
