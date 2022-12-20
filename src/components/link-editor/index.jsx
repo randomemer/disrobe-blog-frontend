@@ -5,7 +5,7 @@ import { createPopper } from "@popperjs/core";
 import { linkSharp } from "ionicons/icons";
 import { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
-import { Editor, Transforms } from "slate";
+import { Editor, Node, Transforms } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
 import "./style.scss";
 
@@ -19,6 +19,9 @@ export default function LinkEditor(props) {
 
 	const saveLink = useCallback(() => {
 		if (!linkNodeRef.current) return;
+		// If the link node is deleted
+		const { node, path } = linkNodeRef.current;
+		if (!Node.has(node, path)) return;
 		Transforms.setNodes(
 			editor,
 			{ url: linkUrl },
@@ -27,6 +30,7 @@ export default function LinkEditor(props) {
 	}, [editor, linkUrl]);
 
 	const isActive = isLinkActive(editor, editor.selection);
+	console.log("link changed", isActive);
 
 	useEffect(() => {
 		const linkEditorEl = linkEditorRef.current;
@@ -81,7 +85,7 @@ export default function LinkEditor(props) {
 		<div ref={linkEditorRef} className="link-editor">
 			<IonIcon icon={linkSharp} />
 			<input
-				type={"url"}
+				type="url"
 				placeholder="link"
 				disabled={!isActive}
 				value={linkUrl}

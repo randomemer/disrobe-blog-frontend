@@ -18,7 +18,7 @@ export default function ArticleEditable() {
 
 	return (
 		<Fragment>
-			{/* <LinkEditor /> */}
+			<LinkEditor />
 			<Editable
 				className="slate-editor"
 				onKeyDown={onKeyDown}

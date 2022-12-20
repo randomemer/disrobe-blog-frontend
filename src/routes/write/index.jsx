@@ -25,7 +25,7 @@ export default function Write(props) {
 			withHistory,
 			withReact,
 			withInlines,
-			withLayout,
+			// withLayout,
 			// withAutoSave,
 		]);
 	}, []);
