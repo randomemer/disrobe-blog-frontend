@@ -65,18 +65,17 @@ export function toggleMark(editor, format) {
 	}
 }
 
-export function isLinkActive(editor) {
-	const [link] = Editor.nodes(editor, {
+export function getActiveLinkNode(editor) {
+	return Editor.above(editor, {
 		match: (node) =>
 			!Editor.isEditor(node) &&
 			Element.isElement(node) &&
 			node.type === "link",
 	});
-	return !!link;
 }
 
 export function wrapLink(editor, url) {
-	if (isLinkActive(editor)) {
+	if (getActiveLinkNode(editor)) {
 		unwrapLink(editor);
 	}
 
@@ -107,7 +106,7 @@ export function unwrapLink(editor) {
 }
 
 export function toggleLink(editor) {
-	if (!isLinkActive(editor)) {
+	if (!getActiveLinkNode(editor)) {
 		if (editor.selection) {
 			wrapLink(editor, "https://www.google.com");
 		}

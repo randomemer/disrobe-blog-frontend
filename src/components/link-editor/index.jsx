@@ -1,54 +1,45 @@
 /* eslint-disable no-undef */
-import { isLinkActive } from "@/utils/editor-utils";
+import { useLinkNode } from "@/hooks/use-link-node";
 import { IonIcon } from "@ionic/react";
 import { createPopper } from "@popperjs/core";
 import { linkSharp } from "ionicons/icons";
-import { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Editor, Node, Transforms } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
 import "./style.scss";
 
+function saveLink(editor, nodeEntry, linkUrl) {
+	console.log("trig save node");
+	if (!nodeEntry) return;
+	console.log("node present to save");
+	const [node, path] = nodeEntry;
+	// Check if the link node is deleted
+	if (!Node.matches(node, Editor.node(editor, path)?.[0])) return;
+	console.log("saving link..");
+	Transforms.setNodes(editor, { url: linkUrl }, { at: path });
+}
+
+// set link url only when the current active link node changes
+
 export default function LinkEditor(props) {
 	const editor = useSlate();
+	const linkNodeEntry = useLinkNode();
 
 	const linkEditorRef = useRef(null);
-	const linkNodeRef = useRef(null);
 
-	const [linkUrl, setLinkUrl] = useState("");
-
-	const saveLink = useCallback(() => {
-		if (!linkNodeRef.current) return;
-		// If the link node is deleted
-		const { node, path } = linkNodeRef.current;
-		if (!Node.has(node, path)) return;
-		Transforms.setNodes(
-			editor,
-			{ url: linkUrl },
-			{ at: linkNodeRef.current.path }
-		);
-	}, [editor, linkUrl]);
-
-	const isActive = isLinkActive(editor, editor.selection);
-	console.log("link changed", isActive);
+	const [linkUrl, setLinkUrl] = useState(linkNodeEntry?.[0].url || "");
 
 	useEffect(() => {
 		const linkEditorEl = linkEditorRef.current;
+		console.log("changed linkeditor");
 
 		// show link editor
-		if (isActive) {
-			// get the link node at the place
-			const [node, path] = Editor.above(editor, {
-				match: (node) => node.type === "link",
-			});
+		if (linkNodeEntry) {
+			setLinkUrl(linkNodeEntry[0].url);
+			// get the dom reference of both the link node and this link editor
+			const linkEl = ReactEditor.toDOMNode(editor, linkNodeEntry[0]);
 
-			linkNodeRef.current = { node, path };
-			setLinkUrl(node.url);
-
-			// get the dom reference of both the link node and this editor
-			const linkEl = ReactEditor.toDOMNode(editor, node);
-
-			// show the editor as a popover
+			// show the link editor as a popover
 			createPopper(linkEl, linkEditorEl, {
 				placement: "top",
 				modifiers: [
@@ -70,16 +61,18 @@ export default function LinkEditor(props) {
 		}
 		// hide link editor
 		else {
-			// save the link if valid
-			saveLink();
-
 			gsap.to(linkEditorEl, {
 				ease: "expo.out",
 				opacity: 0,
 				onComplete: () => linkEditorEl.classList.remove("active"),
 			});
 		}
-	}, [isActive, editor, editor.selection, saveLink]);
+
+		return () => {
+			console.log(linkNodeEntry, linkUrl);
+			saveLink(editor, linkNodeEntry, linkUrl);
+		};
+	}, [editor, linkNodeEntry]);
 
 	return (
 		<div ref={linkEditorRef} className="link-editor">
@@ -87,7 +80,7 @@ export default function LinkEditor(props) {
 			<input
 				type="url"
 				placeholder="link"
-				disabled={!isActive}
+				disabled={!linkNodeEntry}
 				value={linkUrl}
 				onChange={(event) => setLinkUrl(event.target.value)}
 			/>

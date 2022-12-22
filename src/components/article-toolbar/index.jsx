@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useSlate } from "slate-react";
 import {
 	isBlockActive,
-	isLinkActive,
+	getActiveLinkNode,
 	isMarkActive,
 	toggleBlock,
 	toggleLink,
@@ -89,7 +89,7 @@ export default function ArticleToolbar(props) {
 					<div className="section-buttons">
 						<MenuButton
 							iconName="link"
-							isActive={isLinkActive(editor)}
+							isActive={getActiveLinkNode(editor)}
 							onMouseDown={(event) => {
 								event.preventDefault();
 								toggleLink(editor);
