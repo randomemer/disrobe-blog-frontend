@@ -11,11 +11,14 @@ function ImageButtons(props) {
 	const editor = useSlate();
 
 	const onDeleteImage = (event) => {
+		console.log(editor.children);
 		event.preventDefault();
 
 		Transforms.removeNodes(editor, {
 			match: (node) => node.type === "image",
 		});
+
+		console.log(editor.children);
 	};
 
 	const onUpdateImage = (event) => {
@@ -94,13 +97,12 @@ export default function ArticleImage({ attributes, children, element }) {
 			})}
 			contentEditable={false}
 		>
-			<div className="image-container">
+			<figure className="image-container">
 				<div className="image-wrapper">
 					<ImageButtons isActive={isFocused && isSelected} />
 					<img src={String(element.url)} alt={element.caption} />
 				</div>
-				<div className="image-caption">
-					<div className="auto-expand-element"></div>
+				<figcaption className="image-caption">
 					<input
 						type="text"
 						placeholder="A caption for your image"
@@ -109,8 +111,8 @@ export default function ArticleImage({ attributes, children, element }) {
 						onKeyDown={onKeyDown}
 						onBlur={onCaptionBlur}
 					/>
-				</div>
-			</div>
+				</figcaption>
+			</figure>
 			{children}
 		</div>
 	);

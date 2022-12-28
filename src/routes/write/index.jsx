@@ -16,8 +16,8 @@ import withLayout, {
 import { useLoaderData } from "react-router-dom";
 import "./style.scss";
 
-import sampleOne from "@/../references/sample-article-1";
-// import sampleTwo from "@/../references/kailash-article";
+import sample from "@/../references/sample-article-1";
+// import sample from "@/../references/kailash-article";
 
 export default function Write(props) {
 	const editor = useMemo(() => {
@@ -25,7 +25,7 @@ export default function Write(props) {
 			withHistory,
 			withReact,
 			withInlines,
-			// withLayout,
+			withLayout,
 			// withAutoSave,
 		]);
 	}, []);
@@ -42,7 +42,7 @@ export default function Write(props) {
 		articleContent = JSON.parse(draft.content);
 	}
 
-	const [content, updateContent] = useState(sampleOne);
+	const [content, updateContent] = useState(sample);
 
 	const onChangeHandler = useCallback(
 		(content) => {
@@ -56,11 +56,7 @@ export default function Write(props) {
 		<Fragment>
 			<AppHeader />
 			<div id="write-app">
-				<Slate
-					editor={editor}
-					value={content}
-					onChange={onChangeHandler}
-				>
+				<Slate editor={editor} value={content} onChange={onChangeHandler}>
 					<main className="article-area">
 						<ArticleEditable />
 					</main>

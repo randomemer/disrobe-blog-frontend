@@ -22,12 +22,12 @@ export default function withLayout(editor) {
 				});
 			}
 
-			// add default paragraph when its missing
-			if (editor.children.length < 2) {
-				Transforms.insertNodes(editor, DEFAULT_PARAGRAPH, {
-					at: path.concat(1),
-				});
-			}
+			// // add default paragraph when its missing
+			// if (editor.children.length < 2) {
+			// 	Transforms.insertNodes(editor, DEFAULT_PARAGRAPH, {
+			// 		at: path.concat(1),
+			// 	});
+			// }
 
 			for (const [child, childPath] of Node.children(editor, path)) {
 				let type;
@@ -47,10 +47,10 @@ export default function withLayout(editor) {
 						type = "title";
 						enforceType(type);
 						break;
-					case 1:
-						type = "paragraph";
-						enforceType(type);
-						break;
+					// case 1:
+					// 	type = "paragraph";
+					// 	enforceType(type);
+					// 	break;
 					default:
 						break;
 				}
