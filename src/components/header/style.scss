@@ -17,7 +17,7 @@
 	margin: 0 auto;
 	height: var(--app-header-height);
 
-	background-color: white;
+	background-color: general.$background-color;
 
 	&::after {
 		content: "";

@@ -1,16 +1,5 @@
 @use "@/assets/styles/general";
 
-.link-editor {
-	pointer-events: none;
-	visibility: hidden;
-	opacity: 0;
-
-	&.active {
-		visibility: visible;
-		pointer-events: all;
-	}
-}
-
 $background-color: #333333;
 $font-color: #eeeeee;
 
@@ -19,8 +8,7 @@ $font-color: #eeeeee;
 	color: $font-color;
 	position: fixed;
 	height: 3.6rem;
-	width: 30rem;
-	max-width: 30rem;
+	max-width: 48rem;
 	z-index: 1;
 
 	display: flex;
