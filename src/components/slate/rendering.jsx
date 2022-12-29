@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { DefaultElement, useFocused, useSelected } from "slate-react";
-import ArticleImage from "@/components/article-image";
+import ArticleImage from "@/components/slate/image";
 import classNames from "classnames";
 import { Node } from "slate";
 

@@ -1,6 +1,6 @@
 import { Editor, Element, Range, Transforms } from "slate";
 import isHotkey, { isKeyHotkey } from "is-hotkey";
-import { saveArticleDraft } from "@/modules/article/auto-save";
+import { saveArticleDraft } from "@/modules/slate/auto-save";
 
 export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
@@ -68,9 +68,7 @@ export function toggleMark(editor, format) {
 export function getActiveLinkNode(editor) {
 	return Editor.above(editor, {
 		match: (node) =>
-			!Editor.isEditor(node) &&
-			Element.isElement(node) &&
-			node.type === "link",
+			!Editor.isEditor(node) && Element.isElement(node) && node.type === "link",
 	});
 }
 
@@ -99,9 +97,7 @@ export function unwrapLink(editor) {
 	// find the nearest ancestor element of type link and unwrap its nodes
 	Transforms.unwrapNodes(editor, {
 		match: (node) =>
-			!Editor.isEditor(node) &&
-			Element.isElement(node) &&
-			node.type === "link",
+			!Editor.isEditor(node) && Element.isElement(node) && node.type === "link",
 	});
 }
 

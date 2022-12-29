@@ -1,17 +1,17 @@
-import classNames from "classnames";
-import { useSlate } from "slate-react";
+import ImageEditor from "@/components/slate/image-editor";
 import {
-	isBlockActive,
 	getActiveLinkNode,
+	isBlockActive,
 	isMarkActive,
 	toggleBlock,
 	toggleLink,
 	toggleMark,
 } from "@/utils/editor-utils";
-import "./style.scss";
+import classNames from "classnames";
 import { Fragment, useState } from "react";
 import ReactModal from "react-modal";
-import ImageEditor from "@/components/image-editor";
+import { useSlate } from "slate-react";
+import "./style.scss";
 
 const CHARACTER_STYLES = [
 	{ style: "bold", icon: "format_bold" },

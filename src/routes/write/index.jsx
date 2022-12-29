@@ -1,18 +1,19 @@
-import ArticleEditable from "@/components/article-editor";
-import ArticleToolbar from "@/components/article-toolbar";
+import ArticleEditable from "@/components/slate/article-editor";
+import ArticleToolbar from "@/components/slate/toolbar";
 import AppHeader from "@/components/header";
-import useSelection from "@/hooks/use-selection";
 import { withPlugins } from "@/utils/editor-utils";
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { Fragment, useMemo } from "react";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
 // import withAutoSave from "@/modules/article/auto-save";
-import withInlines from "@/modules/article/inlines";
+import LinkEditor from "@/components/slate/link-editor";
+import { useLinkNode } from "@/hooks/use-link-node";
+import withInlines from "@/modules/slate/inlines";
 import withLayout, {
 	DEFAULT_PARAGRAPH,
 	DEFAULT_TITLE,
-} from "@/modules/article/layout";
+} from "@/modules/slate/layout";
 import { useLoaderData } from "react-router-dom";
 import "./style.scss";
 
@@ -29,7 +30,8 @@ export default function Write() {
 			// withAutoSave,
 		]);
 	}, []);
-	const [selection, setSelection] = useSelection(editor);
+
+	const linkNode = useLinkNode(editor);
 
 	// get article data if given
 	const loaderData = useLoaderData();
@@ -42,25 +44,18 @@ export default function Write() {
 		articleContent = JSON.parse(draft.content);
 	}
 
-	const [content, updateContent] = useState(articleContent);
-
-	const onChangeHandler = useCallback(
-		(content) => {
-			updateContent(content);
-			setSelection(selection);
-		},
-		[updateContent, selection, setSelection]
-	);
+	const content = sample;
 
 	return (
 		<Fragment>
 			<AppHeader />
 			<div id="write-app">
-				<Slate editor={editor} value={content} onChange={onChangeHandler}>
+				<Slate editor={editor} value={content}>
 					<main className="article-area">
 						<ArticleEditable />
 					</main>
 					<ArticleToolbar />
+					{linkNode ? <LinkEditor /> : null}
 				</Slate>
 			</div>
 		</Fragment>

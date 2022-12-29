@@ -10,7 +10,7 @@ import "./style.scss";
 
 export default function LinkEditor() {
 	const editor = useSlate();
-	const [node, path] = useLinkNode();
+	const [node, path] = useLinkNode(editor);
 	const linkEditorRef = useRef(null);
 
 	const [linkUrl, setLinkUrl] = useState(node.url);
@@ -52,9 +52,6 @@ export default function LinkEditor() {
 			<button type="button" onClick={saveLink}>
 				<IonIcon icon={checkmarkSharp} />
 			</button>
-			{/* <button type="button" onClick={saveLink}>
-				<IonIcon icon={checkmarkSharp} />
-			</button> */}
 		</div>
 	);
 }
