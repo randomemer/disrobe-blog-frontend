@@ -34,12 +34,10 @@ const HEADING_STYLES = [
 	{ style: "h6", icon: "format_h6" },
 ];
 
-export default function ArticleToolbar(props) {
-	// const { selection, previousSelection } = props;
+export default function ArticleToolbar() {
+	const editor = useSlate();
 
 	const [isImageModalOpen, setImageModalOpen] = useState(false);
-
-	const editor = useSlate();
 
 	return (
 		<Fragment>
@@ -95,10 +93,7 @@ export default function ArticleToolbar(props) {
 								toggleLink(editor);
 							}}
 						/>
-						<BlockButton
-							format="blockquote"
-							iconName="format_quote"
-						/>
+						<BlockButton format="blockquote" iconName="format_quote" />
 						<MenuButton
 							iconName="image"
 							onMouseDown={() => setImageModalOpen(true)}

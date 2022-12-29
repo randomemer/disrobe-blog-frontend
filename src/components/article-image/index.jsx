@@ -7,7 +7,7 @@ import { Editor, Transforms } from "slate";
 import { useFocused, useSelected, useSlate } from "slate-react";
 import "./style.scss";
 
-function ImageButtons(props) {
+function ImageButtons() {
 	const editor = useSlate();
 
 	const onDeleteImage = (event) => {
@@ -69,10 +69,7 @@ export default function ArticleImage({ attributes, children, element }) {
 
 	const onKeyDown = useCallback(
 		(event) => {
-			if (!isHotkey("enter", event)) {
-				return;
-			}
-
+			if (!isHotkey("enter", event)) return;
 			applyCaptionChange(event.target.value);
 		},
 		[applyCaptionChange]
@@ -84,7 +81,7 @@ export default function ArticleImage({ attributes, children, element }) {
 	);
 
 	const onCaptionBlur = useCallback(
-		(event) => applyCaptionChange(caption),
+		() => applyCaptionChange(caption),
 		[caption, applyCaptionChange]
 	);
 
@@ -92,10 +89,10 @@ export default function ArticleImage({ attributes, children, element }) {
 		// Need `contentEditable={false}` or Firefox has issues with certain input types.
 		<div
 			{...attributes}
+			contentEditable={false}
 			className={classNames("editor-image", {
 				"editor-image--selected": isFocused && isSelected,
 			})}
-			contentEditable={false}
 		>
 			<figure className="image-container">
 				<div className="image-wrapper">

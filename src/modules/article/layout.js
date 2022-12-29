@@ -13,7 +13,21 @@ export const DEFAULT_PARAGRAPH = {
 export default function withLayout(editor) {
 	const { normalizeNode } = editor;
 
+	const ELEMENT_TYPES = {
+		title: ([node, path]) => {
+			if (Element.isElement(node) && node.type !== "title") {
+				Transforms.setNodes(editor, { type: "title" }, { at: path });
+			}
+		},
+		paragraph: ([node, path]) => {
+			if (Element.isElement(node) && node.type !== "paragraph") {
+				Transforms.setNodes(editor, { type: "paragraph" }, { at: path });
+			}
+		},
+	};
+
 	editor.normalizeNode = ([node, path]) => {
+		// normalize the editor itself
 		if (path.length === 0) {
 			// add default title when its missing
 			if (editor.children.length < 1) {
@@ -22,38 +36,25 @@ export default function withLayout(editor) {
 				});
 			}
 
-			// // add default paragraph when its missing
-			// if (editor.children.length < 2) {
-			// 	Transforms.insertNodes(editor, DEFAULT_PARAGRAPH, {
-			// 		at: path.concat(1),
-			// 	});
-			// }
+			// add default paragraph when its missing
+			if (editor.children.length < 2) {
+				Transforms.insertNodes(editor, DEFAULT_PARAGRAPH, {
+					at: path.concat(1),
+				});
+			}
+
+			console.log("normalized : ", node, path);
 
 			for (const [child, childPath] of Node.children(editor, path)) {
-				let type;
 				const slateIndex = childPath[0];
 
-				const enforceType = (type) => {
-					if (Element.isElement(child) && child.type !== type) {
-						const newProperties = { type };
-						Transforms.setNodes(editor, newProperties, {
-							at: childPath,
-						});
-					}
-				};
-
-				switch (slateIndex) {
-					case 0:
-						type = "title";
-						enforceType(type);
-						break;
-					// case 1:
-					// 	type = "paragraph";
-					// 	enforceType(type);
-					// 	break;
-					default:
-						break;
-				}
+				// if (slateIndex === 0) {
+				// 	ELEMENT_TYPES.title([child, childPath]);
+				// 	return;
+				// }
+				// if (slateIndex === 1) {
+				// 	ELEMENT_TYPES.paragraph(child, childPath);
+				// }
 			}
 		}
 

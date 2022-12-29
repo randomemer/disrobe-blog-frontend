@@ -19,7 +19,7 @@ import "./style.scss";
 import sample from "@/../references/sample-article-1";
 // import sample from "@/../references/kailash-article";
 
-export default function Write(props) {
+export default function Write() {
 	const editor = useMemo(() => {
 		return withPlugins(createEditor(), [
 			withHistory,
@@ -29,7 +29,7 @@ export default function Write(props) {
 			// withAutoSave,
 		]);
 	}, []);
-	const [selection, setSelectionOptimized] = useSelection(editor);
+	const [selection, setSelection] = useSelection(editor);
 
 	// get article data if given
 	const loaderData = useLoaderData();
@@ -42,14 +42,14 @@ export default function Write(props) {
 		articleContent = JSON.parse(draft.content);
 	}
 
-	const [content, updateContent] = useState(sample);
+	const [content, updateContent] = useState(articleContent);
 
 	const onChangeHandler = useCallback(
 		(content) => {
 			updateContent(content);
-			setSelectionOptimized(selection);
+			setSelection(selection);
 		},
-		[updateContent, setSelectionOptimized, selection]
+		[updateContent, selection, setSelection]
 	);
 
 	return (

@@ -3,13 +3,12 @@ import useEditorConfig from "@/hooks/use-editor-config";
 import { useLinkNode } from "@/hooks/use-link-node";
 import { useCallback } from "react";
 import { Fragment } from "react";
-import { Editable, useSlate } from "slate-react";
+import { Editable } from "slate-react";
 import { EditorElement, EditorLeaf } from "./rendering";
 
 export default function ArticleEditable() {
-	const editor = useSlate();
 	const linkNode = useLinkNode();
-	const { onKeyDown } = useEditorConfig(editor);
+	const { onKeyDown } = useEditorConfig();
 
 	const renderElement = useCallback(
 		(props) => <EditorElement {...props} />,
@@ -21,12 +20,12 @@ export default function ArticleEditable() {
 		<Fragment>
 			{linkNode ? <LinkEditor /> : null}
 			<Editable
+				autoFocus
+				spellCheck
 				className="slate-editor"
 				onKeyDown={onKeyDown}
 				renderElement={renderElement}
 				renderLeaf={renderLeaf}
-				spellCheck
-				autoFocus
 			/>
 		</Fragment>
 	);
