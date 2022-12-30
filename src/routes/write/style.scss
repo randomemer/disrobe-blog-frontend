@@ -1,27 +1,38 @@
 @use "@/assets/styles/general";
 
-.write-app {
-	width: 100%;
-	max-width: 120rem;
-	margin: 0 auto;
+:root {
+	--toolbar-width: 30rem;
+}
 
-	display: flex;
-	gap: 6.4rem;
+.write-app {
+	// width: 100%;
+	// max-width: 120rem;
+	// margin: 0 auto;
+
+	.article-container {
+		padding-top: var(--app-header-height);
+		padding-left: 10%;
+		padding-right: var(--toolbar-width);
+	}
 
 	.article-area {
-		margin-top: 4.8rem;
 		padding: 0 6.4rem;
-		flex: 1;
+		padding-top: 4.8rem;
 		// resetting the value from body
 		line-height: normal;
 	}
 
 	.article-toolbar {
-		// width: 32rem;
-		height: 100%;
-		position: sticky;
-		top: calc(var(--app-header-height) + 4.8rem);
-		padding-top: 4.8rem;
+		position: fixed;
+		top: var(--app-header-height);
+		right: 0;
+		bottom: 0;
+
+		width: var(--toolbar-width);
+		padding: 4.8rem 0;
+		padding-left: 3rem;
+		padding-right: 7.2rem;
+		background-color: general.$background-color;
 	}
 }
 
@@ -74,6 +85,7 @@ blockquote.editor-block {
 h1.editor-block,
 input[name="article-title"] {
 	position: relative;
+	font-weight: 700;
 	font-size: 4.8rem;
 	margin-bottom: 2.4rem;
 
@@ -85,4 +97,8 @@ input[name="article-title"] {
 		pointer-events: none;
 		top: 0;
 	}
+}
+
+input[name="article-title"] {
+	width: 100%;
 }

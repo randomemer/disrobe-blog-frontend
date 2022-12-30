@@ -41,67 +41,75 @@ export default function ArticleToolbar() {
 
 	return (
 		<Fragment>
-			<div className="article-toolbar">
-				{/* HEADING STYLES */}
-				<div className="toolbar-section">
-					<span className="section-title">Headings</span>
-					<div className="section-buttons">
-						{HEADING_STYLES.map((item) => (
-							<BlockButton
-								key={item.style}
-								format={item.style}
-								iconName={item.icon}
+			<aside className="article-toolbar">
+				<div className="toolbar-sections">
+					{/* HEADING STYLES */}
+					<div className="toolbar-section">
+						<span className="section-title">Headings</span>
+						<div className="section-buttons">
+							{HEADING_STYLES.map((item) => (
+								<BlockButton
+									key={item.style}
+									format={item.style}
+									iconName={item.icon}
+								/>
+							))}
+						</div>
+					</div>
+					{/* CHARACTER STYLES */}
+					<div className="toolbar-section">
+						<span className="section-title">Character</span>
+						<div className="section-buttons">
+							{CHARACTER_STYLES.map((item) => (
+								<MarkButton
+									key={item.style}
+									format={item.style}
+									iconName={item.icon}
+								/>
+							))}
+						</div>
+					</div>
+					{/* LIST STYLES */}
+					<div className="toolbar-section">
+						<span className="section-title">Lists</span>
+						<div className="section-buttons">
+							{LIST_STYLES.map((item) => (
+								<BlockButton
+									key={item.style}
+									format={item.style}
+									iconName={item.icon}
+								/>
+							))}
+						</div>
+					</div>
+					{/* OTHER ACTIONS */}
+					<div className="toolbar-section">
+						<span className="section-title">Other</span>
+						<div className="section-buttons">
+							<MenuButton
+								iconName="link"
+								isActive={getActiveLinkNode(editor)}
+								onMouseDown={(event) => {
+									event.preventDefault();
+									toggleLink(editor);
+								}}
 							/>
-						))}
-					</div>
-				</div>
-				{/* CHARACTER STYLES */}
-				<div className="toolbar-section">
-					<span className="section-title">Character</span>
-					<div className="section-buttons">
-						{CHARACTER_STYLES.map((item) => (
-							<MarkButton
-								key={item.style}
-								format={item.style}
-								iconName={item.icon}
+							<BlockButton format="blockquote" iconName="format_quote" />
+							<MenuButton
+								iconName="image"
+								onMouseDown={() => setImageModalOpen(true)}
 							/>
-						))}
+							<MenuButton iconName="code_blocks" />
+						</div>
 					</div>
 				</div>
-				{/* LIST STYLES */}
-				<div className="toolbar-section">
-					<span className="section-title">Lists</span>
-					<div className="section-buttons">
-						{LIST_STYLES.map((item) => (
-							<BlockButton
-								key={item.style}
-								format={item.style}
-								iconName={item.icon}
-							/>
-						))}
-					</div>
+				{/* Status Area */}
+				<div className="article-status">
+					<button type="button" className="publish-button button">
+						Publish
+					</button>
 				</div>
-				{/* OTHER ACTIONS */}
-				<div className="toolbar-section">
-					<span className="section-title">Other</span>
-					<div className="section-buttons">
-						<MenuButton
-							iconName="link"
-							isActive={getActiveLinkNode(editor)}
-							onMouseDown={(event) => {
-								event.preventDefault();
-								toggleLink(editor);
-							}}
-						/>
-						<BlockButton format="blockquote" iconName="format_quote" />
-						<MenuButton
-							iconName="image"
-							onMouseDown={() => setImageModalOpen(true)}
-						/>
-						<MenuButton iconName="code_blocks" />
-					</div>
-				</div>
-			</div>
+			</aside>
 			{/* Image Editor Dialog */}
 			<ReactModal
 				isOpen={isImageModalOpen}

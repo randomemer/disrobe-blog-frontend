@@ -16,7 +16,7 @@ html {
 }
 
 body {
-	font-family: general.$serif-font;
+	font-family: general.$sans-serif-font;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
@@ -40,6 +40,11 @@ body {
 ul {
 	list-style: none;
 	display: flex;
+}
+
+#root {
+	height: 100vh;
+	width: 100vw;
 }
 
 #app {
@@ -67,7 +72,7 @@ button {
 @mixin placeholder-style($selectors...) {
 	@each $selector in $selectors {
 		#{$selector} {
-			color: #bbb;
+			color: rgba(187, 187, 187, 0.5);
 			opacity: 1;
 		}
 	}
@@ -92,7 +97,7 @@ a {
 
 *:focus {
 	outline: none;
-	box-shadow: 0 0 0 1px general.$primary-color-dim;
+	box-shadow: 0 0 0 2px general.$primary-color;
 }
 
 .modal-container {
@@ -140,13 +145,13 @@ img {
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	font-family: general.$sans-serif-font;
-	color: white;
+	color: general.$background-color;
 	font-size: 1.4rem;
 	font-weight: 600;
 
 	&:hover {
 		color: general.$primary-color;
-		background: white;
+		background: inherit;
 		box-shadow: inset 0 0 0 3px general.$primary-color;
 	}
 }

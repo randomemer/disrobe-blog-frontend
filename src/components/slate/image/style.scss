@@ -63,19 +63,23 @@
 	.image-caption {
 		display: grid;
 		grid-template-columns: 1fr;
+		width: 80%;
 
 		input {
+			display: block;
+			// width: 80%;
 			border-bottom: 2px solid #aaa;
 			background-color: general.$background-color;
 			text-align: center;
 			font-size: 1.6rem;
 			padding-bottom: 3px;
-			display: block;
 
 			&:focus {
 				box-shadow: none;
 				border-color: general.$primary-color;
 			}
+
+			resize: none;
 		}
 
 		& > * {

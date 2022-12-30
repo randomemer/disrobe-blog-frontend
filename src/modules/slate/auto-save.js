@@ -3,6 +3,32 @@ import { addDoc, collection, Timestamp, updateDoc } from "firebase/firestore";
 
 const AUTO_SAVE_TIMEOUT = 5000;
 
+export default function withAutoSave(editor) {
+	const { onChange } = editor;
+
+	editor.onChange = (content) => {
+		// Call the default onChange handler
+		onChange(content);
+
+		const isAstChange = editor.operations.some(
+			(op) => op.type !== "set_selection"
+		);
+
+		if (isAstChange) {
+			const { savedAt } = editor;
+			const now = Date.now();
+
+			if (!savedAt || now - savedAt > 0) {
+				setTimeout(() => saveArticleDraft(editor), AUTO_SAVE_TIMEOUT);
+				editor.savedAt = now + AUTO_SAVE_TIMEOUT;
+				console.log("will save after 5 secs");
+			}
+		}
+	};
+
+	return editor;
+}
+
 function createArticleContent(editor) {
 	return {
 		title: editor.title,
@@ -39,38 +65,4 @@ export async function saveArticleDraft(editor) {
 	} catch (error) {
 		console.error(error);
 	}
-}
-
-export default function withAutoSave(editor) {
-	const { onChange } = editor;
-
-	const autoSaveCallback = async () => {
-		saveArticleDraft(editor);
-		const diff = Date.now() - editor.lastChange;
-		if (diff < AUTO_SAVE_TIMEOUT) {
-			console.log("Re-saving...");
-			editor.autoSaveTimer = setTimeout(autoSaveCallback, AUTO_SAVE_TIMEOUT);
-		} else {
-			console.log("Not re-saving.");
-			editor.autoSaveTimer = null;
-		}
-	};
-
-	editor.onChange = (content) => {
-		// Call the default onChange handler
-		onChange(content);
-
-		const isAstChange = editor.operations.some(
-			(op) => op.type !== "set_selection"
-		);
-
-		if (isAstChange) {
-			editor.lastChange = new Date();
-			if (editor.autoSaveTimer) return;
-
-			editor.autoSaveTimer = setTimeout(autoSaveCallback, AUTO_SAVE_TIMEOUT);
-		}
-	};
-
-	return editor;
 }
