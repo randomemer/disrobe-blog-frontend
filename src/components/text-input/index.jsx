@@ -1,9 +1,9 @@
-/* eslint-disable no-undef */
-import { Component } from "react";
 import { IonIcon } from "@ionic/react";
-import { warningOutline } from "ionicons/icons";
-import "./style.scss";
 import classNames from "classnames";
+import gsap from "gsap";
+import { warningOutline } from "ionicons/icons";
+import { Component } from "react";
+import "./style.scss";
 
 export default class FormTextInput extends Component {
 	state = {
@@ -19,9 +19,7 @@ export default class FormTextInput extends Component {
 
 	get label() {
 		return this.props.label ? (
-			<label htmlFor={this.props.inputOptions.name}>
-				{this.props.label}
-			</label>
+			<label htmlFor={this.props.inputOptions.name}>{this.props.label}</label>
 		) : undefined;
 	}
 

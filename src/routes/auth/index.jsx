@@ -1,21 +1,21 @@
-/* eslint-disable no-undef */
-import { Component } from "react";
-import { Link, redirect } from "react-router-dom";
-import "./style.scss";
-import RegisterForm from "./register";
-import LoginForm from "./login";
-// import { delay } from "utils";
+import { db } from "@/modules/firebase";
+import { FirebaseError } from "firebase/app";
 import {
-	getAuth,
-	createUserWithEmailAndPassword,
-	setPersistence,
 	browserLocalPersistence,
 	browserSessionPersistence,
+	createUserWithEmailAndPassword,
+	getAuth,
+	setPersistence,
 	signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/modules/firebase";
-import { FirebaseError } from "firebase/app";
+import gsap from "gsap";
+import { Component } from "react";
+import { Link, redirect } from "react-router-dom";
+import LoginForm from "./login";
+import RegisterForm from "./register";
+import "./style.scss";
+// import { delay } from "utils";
 
 class Auth extends Component {
 	constructor(props) {
@@ -153,9 +153,7 @@ class Auth extends Component {
 				}
 			}
 			console.error(error);
-			console.log(
-				JSON.stringify(error, Object.getOwnPropertyNames(error))
-			);
+			console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)));
 		}
 		this.setState({ isProcessing: false });
 	};

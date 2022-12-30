@@ -12,6 +12,7 @@
 		"classnames": "^2.3.2",
 		"deep-equal": "^2.1.0",
 		"firebase": "^9.14.0",
+		"gsap": "^3.11.4",
 		"ionicons": "^6.0.4",
 		"is-hotkey": "^0.2.0",
 		"is-url": "^1.2.4",
