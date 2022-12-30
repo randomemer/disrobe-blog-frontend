@@ -27,7 +27,7 @@ const BLOCK_ELEMENTS = new Set([
 	"h6",
 ]);
 
-export function EditorElement(props) {
+export function SlateElement(props) {
 	const { attributes, element, children } = props;
 	const isFocused = useFocused();
 	const isSelected = useSelected();
@@ -132,7 +132,7 @@ export function EditorElement(props) {
 	}
 }
 
-export function EditorLeaf({ attributes, children, leaf }) {
+export function SlateLeaf({ attributes, children, leaf }) {
 	let el = <Fragment>{children}</Fragment>;
 
 	// The following is a workaround for a Chromium bug where,

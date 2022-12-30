@@ -1,6 +1,6 @@
 @use "@/assets/styles/general";
 
-#write-app {
+.write-app {
 	width: 100%;
 	max-width: 120rem;
 	margin: 0 auto;
@@ -25,7 +25,7 @@
 	}
 }
 
-.slate-editor {
+.article-editor {
 	font-size: 1.8rem;
 
 	&:focus {
@@ -43,7 +43,8 @@
 	margin-bottom: 4.8rem;
 
 	// when the cursor is in that block
-	&.editor-block--selected {
+	&:focus,
+	&--selected {
 		border-color: general.$primary-color;
 	}
 }
@@ -70,7 +71,8 @@ blockquote.editor-block {
 	font-style: italic;
 }
 
-h1.editor-block {
+h1.editor-block,
+input[name="article-title"] {
 	position: relative;
 	font-size: 4.8rem;
 	margin-bottom: 2.4rem;

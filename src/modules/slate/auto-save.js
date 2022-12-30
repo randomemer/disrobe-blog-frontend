@@ -1,12 +1,11 @@
 import { auth, db } from "@/modules/firebase";
 import { addDoc, collection, Timestamp, updateDoc } from "firebase/firestore";
-import { Node } from "slate";
 
 const AUTO_SAVE_TIMEOUT = 5000;
 
 function createArticleContent(editor) {
 	return {
-		title: Node.string(editor.children[0]),
+		title: editor.title,
 		content: JSON.stringify(editor.children),
 		timestamp: Timestamp.now(),
 	};
@@ -45,15 +44,12 @@ export async function saveArticleDraft(editor) {
 export default function withAutoSave(editor) {
 	const { onChange } = editor;
 
-	const autoSaveCallback = () => {
+	const autoSaveCallback = async () => {
 		saveArticleDraft(editor);
 		const diff = Date.now() - editor.lastChange;
 		if (diff < AUTO_SAVE_TIMEOUT) {
 			console.log("Re-saving...");
-			editor.autoSaveTimer = setTimeout(
-				autoSaveCallback,
-				AUTO_SAVE_TIMEOUT
-			);
+			editor.autoSaveTimer = setTimeout(autoSaveCallback, AUTO_SAVE_TIMEOUT);
 		} else {
 			console.log("Not re-saving.");
 			editor.autoSaveTimer = null;
@@ -61,6 +57,9 @@ export default function withAutoSave(editor) {
 	};
 
 	editor.onChange = (content) => {
+		// Call the default onChange handler
+		onChange(content);
+
 		const isAstChange = editor.operations.some(
 			(op) => op.type !== "set_selection"
 		);
@@ -69,14 +68,8 @@ export default function withAutoSave(editor) {
 			editor.lastChange = new Date();
 			if (editor.autoSaveTimer) return;
 
-			editor.autoSaveTimer = setTimeout(
-				autoSaveCallback,
-				AUTO_SAVE_TIMEOUT
-			);
+			editor.autoSaveTimer = setTimeout(autoSaveCallback, AUTO_SAVE_TIMEOUT);
 		}
-
-		// Call the default onChange handler
-		onChange(content);
 	};
 
 	return editor;
