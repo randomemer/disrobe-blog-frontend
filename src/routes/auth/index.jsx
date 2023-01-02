@@ -215,13 +215,9 @@ class Auth extends Component {
 	}
 
 	// helpers
-	getTabByName(name) {
-		return this.tabs[this.tabIndices[name]];
-	}
+	getTabByName = (name) => this.tabs[this.tabIndices[name]];
 
-	currentTab() {
-		return this.tabs[this.tabIndices[this.state.tab]];
-	}
+	currentTab = () => this.tabs[this.tabIndices[this.state.tab]];
 
 	currentForm() {
 		const tab = this.currentTab();

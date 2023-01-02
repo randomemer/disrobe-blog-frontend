@@ -20,7 +20,7 @@ export default function Write() {
 			withHistory,
 			withReact,
 			withInlines,
-			// withAutoSave,
+			withAutoSave,
 		]);
 	}, []);
 	const dispatch = useDispatch();

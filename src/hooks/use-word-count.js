@@ -7,8 +7,8 @@ const readTimeHumanizer = humanizeDuration.humanizer({
 	language: "short_en",
 	languages: {
 		short_en: {
-			m: () => "min",
-			s: () => "sec",
+			m: () => "m",
+			s: () => "s",
 		},
 	},
 	units: ["m", "s"],

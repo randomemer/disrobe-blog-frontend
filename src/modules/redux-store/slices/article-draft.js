@@ -29,7 +29,7 @@ export const updateArticleDraft = createAsyncThunk(
 	async (content, { getState }) => {
 		const state = getState();
 		const articles = collection(db, "articles");
-		const docRef = doc(articles, state.id);
+		const docRef = doc(articles, state.article_draft.id);
 		return await updateDoc(docRef, {
 			"data.draft": content,
 		});
@@ -79,12 +79,14 @@ const articleDraftSlice = createSlice({
 		});
 
 		builder.addCase(updateArticleDraft.rejected, (state, action) => {
+			state.status = "rejected";
 			state.error = action.error;
 		});
 	},
 });
 
-export const selectArticleDraftID = (state) => state.id;
-export const selectArticleSavedAt = (state) => state.savedAt;
+export const selectArticleDraftID = (state) => state.article_draft.id;
+export const selectArticleSavedAt = (state) => state.article_draft.savedAt;
+export const selectSavingStatus = (state) => state.article_draft.status;
 
 export default articleDraftSlice;

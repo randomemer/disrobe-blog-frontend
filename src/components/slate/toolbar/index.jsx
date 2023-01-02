@@ -1,6 +1,7 @@
 import ImageEditor from "@/components/slate/image-editor";
 import useWordCount from "@/hooks/use-word-count";
-import { publishArticle } from "@/utils";
+import { selectSavingStatus } from "@/modules/redux-store/slices/article-draft";
+// import { publishArticle } from "@/utils";
 import {
 	getActiveLinkNode,
 	isBlockActive,
@@ -9,9 +10,18 @@ import {
 	toggleLink,
 	toggleMark,
 } from "@/utils/editor-utils";
+import { IonIcon } from "@ionic/react";
 import classNames from "classnames";
+import {
+	closeOutline,
+	cloudDoneOutline,
+	cloudOfflineOutline,
+	cloudUploadOutline,
+	settingsOutline,
+} from "ionicons/icons";
 import { Fragment, useState } from "react";
 import ReactModal from "react-modal";
+import { useSelector } from "react-redux";
 import { useSlate } from "slate-react";
 import "./style.scss";
 
@@ -109,19 +119,26 @@ export default function ArticleToolbar() {
 				</div>
 				{/* Status Area */}
 				<div className="article-status">
+					<div className="article-actions">
+						<button
+							type="button"
+							className="publish-button button"
+							onClick={() => {
+								// publishArticle();
+							}}
+						>
+							Publish
+						</button>
+						<button className="article-settings-button">
+							<IonIcon icon={settingsOutline} />
+						</button>
+					</div>
 					<div className="content-info">
 						<div className="word-count">{articleInfo.wordCount} words</div>
+						<span>●</span>
 						<div className="read-time">{articleInfo.readTime}</div>
 					</div>
-					<button
-						type="button"
-						className="publish-button button"
-						onClick={() => {
-							// publishArticle();
-						}}
-					>
-						Publish
-					</button>
+					<SavingIndicator />
 				</div>
 			</aside>
 			{/* Image Editor Dialog */}
@@ -140,6 +157,45 @@ export default function ArticleToolbar() {
 }
 
 // Toolbar Components
+function SavingIndicator() {
+	const state = useSelector(selectSavingStatus);
+
+	let icon, message;
+	switch (state) {
+		case "pending":
+			icon = cloudUploadOutline;
+			message = "Saving";
+			break;
+
+		case "fulfilled":
+			icon = cloudDoneOutline;
+			message = "Saved";
+			break;
+
+		case "rejected":
+			icon = closeOutline;
+			message = "Saving Failed";
+			break;
+
+		default:
+			icon = cloudOfflineOutline;
+			message = "Not Saved";
+			break;
+	}
+
+	return (
+		<div className="saving-indicator">
+			<IonIcon
+				icon={icon}
+				className={classNames({
+					error: state === "rejected",
+					success: state === "fulfilled",
+				})}
+			/>
+			<span>{message}</span>
+		</div>
+	);
+}
 
 // Base Components
 
