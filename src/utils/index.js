@@ -1,3 +1,5 @@
+import { Timestamp, updateDoc } from "firebase/firestore";
+
 export function delay(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -18,5 +20,25 @@ export function passwordValidator(text) {
 export function emptyValidator(text) {
 	if (!text.trim()) {
 		return "Field cannot be empty";
+	}
+}
+
+export function createArticleContent(editor) {
+	return {
+		title: editor.title,
+		content: JSON.stringify(editor.children),
+		timestamp: Timestamp.now(),
+	};
+}
+
+export async function publishArticle(editor) {
+	if (!editor.docRef) return;
+	try {
+		await updateDoc(editor.docRef, {
+			is_published: true,
+			"data.live": createArticleContent(editor),
+		});
+	} catch (error) {
+		console.error(error);
 	}
 }

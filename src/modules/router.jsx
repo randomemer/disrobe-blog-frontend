@@ -40,9 +40,7 @@ export default createBrowserRouter([
 		path: "/",
 		element: <Outlet />,
 		errorElement:
-			process.env.NODE_ENV === "development" ? (
-				<ErrorDevelopmentPage />
-			) : null,
+			process.env.NODE_ENV === "development" ? <ErrorDevelopmentPage /> : null,
 		children: [
 			{
 				index: true,
@@ -59,7 +57,7 @@ export default createBrowserRouter([
 					const docRef = doc(db, "articles", params.id);
 					const docSnapshot = await getDoc(docRef);
 
-					return { article: docSnapshot };
+					return { article: docSnapshot.data() };
 				},
 			},
 			{

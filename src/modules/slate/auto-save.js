@@ -1,5 +1,9 @@
-import { auth, db } from "@/modules/firebase";
-import { addDoc, collection, Timestamp, updateDoc } from "firebase/firestore";
+import { createArticleContent } from "@/utils";
+import reduxStore from "@/modules/redux-store";
+import {
+	createArticleDraft,
+	updateArticleDraft,
+} from "@/modules/redux-store/slices/article-draft";
 
 const AUTO_SAVE_TIMEOUT = 5000;
 
@@ -15,13 +19,15 @@ export default function withAutoSave(editor) {
 		);
 
 		if (isAstChange) {
-			const { savedAt } = editor;
+			const savedAt = reduxStore.getState().article_draft.savedAt;
 			const now = Date.now();
 
 			if (!savedAt || now - savedAt > 0) {
+				reduxStore.dispatch({
+					type: "article_draft/setSavedAt",
+					payload: now + AUTO_SAVE_TIMEOUT,
+				});
 				setTimeout(() => saveArticleDraft(editor), AUTO_SAVE_TIMEOUT);
-				editor.savedAt = now + AUTO_SAVE_TIMEOUT;
-				console.log("will save after 5 secs");
 			}
 		}
 	};
@@ -29,40 +35,20 @@ export default function withAutoSave(editor) {
 	return editor;
 }
 
-function createArticleContent(editor) {
-	return {
-		title: editor.title,
-		content: JSON.stringify(editor.children),
-		timestamp: Timestamp.now(),
-	};
-}
-
 export async function saveArticleDraft(editor) {
-	const articles = collection(db, "articles");
-	try {
-		const content = createArticleContent(editor);
-		console.log("saving draft ...", content);
-		if (!editor.docRef) {
-			// create article in firestore
-			editor.docRef = await addDoc(articles, {
-				author: auth.currentUser.uid,
-				is_published: false,
-				data: {
-					draft: content,
-				},
-				created_at: Timestamp.now(),
-			});
-			console.log(editor.docRef);
+	const content = createArticleContent(editor);
+	const state = reduxStore.getState();
+	const doc = state.article_draft.id;
 
+	if (!doc) {
+		const res = await reduxStore.dispatch(createArticleDraft(content));
+
+		if (!res.error) {
 			// change url to appropriate article edit
-			const url = `/story/${editor.docRef.id}/edit`;
+			const url = `/story/${res.payload}/edit`;
 			window.history.replaceState(null, "", url);
-		} else {
-			await updateDoc(editor.docRef, {
-				"data.draft": content,
-			});
 		}
-	} catch (error) {
-		console.error(error);
+	} else {
+		reduxStore.dispatch(updateArticleDraft(content));
 	}
 }

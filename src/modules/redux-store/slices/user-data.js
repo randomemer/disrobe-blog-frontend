@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 
 export const fetchUserProfile = createAsyncThunk(
-	"user-profile/fetch-user",
+	"user_profile/fetch-user",
 	async (uid) => {
 		console.log("fetching user ...");
 		const docRef = doc(db, "authors", uid);
@@ -22,7 +22,7 @@ export const fetchUserProfile = createAsyncThunk(
 );
 
 const userProfileSlice = createSlice({
-	name: "user-profile",
+	name: "user_profile",
 	initialState: {
 		value: null,
 		status: "idle",

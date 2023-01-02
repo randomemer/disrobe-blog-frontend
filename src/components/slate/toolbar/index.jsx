@@ -1,4 +1,6 @@
 import ImageEditor from "@/components/slate/image-editor";
+import useWordCount from "@/hooks/use-word-count";
+import { publishArticle } from "@/utils";
 import {
 	getActiveLinkNode,
 	isBlockActive,
@@ -38,6 +40,8 @@ export default function ArticleToolbar() {
 	const editor = useSlate();
 
 	const [isImageModalOpen, setImageModalOpen] = useState(false);
+
+	const articleInfo = useWordCount();
 
 	return (
 		<Fragment>
@@ -105,7 +109,17 @@ export default function ArticleToolbar() {
 				</div>
 				{/* Status Area */}
 				<div className="article-status">
-					<button type="button" className="publish-button button">
+					<div className="content-info">
+						<div className="word-count">{articleInfo.wordCount} words</div>
+						<div className="read-time">{articleInfo.readTime}</div>
+					</div>
+					<button
+						type="button"
+						className="publish-button button"
+						onClick={() => {
+							// publishArticle();
+						}}
+					>
 						Publish
 					</button>
 				</div>
