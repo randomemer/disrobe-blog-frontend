@@ -7,7 +7,7 @@ ReactModal.defaultStyles.overlay = {
 	right: 0,
 	bottom: 0,
 	zIndex: 999,
-	backgroundColor: "rgba(255, 255, 255, 0.5)",
+	backgroundColor: "rgba(0, 0, 0, 0.5)",
 };
 
 ReactModal.defaultStyles.content = {

@@ -4,7 +4,7 @@ import reduxStore from "@/modules/redux-store";
 import { fetchUserProfile } from "@/modules/redux-store/slices/user-data";
 import router from "@/modules/router";
 import { onAuthStateChanged } from "firebase/auth";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 
 import "@/utils/modal-utils";
@@ -15,7 +15,11 @@ function App() {
 
 	// setup listener for auth state changes
 	onAuthStateChanged(auth, (user) => {
-		if (user) {
+		const {
+			user_profile: { value, status },
+		} = reduxStore.getState();
+
+		if (user && status === "idle" && value === null) {
 			localStorage.setItem("firebase-uid", user.uid);
 			reduxStore.dispatch(fetchUserProfile(user.uid));
 		} else {

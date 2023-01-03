@@ -3,7 +3,7 @@
 .image-editor-container {
 	padding: 2.4rem;
 	box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-	background-color: #ffffff;
+	background-color: #4d4d4d;
 
 	display: flex;
 	flex-direction: column;
@@ -31,7 +31,7 @@
 		}
 
 		.line {
-			border: 1px solid rgba(83, 83, 83, 0.3);
+			border: 1px solid rgba(255, 255, 255, 0.3);
 			flex: 1;
 			height: 1px;
 		}
@@ -44,5 +44,23 @@
 		color: general.$primary-color;
 		font-weight: 500;
 		font-size: 1.6rem;
+	}
+
+	.upload-info {
+		.upload-track {
+			background-color: rgba($color: white, $alpha: 0.3);
+			height: 25px;
+			width: 100%;
+
+			.upload-bar {
+				transition: all 0.3s ease;
+				height: 25px;
+				background-color: general.$primary-color;
+			}
+		}
+
+		.upload-status {
+			font-size: 1.4rem;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-import ImageEditor from "@/components/slate/image-editor";
+import ImageEditor from "@/components/slate/image-dialog";
 import useWordCount from "@/hooks/use-word-count";
 import { selectSavingStatus } from "@/modules/redux-store/slices/article-draft";
 // import { publishArticle } from "@/utils";

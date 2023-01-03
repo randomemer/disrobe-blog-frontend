@@ -26,7 +26,7 @@ export default function Write() {
 	const dispatch = useDispatch();
 
 	let [title, content] = ["", [DEFAULT_PARAGRAPH]];
-	content = sample;
+	// content = sample;
 
 	// get article data if given
 	const params = useParams();
