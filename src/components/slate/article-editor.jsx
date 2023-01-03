@@ -21,6 +21,9 @@ export default function ArticleEditable() {
 				onKeyDown={onKeyDown}
 				renderElement={renderElement}
 				renderLeaf={renderLeaf}
+				onClick={(event) => {
+					console.log(event);
+				}}
 			/>
 			{linkNode ? <LinkEditor /> : null}
 		</Fragment>

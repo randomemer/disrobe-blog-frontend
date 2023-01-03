@@ -5,8 +5,22 @@
 	gap: 0.8rem;
 	width: 100%;
 
-	.image-wrapper {
-		position: relative;
+	.image-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.image-wrapper {
+			position: relative;
+
+			img {
+				transition: all 0.3s;
+				// max-height: 40rem;
+				max-width: 100%;
+				object-fit: cover;
+				margin-bottom: 1.2rem;
+			}
+		}
 	}
 
 	.image-buttons {
@@ -21,9 +35,7 @@
 		top: $offset;
 		right: $offset;
 
-		visibility: hidden;
-		pointer-events: none;
-		opacity: 0;
+		@include general.hide();
 
 		button {
 			background-color: #333333;
@@ -44,20 +56,6 @@
 			font-size: 2.4rem;
 			color: general.$primary-color;
 		}
-	}
-
-	.image-container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	img {
-		transition: all 0.3s;
-		// max-height: 40rem;
-		max-width: 100%;
-		object-fit: cover;
-		margin-bottom: 1.2rem;
 	}
 
 	.image-caption {
@@ -87,16 +85,13 @@
 		}
 	}
 
-	// editor-image--selected
-	&--#{"selected"} {
+	&--selected {
 		img {
 			box-shadow: 0px 0px 0px 5px general.$primary-color;
 		}
 
 		.image-buttons {
-			visibility: visible;
-			pointer-events: all;
-			opacity: 1;
+			@include general.unhide();
 		}
 	}
 }

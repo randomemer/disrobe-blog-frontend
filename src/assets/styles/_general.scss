@@ -36,3 +36,15 @@ $shadow: 0px 0px 3px 0px rgba(123, 123, 123, 0.75);
 		right: 0;
 	}
 }
+
+@mixin hide() {
+	visibility: hidden;
+	pointer-events: none;
+	opacity: 0;
+}
+
+@mixin unhide() {
+	visibility: visible;
+	pointer-events: all;
+	opacity: 1;
+}
