@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import articleDraftSlice from "./slices/article-draft";
+import storyDraftSlice from "./slices/story-draft";
 import userProfileSlice from "./slices/user-data";
 
 export default configureStore({
 	reducer: {
 		user_profile: userProfileSlice.reducer,
-		article_draft: articleDraftSlice.reducer,
+		story_draft: storyDraftSlice.reducer,
 	},
 	devTools:
 		window.__REDUX_DEVTOOLS_EXTENSION__ &&

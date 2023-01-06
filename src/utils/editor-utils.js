@@ -1,6 +1,6 @@
 import { Editor, Element, Range, Transforms } from "slate";
 import isHotkey, { isKeyHotkey } from "is-hotkey";
-import { saveArticleDraft } from "@/modules/slate/auto-save";
+import { saveStoryDraft } from "@/modules/slate/auto-save";
 
 export const LIST_TYPES = ["bulleted-list", "numbered-list"];
 
@@ -10,7 +10,7 @@ const KEY_BINDINGS = {
 	"mod+u": (editor) => toggleMark(editor, "underline"),
 	"mod+`": (editor) => toggleMark(editor, "code"),
 	"shift+enter": (editor) => Editor.insertSoftBreak(editor),
-	"mod+s": (editor) => saveArticleDraft(editor),
+	"mod+s": (editor) => saveStoryDraft(editor),
 };
 const KEY_BINDINGS_ENTRIES = Object.entries(KEY_BINDINGS);
 

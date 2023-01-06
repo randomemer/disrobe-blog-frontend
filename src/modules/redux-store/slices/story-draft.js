@@ -8,11 +8,11 @@ import {
 	updateDoc,
 } from "firebase/firestore";
 
-export const createArticleDraft = createAsyncThunk(
-	"article_draft/create",
+export const createStoryDraft = createAsyncThunk(
+	"story_draft/create",
 	async (content) => {
-		const articles = collection(db, "articles");
-		const docRef = await addDoc(articles, {
+		const stories = collection(db, "stories");
+		const docRef = await addDoc(stories, {
 			author: auth.currentUser.uid,
 			is_published: false,
 			data: {
@@ -24,20 +24,20 @@ export const createArticleDraft = createAsyncThunk(
 	}
 );
 
-export const updateArticleDraft = createAsyncThunk(
-	"article_draft/update",
+export const updateStoryDraft = createAsyncThunk(
+	"story_draft/update",
 	async (content, { getState }) => {
 		const state = getState();
-		const articles = collection(db, "articles");
-		const docRef = doc(articles, state.article_draft.id);
+		const stories = collection(db, "stories");
+		const docRef = doc(stories, state.story_draft.id);
 		return await updateDoc(docRef, {
 			"data.draft": content,
 		});
 	}
 );
 
-const articleDraftSlice = createSlice({
-	name: "article_draft",
+const storyDraftSlice = createSlice({
+	name: "story_draft",
 	initialState: {
 		id: null,
 		status: "idle",
@@ -45,7 +45,7 @@ const articleDraftSlice = createSlice({
 		savedAt: null,
 	},
 	reducers: {
-		setArticleID: (state, action) => {
+		setStoryID: (state, action) => {
 			state.id = action.payload;
 		},
 		setSavedAt: (state, action) => {
@@ -54,39 +54,39 @@ const articleDraftSlice = createSlice({
 	},
 	extraReducers(builder) {
 		// create
-		builder.addCase(createArticleDraft.pending, (state) => {
+		builder.addCase(createStoryDraft.pending, (state) => {
 			state.status = "pending";
 		});
 
-		builder.addCase(createArticleDraft.fulfilled, (state, action) => {
+		builder.addCase(createStoryDraft.fulfilled, (state, action) => {
 			state.status = "fulfilled";
 			state.id = action.payload;
 			console.log(action.payload);
 		});
 
-		builder.addCase(createArticleDraft.rejected, (state, action) => {
+		builder.addCase(createStoryDraft.rejected, (state, action) => {
 			state.status = "rejected";
 			state.error = action.error;
 		});
 
 		// update
-		builder.addCase(updateArticleDraft.pending, (state) => {
+		builder.addCase(updateStoryDraft.pending, (state) => {
 			state.status = "pending";
 		});
 
-		builder.addCase(updateArticleDraft.fulfilled, (state) => {
+		builder.addCase(updateStoryDraft.fulfilled, (state) => {
 			state.status = "fulfilled";
 		});
 
-		builder.addCase(updateArticleDraft.rejected, (state, action) => {
+		builder.addCase(updateStoryDraft.rejected, (state, action) => {
 			state.status = "rejected";
 			state.error = action.error;
 		});
 	},
 });
 
-export const selectArticleDraftID = (state) => state.article_draft.id;
-export const selectArticleSavedAt = (state) => state.article_draft.savedAt;
-export const selectSavingStatus = (state) => state.article_draft.status;
+export const selectStoryDraftID = (state) => state.story_draft.id;
+export const selectStorySavedAt = (state) => state.story_draft.savedAt;
+export const selectSavingStatus = (state) => state.story_draft.status;
 
-export default articleDraftSlice;
+export default storyDraftSlice;

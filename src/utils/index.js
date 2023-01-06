@@ -23,7 +23,7 @@ export function emptyValidator(text) {
 	}
 }
 
-export function createArticleContent(editor) {
+export function createStoryContent(editor) {
 	return {
 		title: editor.title,
 		content: JSON.stringify(editor.children),
@@ -31,12 +31,12 @@ export function createArticleContent(editor) {
 	};
 }
 
-export async function publishArticle(editor) {
+export async function publishStory(editor) {
 	if (!editor.docRef) return;
 	try {
 		await updateDoc(editor.docRef, {
 			is_published: true,
-			"data.live": createArticleContent(editor),
+			"data.live": createStoryContent(editor),
 		});
 	} catch (error) {
 		console.error(error);

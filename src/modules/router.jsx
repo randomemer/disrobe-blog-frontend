@@ -54,7 +54,7 @@ export default createBrowserRouter([
 				path: "/story/:id/edit",
 				element: <Write />,
 				loader: async ({ params }) => {
-					const docRef = doc(db, "articles", params.id);
+					const docRef = doc(db, "stories", params.id);
 					const docSnapshot = await getDoc(docRef);
 
 					return { article: docSnapshot.data() };

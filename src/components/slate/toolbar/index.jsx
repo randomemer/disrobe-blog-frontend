@@ -1,6 +1,6 @@
 import ImageEditor from "@/components/slate/image-dialog";
 import useWordCount from "@/hooks/use-word-count";
-import { selectSavingStatus } from "@/modules/redux-store/slices/article-draft";
+import { selectSavingStatus } from "@/modules/redux-store/slices/story-draft";
 // import { publishArticle } from "@/utils";
 import {
 	getActiveLinkNode,
@@ -51,7 +51,7 @@ export default function ArticleToolbar() {
 
 	const [isImageModalOpen, setImageModalOpen] = useState(false);
 
-	const articleInfo = useWordCount();
+	const storyInfo = useWordCount();
 
 	return (
 		<Fragment>
@@ -134,9 +134,9 @@ export default function ArticleToolbar() {
 						</button>
 					</div>
 					<div className="content-info">
-						<div className="word-count">{articleInfo.wordCount} words</div>
+						<div className="word-count">{storyInfo.wordCount} words</div>
 						<span>●</span>
-						<div className="read-time">{articleInfo.readTime}</div>
+						<div className="read-time">{storyInfo.readTime}</div>
 					</div>
 					<SavingIndicator />
 				</div>

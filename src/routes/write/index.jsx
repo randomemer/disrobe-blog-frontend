@@ -20,7 +20,7 @@ export default function Write() {
 			withHistory,
 			withReact,
 			withInlines,
-			// withAutoSave,
+			withAutoSave,
 		]);
 	}, []);
 	const dispatch = useDispatch();
@@ -37,7 +37,7 @@ export default function Write() {
 		const { draft } = article.data;
 		title = draft.title;
 		content = JSON.parse(draft.content);
-		dispatch({ type: "article_draft/setArticleID", payload: params.id });
+		dispatch({ type: "story_draft/setStoryID", payload: params.id });
 	}
 
 	return (
