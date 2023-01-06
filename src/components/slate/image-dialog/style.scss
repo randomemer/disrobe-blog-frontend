@@ -47,19 +47,25 @@
 	}
 
 	.upload-info {
+		display: flex;
+		flex-direction: column;
+		$upload-bar-height: 1.6rem;
+
 		.upload-track {
 			background-color: rgba($color: white, $alpha: 0.3);
-			height: 25px;
+			height: $upload-bar-height;
 			width: 100%;
+			margin-bottom: 1.2rem;
 
 			.upload-bar {
 				transition: all 0.3s ease;
-				height: 25px;
+				height: 100%;
 				background-color: general.$primary-color;
 			}
 		}
 
 		.upload-status {
+			align-self: flex-end;
 			font-size: 1.4rem;
 		}
 	}

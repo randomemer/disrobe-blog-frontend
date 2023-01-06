@@ -4,7 +4,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { linkOutline } from "ionicons/icons";
 import isUrl from "is-url";
 import { extname } from "path-browserify";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Transforms } from "slate";
 import { useSlate } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
@@ -12,8 +12,6 @@ import imageCompression from "browser-image-compression";
 import "./style.scss";
 
 const IMAGE_SIZE_LIMIT = 300_000; // in bytes
-
-// https://images.unsplash.com/photo-1546587348-d12660c30c50?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8bmF0dXJhbHxlbnwwfHwwfHw%3D&w=1000&q=80
 
 export default function ImageEditor({ closeModal }) {
 	const editor = useSlate();
@@ -23,6 +21,12 @@ export default function ImageEditor({ closeModal }) {
 
 	const [isUploading, setUploading] = useState(false);
 	const [progress, setProgress] = useState(0);
+	const [status, setStatus] = useState("");
+
+	useEffect(
+		() => console.log("changed state"),
+		[isUploading, progress, status]
+	);
 
 	const addImageNode = (editor, node) => {
 		const index = editor.selection
@@ -30,7 +34,6 @@ export default function ImageEditor({ closeModal }) {
 			: editor.children.length;
 
 		Transforms.insertNodes(editor, node, { at: [index] });
-		console.log("inserted image", index, node);
 	};
 
 	// For local images
@@ -38,43 +41,44 @@ export default function ImageEditor({ closeModal }) {
 		setUploading(true);
 
 		let [file] = event.target.files;
-		const imageId = uuidv4();
-		const ext = extname(file.name);
-		const path = `images/stories/${imageId}${ext}`;
-
+		const path = `images/stories/${uuidv4()}${extname(file.name)}`;
 		const locationRef = ref(storage, path);
 
 		// compress image
 		if (file.size > IMAGE_SIZE_LIMIT) {
+			setStatus("compressing");
 			file = await imageCompression(file, {
 				maxSizeMB: IMAGE_SIZE_LIMIT / 1e6,
+				useWebWorker: false,
 				onProgress: (progress) => {
 					setProgress(progress / 100);
 				},
 			});
 		}
 
-		const uploadTask = uploadBytesResumable(locationRef, file);
+		console.log(file.size);
 
-		// await uploadTask;
+		const uploadTask = uploadBytesResumable(locationRef, file);
+		setStatus("uploading");
 		uploadTask.on("state_changed", {
 			next: (snapshot) => {
 				setProgress(snapshot.bytesTransferred / snapshot.totalBytes);
 			},
 			error: (error) => {
-				closeModal();
-				setUploading(false);
 				// TODO : show error dialog
 				console.error(error);
 			},
 			complete: async () => {
-				closeModal();
-				setUploading(false);
 				const url = await getDownloadURL(locationRef);
-				const node = createImageNode("local", url, path);
+				const node = createImageNode("backend", url, path);
 				addImageNode(editor, node);
 			},
 		});
+
+		await uploadTask;
+
+		closeModal();
+		setUploading(false);
 	};
 
 	// For network images
@@ -118,7 +122,7 @@ export default function ImageEditor({ closeModal }) {
 			</div>
 
 			{isUploading ? (
-				<UploadInfo progress={progress} />
+				<UploadInfo progress={progress} status={status} />
 			) : (
 				<button
 					type="button"
@@ -153,13 +157,17 @@ function createImageNode(source_type, url, bucket_path) {
 }
 
 function UploadInfo({ progress, status }) {
-	const barWidth = `${progress * 100}%`;
+	const barWidth = `${(progress * 100).toFixed(0)}%`;
+	console.log({ progress, status });
+
 	return (
 		<div className="upload-info">
 			<div className="upload-track">
 				<div className="upload-bar" style={{ width: barWidth }}></div>
 			</div>
-			<div className="uplaod-status">{status}</div>
+			<div className="upload-status">
+				{status} : {barWidth}
+			</div>
 		</div>
 	);
 }

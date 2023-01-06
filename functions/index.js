@@ -17,7 +17,7 @@ export const cleanStoryImages = functions
 			let draft = await doc.get("data.draft.content");
 			draft = JSON.parse(draft);
 			for (const element of draft) {
-				if (element.type === "image" && element.source_type === "local") {
+				if (element.type === "image" && element.source_type === "backend") {
 					images.add(element.bucket_path);
 				}
 			}
