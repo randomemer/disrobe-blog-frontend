@@ -1,4 +1,6 @@
-import Article from "@/routes/article";
+import App from "@/App";
+import { db } from "@/modules/firebase";
+import Story from "@/routes/article";
 import Auth from "@/routes/auth";
 import ErrorDevelopmentPage from "@/routes/error-dev";
 import Home from "@/routes/home";
@@ -8,39 +10,17 @@ import Write from "@/routes/write";
 import { doc, getDoc } from "firebase/firestore";
 import {
 	createBrowserRouter,
-	Outlet,
 	redirect,
 	useLoaderData,
 	useLocation,
 	useNavigate,
 	useParams,
 } from "react-router-dom";
-import { db } from "./firebase";
-
-export function withRouter(Component) {
-	function ComponentWithRouterProp(props) {
-		let location = useLocation();
-		let navigate = useNavigate();
-		let params = useParams();
-		let loaderData = useLoaderData();
-		return (
-			<Component
-				{...props}
-				router={{ location, navigate, params, loaderData }}
-			/>
-		);
-	}
-
-	return <ComponentWithRouterProp />;
-}
 
 export default createBrowserRouter([
-	// public routes
 	{
 		path: "/",
-		element: <Outlet />,
-		errorElement:
-			process.env.NODE_ENV === "development" ? <ErrorDevelopmentPage /> : null,
+		element: <App />,
 		children: [
 			{
 				index: true,
@@ -48,16 +28,41 @@ export default createBrowserRouter([
 			},
 			{
 				path: "/story/:id",
-				element: <Article />,
-			},
-			{
-				path: "/story/:id/edit",
-				element: <Write />,
+				element: <Story />,
 				loader: async ({ params }) => {
 					const docRef = doc(db, "stories", params.id);
 					const docSnapshot = await getDoc(docRef);
+					const data = docSnapshot.data();
 
-					return { article: docSnapshot.data() };
+					// TODO : remove later after testing
+					data.is_published = true;
+
+					if (data === undefined || !data.is_published) {
+						throw new Response("", {
+							status: 404,
+							statusText: "Story doesn't exist",
+						});
+					}
+
+					return { story: data };
+				},
+			},
+			{
+				path: "/story/:id/edit",
+				element: <Write edit={true} />,
+				loader: async ({ params }) => {
+					const docRef = doc(db, "stories", params.id);
+					const docSnapshot = await getDoc(docRef);
+					const data = docSnapshot.data();
+
+					if (data === undefined) {
+						throw new Response("", {
+							status: 404,
+							statusText: "Story doesn't exist",
+						});
+					}
+
+					return { story: data };
 				},
 			},
 			{
@@ -93,11 +98,14 @@ export default createBrowserRouter([
 			},
 			{
 				path: "/settings",
-				loader: (p) => {
-					console.log(p);
+				loader: () => {
+					// const history = useHis
 					const uid = localStorage.getItem("firebase-uid");
-					if (!uid) throw redirect("/auth/login");
-					// else throw redirect("/settings/account");
+					console.log(uid);
+					if (!uid)
+						throw redirect(
+							`/auth/login?redirect=${encodeURIComponent("/settings")}`
+						);
 				},
 				element: withRouter(Settings),
 				children: [
@@ -113,5 +121,26 @@ export default createBrowserRouter([
 				],
 			},
 		],
+		errorElement:
+			process.env.NODE_ENV === "development" ? <ErrorDevelopmentPage /> : null,
 	},
 ]);
+
+export function withRouter(Component) {
+	function ComponentWithRouterProp(props) {
+		let location = useLocation();
+		let navigate = useNavigate();
+		let params = useParams();
+		let loaderData = useLoaderData();
+		return (
+			<Component
+				{...props}
+				router={{ location, navigate, params, loaderData }}
+			/>
+		);
+	}
+
+	return <ComponentWithRouterProp />;
+}
+
+// http://localhost:3000/story/qCw1Qqs5A3ikIL023KXA

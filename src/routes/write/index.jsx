@@ -14,7 +14,7 @@ import "./style.scss";
 import sample from "@/../references/kailash-article";
 import { useDispatch } from "react-redux";
 
-export default function Write() {
+export default function Write(props) {
 	const editor = useMemo(() => {
 		return withPlugins(createEditor(), [
 			withHistory,
@@ -28,13 +28,13 @@ export default function Write() {
 	let [title, content] = ["", [DEFAULT_PARAGRAPH]];
 	// content = sample;
 
-	// get article data if given
+	// get story data if given
 	const params = useParams();
 	const loaderData = useLoaderData();
-	const { article } = loaderData || {};
 
-	if (article) {
-		const { draft } = article.data;
+	if (props.edit) {
+		const { story } = loaderData;
+		const { draft } = story.data;
 		title = draft.title;
 		content = JSON.parse(draft.content);
 		dispatch({ type: "story_draft/setStoryID", payload: params.id });

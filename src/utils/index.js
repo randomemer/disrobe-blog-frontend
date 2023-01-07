@@ -1,4 +1,5 @@
-import { Timestamp, updateDoc } from "firebase/firestore";
+import { db } from "@/modules/firebase";
+import { doc, Timestamp, updateDoc } from "firebase/firestore";
 
 export function delay(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -31,10 +32,9 @@ export function createStoryContent(editor) {
 	};
 }
 
-export async function publishStory(editor) {
-	if (!editor.docRef) return;
+export async function publishStory(editor, storyId) {
 	try {
-		await updateDoc(editor.docRef, {
+		await updateDoc(doc(db, "stories", storyId), {
 			is_published: true,
 			"data.live": createStoryContent(editor),
 		});

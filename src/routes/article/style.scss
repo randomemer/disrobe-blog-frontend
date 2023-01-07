@@ -1,28 +1,54 @@
-.app-main {
-	// background-color: aquamarine;
-	flex-grow: 1;
-	max-width: 80rem;
-	display: flex;
-	flex-direction: column;
+@use "@/assets/styles/general";
 
+.app-main {
+	margin: 4.8rem auto;
+	max-width: 120rem;
+	// background-color: purple;
+
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 4.8rem;
+}
+
+.story {
+	&-heading-container {
+		.story-heading {
+			font-size: 5.6rem;
+			margin-bottom: 3.2rem;
+			line-height: 1.3;
+		}
+	}
+
+	&-content {
+	}
+}
+
+.story-content {
 	p {
 		font-size: 2rem;
 		line-height: 1.6;
 		font-weight: 500;
 		margin-top: 3rem;
 	}
-}
 
-.article-heading {
-	font-size: 5.6rem;
-	margin-bottom: 3.2rem;
-}
+	figure {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
 
-.image {
-	max-width: 100%;
-}
+		img {
+			max-width: 100%;
+		}
 
-.article-thumb {
-	align-self: center;
-	// height: 36rem;
+		figcaption {
+			align-self: center;
+			font-style: italic;
+		}
+	}
+	a {
+		&:link,
+		&:visited {
+			color: general.$primary-color;
+		}
+	}
 }

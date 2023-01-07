@@ -1,50 +1,38 @@
-import AppHeader from "@/components/header";
-import { Component } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import "./style.scss";
 
-export default class Settings extends Component {
-	constructor(props) {
-		super(props);
-	}
+export default function Settings() {
+	const location = useLocation();
 
-	componentDidMount() {
-		this.links = document.querySelector(".settings-links");
+	console.log(location);
 
-		this.highlightLink();
-	}
+	useEffect(() => {});
 
-	componentDidUpdate() {
-		// this.highlightLink();
-	}
+	const isActiveLink = (path) => {
+		return location.pathname === path;
+	};
 
-	highlightLink() {
-		const { location } = this.props.router;
-
-		const anchor = this.links.querySelector(
-			`a[href="${location.pathname}"]`
-		);
-	}
-
-	render() {
-		return (
-			<>
-				<AppHeader />
-				<div className="settings-container">
-					<div className="settings-side-nav">
-						<div className="active-link-line"></div>
-						<ul className="settings-links">
-							<Link to="/settings/account">Account</Link>
-							<Link to="/settings/notifications">
-								Notifications
-							</Link>
-						</ul>
-					</div>
-					<div className="settings-content">
-						<Outlet />
-					</div>
-				</div>
-			</>
-		);
-	}
+	return (
+		<div className="settings-container">
+			<div className="settings-side-nav">
+				<div className="active-link-line"></div>
+				<ul className="settings-links">
+					{SETTINGS_SUBROUTES.map(({ path, name }) => (
+						<Link key={path} to={path}>
+							{name}
+						</Link>
+					))}
+				</ul>
+			</div>
+			<div className="settings-content">
+				<Outlet />
+			</div>
+		</div>
+	);
 }
+
+const SETTINGS_SUBROUTES = [
+	{ path: "account", name: "Account" },
+	{ path: "notifications", name: "Notifications" },
+];

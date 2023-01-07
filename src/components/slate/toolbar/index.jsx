@@ -1,7 +1,10 @@
 import ImageEditor from "@/components/slate/image-dialog";
 import useWordCount from "@/hooks/use-word-count";
-import { selectSavingStatus } from "@/modules/redux-store/slices/story-draft";
-// import { publishArticle } from "@/utils";
+import {
+	selectSavingStatus,
+	selectStoryDraftID,
+} from "@/modules/redux-store/slices/story-draft";
+import { publishStory } from "@/utils";
 import {
 	getActiveLinkNode,
 	isBlockActive,
@@ -48,10 +51,10 @@ const HEADING_STYLES = [
 
 export default function ArticleToolbar() {
 	const editor = useSlate();
+	const storyInfo = useWordCount();
+	const storyID = useSelector(selectStoryDraftID);
 
 	const [isImageModalOpen, setImageModalOpen] = useState(false);
-
-	const storyInfo = useWordCount();
 
 	return (
 		<Fragment>
@@ -123,8 +126,8 @@ export default function ArticleToolbar() {
 						<button
 							type="button"
 							className="publish-button button"
-							onClick={() => {
-								// publishArticle();
+							onClick={async () => {
+								await publishStory(editor, storyID);
 							}}
 						>
 							Publish

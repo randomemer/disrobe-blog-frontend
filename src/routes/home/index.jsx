@@ -1,12 +1,7 @@
-import AppHeader from "@/components/header";
-import { Component, Fragment } from "react";
+import { Component } from "react";
 
 export default class Home extends Component {
 	render() {
-		return (
-			<Fragment>
-				<AppHeader />
-			</Fragment>
-		);
+		return <main id="app-main"></main>;
 	}
 }
