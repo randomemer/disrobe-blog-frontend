@@ -1,6 +1,6 @@
 import FormTextInput from "@/components/text-input";
 import { storage } from "@/modules/firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { ref, uploadBytesResumable } from "firebase/storage";
 import { linkOutline } from "ionicons/icons";
 import isUrl from "is-url";
 import { extname } from "path-browserify";
@@ -23,10 +23,7 @@ export default function ImageEditor({ closeModal }) {
 	const [progress, setProgress] = useState(0);
 	const [status, setStatus] = useState("");
 
-	useEffect(
-		() => console.log("changed state"),
-		[isUploading, progress, status]
-	);
+	useEffect(() => {}, [isUploading, progress, status]);
 
 	const addImageNode = (editor, node) => {
 		const index = editor.selection
@@ -49,7 +46,6 @@ export default function ImageEditor({ closeModal }) {
 			setStatus("compressing");
 			file = await imageCompression(file, {
 				maxSizeMB: IMAGE_SIZE_LIMIT / 1e6,
-				useWebWorker: false,
 				onProgress: (progress) => {
 					setProgress(progress / 100);
 				},
@@ -68,8 +64,10 @@ export default function ImageEditor({ closeModal }) {
 				// TODO : show error dialog
 				console.error(error);
 			},
-			complete: async () => {
-				const url = await getDownloadURL(locationRef);
+			complete: () => {
+				const url = `https://firebasestorage.googleapis.com/v0/b/${
+					locationRef.bucket
+				}/o/${encodeURIComponent(path)}?alt=media`;
 				const node = createImageNode("backend", url, path);
 				addImageNode(editor, node);
 			},
@@ -158,7 +156,6 @@ function createImageNode(source_type, url, bucket_path) {
 
 function UploadInfo({ progress, status }) {
 	const barWidth = `${(progress * 100).toFixed(0)}%`;
-	console.log({ progress, status });
 
 	return (
 		<div className="upload-info">
