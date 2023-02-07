@@ -1,9 +1,9 @@
 import LinkEditor from "@/components/slate/link-editor";
+import { SlateElement, SlateLeaf } from "@/components/slate/rendering";
 import useEditorConfig from "@/hooks/use-editor-config";
 import { useLinkNode } from "@/hooks/use-link-node";
 import { Fragment, useCallback } from "react";
 import { Editable } from "slate-react";
-import { SlateElement, SlateLeaf } from "../rendering";
 
 export default function ArticleEditable() {
   const { onKeyDown } = useEditorConfig();

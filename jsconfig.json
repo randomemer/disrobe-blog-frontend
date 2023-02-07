@@ -1,13 +1,13 @@
 {
-	"compilerOptions": {
-		"target": "ES5",
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		},
-		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"strict": true
-	},
-	"include": ["src/**/*"],
-	"exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "ES5",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "strict": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
