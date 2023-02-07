@@ -15,62 +15,62 @@ import sample from "@/../references/kailash-article";
 import { useDispatch } from "react-redux";
 
 export default function Write(props) {
-	const editor = useMemo(() => {
-		return withPlugins(createEditor(), [
-			withHistory,
-			withReact,
-			withInlines,
-			withAutoSave,
-		]);
-	}, []);
-	const dispatch = useDispatch();
+  const editor = useMemo(() => {
+    return withPlugins(createEditor(), [
+      withHistory,
+      withReact,
+      withInlines,
+      withAutoSave,
+    ]);
+  }, []);
+  const dispatch = useDispatch();
 
-	let [title, content] = ["", [DEFAULT_PARAGRAPH]];
-	// content = sample;
+  let [title, content] = ["", [DEFAULT_PARAGRAPH]];
+  // content = sample;
 
-	// get story data if given
-	const params = useParams();
-	const loaderData = useLoaderData();
+  // get story data if given
+  const params = useParams();
+  const loaderData = useLoaderData();
 
-	if (props.edit) {
-		const { story } = loaderData;
-		const { draft } = story.data;
-		title = draft.title;
-		content = JSON.parse(draft.content);
-		dispatch({ type: "story_draft/setStoryID", payload: params.id });
-	}
+  if (props.edit) {
+    const { story } = loaderData;
+    const { draft } = story.data;
+    title = draft.title;
+    content = JSON.parse(draft.content);
+    dispatch({ type: "story_draft/setStoryID", payload: params.id });
+  }
 
-	return (
-		<Fragment>
-			<AppHeader />
-			<div className="write-app">
-				<Slate editor={editor} value={content}>
-					<div className="article-container">
-						<main className="article-area">
-							<ArticleTitle initialValue={title} />
-							<ArticleEditable />
-						</main>
-					</div>
-					<ArticleToolbar />
-				</Slate>
-			</div>
-		</Fragment>
-	);
+  return (
+    <Fragment>
+      <AppHeader />
+      <div className="write-app">
+        <Slate editor={editor} value={content}>
+          <div className="article-container">
+            <main className="article-area">
+              <ArticleTitle initialValue={title} />
+              <ArticleEditable />
+            </main>
+          </div>
+          <ArticleToolbar />
+        </Slate>
+      </div>
+    </Fragment>
+  );
 }
 
 function ArticleTitle({ initialValue }) {
-	const editor = useSlate();
-	const [title, setTitle] = useState(initialValue ?? "");
-	editor.title = title;
+  const editor = useSlate();
+  const [title, setTitle] = useState(initialValue ?? "");
+  editor.title = title;
 
-	return (
-		<input
-			type="text"
-			name="article-title"
-			className="editor-block"
-			placeholder="Title"
-			value={title}
-			onChange={(event) => setTitle(event.target.value)}
-		/>
-	);
+  return (
+    <input
+      type="text"
+      name="article-title"
+      className="editor-block"
+      placeholder="Title"
+      value={title}
+      onChange={(event) => setTitle(event.target.value)}
+    />
+  );
 }

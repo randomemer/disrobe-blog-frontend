@@ -9,11 +9,11 @@ import { RouterProvider } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-	<React.StrictMode>
-		<Redux.Provider store={reduxStore}>
-			<RouterProvider router={router} />
-		</Redux.Provider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <Redux.Provider store={reduxStore}>
+      <RouterProvider router={router} />
+    </Redux.Provider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

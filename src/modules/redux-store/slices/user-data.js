@@ -50,6 +50,6 @@ const userProfileSlice = createSlice({
 	},
 });
 
-// export const selectUser = (state) => state.value;
+export const selectUser = (state) => state.user_profile;
 
 export default userProfileSlice;

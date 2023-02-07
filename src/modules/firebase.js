@@ -25,7 +25,6 @@ export const storage = getStorage(app);
 export const currentUser = new Promise((resolve, reject) => {
 	const unsubscribeAuth = onAuthStateChanged(auth, {
 		next: (user) => {
-			console.log(user);
 			unsubscribeAuth();
 			resolve(user);
 		},

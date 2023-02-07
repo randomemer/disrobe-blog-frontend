@@ -1,22 +1,17 @@
-import { Component } from "react";
+import { selectUser } from "@/modules/redux-store/slices/user-data";
+import { useSelector } from "react-redux";
 import EditForm from "./edit-form";
-import { connect } from "react-redux";
 import "./style.scss";
 
-class Account extends Component {
-	render() {
-		if (this.props.userProfile.status === "fulfilled") {
-			return (
-				<div>
-					<EditForm profile={this.props.userProfile.value} />
-				</div>
-			);
-		} else {
-			<></>;
-		}
+export default function Account(props) {
+	const user = useSelector(selectUser);
+	if (user.status === "fulfilled") {
+		return (
+			<div>
+				<EditForm profile={user.value} />
+			</div>
+		);
+	} else {
+		return <div>loading..</div>;
 	}
 }
-
-const mapStateToProps = (state) => ({ userProfile: state["user-profile"] });
-
-export default connect(mapStateToProps, null)(Account);
