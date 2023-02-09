@@ -38,19 +38,23 @@ export default createBrowserRouter([
         loader: async ({ params }) => {
           const docRef = doc(db, "stories", params.id);
           const docSnapshot = await getDoc(docRef);
-          const data = docSnapshot.data();
+          const story = docSnapshot.data();
 
           // TODO : remove later after testing
-          data.is_published = true;
+          story.is_published = true;
 
-          if (data === undefined || !data.is_published) {
+          if (story === undefined || !story.is_published) {
             throw new Response("", {
               status: 404,
               statusText: "Story doesn't exist",
             });
           }
 
-          return { story: data };
+          const authorDocRef = doc(db, "authors", story.author);
+          const authorDocSnap = await getDoc(authorDocRef);
+          const author = authorDocSnap.data();
+
+          return { story, author };
         },
       },
       {

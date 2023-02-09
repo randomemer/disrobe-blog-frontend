@@ -1,13 +1,33 @@
-import { db } from "@/modules/firebase";
+import { app, db } from "@/modules/firebase";
 import { doc, Timestamp, updateDoc } from "firebase/firestore";
+import humanizeDuration from "humanize-duration";
+
+// VALUES / OBJECTS
+
+const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
+
+const WORD_REGEX = /\b\w+\b/gm;
+
+const readTimeHumanizer = humanizeDuration.humanizer({
+  language: "short_en",
+  languages: {
+    short_en: {
+      m: () => "m",
+      s: () => "s",
+    },
+  },
+  units: ["m", "s"],
+  round: true,
+});
+
+// FUNCTIONS
 
 export function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function emailValidator(text) {
-  const emailReg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
-  if (!emailReg.test(text)) {
+  if (!EMAIL_REGEX.test(text)) {
     return "Not a valid email address";
   }
 }
@@ -41,4 +61,28 @@ export async function publishStory(editor, storyId) {
   } catch (error) {
     console.error(error);
   }
+}
+
+export function getObjectPublicURL(bucketPath) {
+  const bucketName = app.options.storageBucket;
+
+  return `https://firebasestorage.googleapis.com/v0/b/${bucketName}/o/${encodeURIComponent(
+    bucketPath
+  )}?alt=media`;
+}
+
+export function calcWordCount(content) {
+  let words = 0;
+  let match;
+  while ((match = WORD_REGEX.exec(content)) !== null) {
+    if (match.index === WORD_REGEX.lastIndex) {
+      WORD_REGEX.lastIndex++;
+    }
+    words += match.length;
+  }
+
+  return {
+    words,
+    read: readTimeHumanizer(words * 300),
+  };
 }
