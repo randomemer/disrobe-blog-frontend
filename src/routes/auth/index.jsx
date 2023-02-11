@@ -1,127 +1,102 @@
-import { db } from "@/modules/firebase";
+import { auth, analytics, db } from "@/modules/firebase";
+import { logEvent } from "firebase/analytics";
 import { FirebaseError } from "firebase/app";
 import {
   browserLocalPersistence,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
-  getAuth,
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import gsap from "gsap";
-import { Component } from "react";
-import { Link, matchPath, redirect } from "react-router-dom";
-import LoginForm from "./login/login";
+import { useEffect, useRef, useState } from "react";
+import {
+  Link,
+  matchPath,
+  redirect,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import LoginForm from "./login";
 import RegisterForm from "./register";
 import "./style.scss";
-// import { delay } from "utils";
 
-class Auth extends Component {
-  constructor(props) {
-    super(props);
+function useActiveTab() {
+  const location = useLocation();
+  const match = matchPath("/auth/:type", location.pathname);
 
-    this.state = {
-      tab: this.getTabName(props.router),
-      isProcessing: false,
-    };
+  useEffect(() => {}, [match]);
 
-    this.tabIndices = {
-      login: 0,
-      register: 1,
-    };
-  }
+  return match.params.type;
+}
 
-  componentDidMount() {
-    this.tabContent = document.querySelector(".form-tab-content");
-    this.tabs = document.querySelectorAll(".form-tab-content li");
+const AUTH_TABS = ["login", "register"];
 
-    this.resizeObserver = new ResizeObserver((entries) => {
-      this.adjustFormHeight(entries);
+export default function Auth() {
+  // state variables
+  const [isLoading, setLoading] = useState(false);
+  const activeTab = useActiveTab();
+
+  // refs and other hooks
+  const resizeObserverRef = useRef();
+  const tabRef = useRef();
+  const formRef = useRef();
+
+  const navigate = useNavigate();
+
+  // functions
+  const switchTab = (tab) => {
+    const timeline = gsap.timeline();
+
+    const tabIndex = AUTH_TABS.findIndex((val) => val === tab);
+    const observer = resizeObserverRef.current;
+
+    const prevTab = tabRef.current;
+    tabRef.current = document.querySelector(`.form-tab-content .${activeTab}`);
+
+    // un-observe previously active form
+    if (formRef.current) {
+      observer.unobserve(formRef.current);
+    }
+    formRef.current = tabRef.current.querySelector("form");
+
+    const tabLength = 100 / AUTH_TABS.length;
+    gsap.to(".line", {
+      ease: "expo.out",
+      left: `${tabIndex * tabLength}%`,
     });
 
-    this.switchTabs(this.state.tab);
-  }
-
-  componentWillUnmount() {
-    this.resizeObserver.disconnect();
-  }
-
-  componentDidUpdate(prevProps) {
-    const prevTab = this.getTabName(prevProps.router);
-    const curTab = this.getTabName(this.props.router);
-
-    if (prevTab !== curTab) {
-      this.setState({ tab: curTab });
-      this.switchTabs(curTab);
-    }
-  }
-
-  render() {
-    return (
-      <div className="form-container">
-        <ul className="form-tabs">
-          <li>
-            <Link to="/auth/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/auth/register">Register</Link>
-          </li>
-          <div className="line"></div>
-        </ul>
-
-        <ul className="form-tab-content">
-          <li className="login active-tab-content">
-            <LoginForm
-              login={this.loginUser}
-              loading={this.state.isProcessing}
-            />
-          </li>
-          <li className="register">
-            <RegisterForm
-              register={this.registerUser}
-              loading={this.state.isProcessing}
-            />
-          </li>
-        </ul>
-      </div>
-    );
-  }
-
-  registerUser = async (data) => {
-    this.setState({ isProcessing: true });
-    try {
-      console.log(data);
-      // create new user
-      const auth = getAuth();
-      const credentials = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      console.log(credentials);
-
-      // add document to authors collection
-      const docRef = doc(db, "authors", credentials.user.uid);
-      await setDoc(docRef, {
-        name: data.name,
+    // fade out active tab
+    if (prevTab) {
+      timeline.to(prevTab, {
+        opacity: 0,
+        duration: 0.05,
+        onComplete: () => {
+          // remove active class from all tabs
+          prevTab.classList.remove("active-tab-content");
+          // add active class to current tab
+          tabRef.current.classList.add("active-tab-content");
+        },
       });
-
-      redirect("/settings/account");
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        console.log(error.code, error.name, error.message);
-      }
-      console.error(error);
     }
-    this.setState({ isProcessing: false });
+
+    // animate height of container
+    timeline.to(".form-tab-content", {
+      height: formRef.current.offsetHeight,
+      onComplete: () => {
+        // observer for the current form to animate height changes
+        observer.observe(formRef.current);
+      },
+    });
+
+    // fade in current tab
+    timeline.to(tabRef.current, { opacity: 1, duration: 0.15 });
   };
 
-  loginUser = async (data, shouldRemember) => {
-    this.setState({ isProcessing: true });
+  const loginUser = async (data, shouldRemember) => {
+    setLoading(true);
     try {
-      const auth = getAuth();
-
       if (shouldRemember) {
         await setPersistence(auth, browserLocalPersistence);
       } else {
@@ -134,9 +109,11 @@ class Auth extends Component {
         data.password
       );
       console.log(result);
-      const res = this.props.router.navigate("/settings/account");
+      logEvent(analytics, "login", {
+        method: "email",
+      });
 
-      console.log(res);
+      navigate("/settings/account");
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -155,79 +132,86 @@ class Auth extends Component {
       console.error(error);
       console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)));
     }
-    this.setState({ isProcessing: false });
+    setLoading(false);
   };
 
-  switchTabs(tab) {
-    const timeline = gsap.timeline();
+  const registerUser = async (data) => {
+    setLoading(true);
+    try {
+      console.log(data);
+      // create new user
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      logEvent(analytics, "sign_up", {
+        method: "email",
+      });
+      console.log(credentials);
 
-    const tabIndex = this.tabIndices[tab];
-    const previous = this.getTabByName(this.state.tab);
-    const current = this.getTabByName(tab);
+      // add document to authors collection
+      const docRef = doc(db, "authors", credentials.user.uid);
+      await setDoc(docRef, {
+        name: data.name,
+      });
 
-    // un-observe previously active form
-    this.resizeObserver.unobserve(previous.querySelector("form"));
-
-    const tabLength = 100 / this.tabs.length;
-    gsap.to(".line", {
-      ease: "expo.out",
-      left: `${tabIndex * tabLength}%`,
-    });
-
-    // fade out active tab
-    timeline.to(previous, {
-      opacity: 0,
-      duration: 0.05,
-      onComplete: () => {
-        // remove active class from all tabs
-        for (const tab of this.tabs) {
-          tab.classList.remove("active-tab-content");
-        }
-        // add active class to current tab
-        current.classList.add("active-tab-content");
-      },
-    });
-
-    const form = current.querySelector("form");
-    // animate height of container
-    timeline.to(this.tabContent, {
-      height: form.offsetHeight,
-      onComplete: () => {
-        // observer for the current form to animate height changes
-        this.resizeObserver.observe(form);
-      },
-    });
-
-    // fade in current tab
-    timeline.to(current, { opacity: 1, duration: 0.15 });
-  }
-
-  adjustFormHeight(entries) {
-    const form = this.currentForm();
-    const entry = entries.find((entry) => entry.target === form);
-    if (!entry) return;
-    // console.log(entry);
-    gsap.to(this.tabContent, {
-      height: entry.borderBoxSize[0].blockSize,
-      ease: "expo.out",
-      duration: 0.3,
-    });
-  }
-
-  // helpers
-  getTabByName = (name) => this.tabs[this.tabIndices[name]];
-
-  getTabName = (router) => {
-    const match = matchPath("/auth/:type", router.location.pathname);
-    return match.params.type;
+      redirect("/settings/account");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        console.log(error.code, error.name, error.message);
+      }
+      console.error(error);
+    }
+    setLoading(false);
   };
 
-  currentTab = () => this.tabs[this.tabIndices[this.state.tab]];
+  // Component Mount
+  useEffect(() => {
+    resizeObserverRef.current = new ResizeObserver((entries) => {
+      const form = formRef.current;
+      const entry = entries.find((entry) => entry.target === form);
+      if (!entry) return;
+      // console.log(entry);
+      gsap.to(".form-tab-content", {
+        height: entry.borderBoxSize[0].blockSize,
+        ease: "expo.out",
+        duration: 0.3,
+      });
+    });
 
-  currentForm() {
-    const tab = this.currentTab();
-    return tab.querySelector("form");
-  }
+    switchTab(activeTab);
+
+    // Component Unmount
+    return () => {
+      resizeObserverRef.current.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    switchTab(activeTab);
+  }, [activeTab]);
+
+  return (
+    <div className="form-container">
+      <ul className="form-tabs">
+        <li>
+          <Link to="/auth/login">Login</Link>
+        </li>
+        <li>
+          <Link to="/auth/register">Register</Link>
+        </li>
+        <div className="line"></div>
+      </ul>
+
+      <ul className="form-tab-content">
+        <li className="login active-tab-content">
+          <LoginForm login={loginUser} loading={isLoading} />
+        </li>
+        <li className="register">
+          <RegisterForm register={registerUser} loading={isLoading} />
+        </li>
+      </ul>
+    </div>
+  );
 }
-
-export default Auth;

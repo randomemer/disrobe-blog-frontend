@@ -2,68 +2,78 @@ import { Text } from "slate";
 import { Fragment } from "react";
 
 export function serializeToHTML(content) {
-	return (
-		<Fragment>
-			{content.map((element, index) => (
-				<HTMLElement key={index} node={element} />
-			))}
-		</Fragment>
-	);
+  return (
+    <Fragment>
+      {content.map((element, index) => (
+        <HTMLElement key={index} node={element} />
+      ))}
+    </Fragment>
+  );
 }
 
 const HTMLElement = ({ node }) => {
-	if (Text.isText(node)) {
-		let leaf = <Fragment>{node.text}</Fragment>;
-		if (node.bold) {
-			leaf = <strong>{leaf}</strong>;
-		}
-		if (node.italic) {
-			leaf = <em>{leaf}</em>;
-		}
-		if (node.strikethrough) {
-			leaf = <s>{leaf}</s>;
-		}
-		if (node.underline) {
-			leaf = <u>{leaf}</u>;
-		}
-		if (node.code) {
-			leaf = <code>{leaf}</code>;
-		}
-		return leaf;
-	}
+  if (Text.isText(node)) {
+    let leaf = <Fragment>{node.text}</Fragment>;
+    if (node.bold) {
+      leaf = <strong>{leaf}</strong>;
+    }
+    if (node.italic) {
+      leaf = <em>{leaf}</em>;
+    }
+    if (node.strikethrough) {
+      leaf = <s>{leaf}</s>;
+    }
+    if (node.underline) {
+      leaf = <u>{leaf}</u>;
+    }
+    if (node.code) {
+      leaf = <code>{leaf}</code>;
+    }
+    return leaf;
+  }
 
-	const children = node.children.map((n, i) => (
-		<HTMLElement key={i} node={n} />
-	));
+  const children = node.children.map((n, i) => (
+    <HTMLElement key={i} node={n} />
+  ));
 
-	switch (node.type) {
-		case "paragraph":
-			return <p>{children}</p>;
+  switch (node.type) {
+    case "h2":
+      return <h2>{children}</h2>;
 
-		case "image":
-			return (
-				<figure>
-					<img src={node.url} alt={node.alt} />
-					<figcaption>{node.caption}</figcaption>
-				</figure>
-			);
+    case "h3":
+      return <h3>{children}</h3>;
 
-		case "blockquote":
-			return <blockquote>{children}</blockquote>;
+    case "paragraph":
+      return <p>{children}</p>;
 
-		case "link":
-			return <a href={node.url}>{children}</a>;
+    case "image":
+      return (
+        <figure>
+          <img src={node.url} alt={node.alt} />
+          <figcaption>{node.caption}</figcaption>
+        </figure>
+      );
 
-		case "numbered-list":
-			return <ol>{children}</ol>;
+    case "blockquote":
+      return <blockquote>{children}</blockquote>;
 
-		case "bulleted-list":
-			return <ul>{children}</ul>;
+    case "link":
+      return (
+        <a href={node.url} target="_blank" rel="noreferrer">
+          {children}
+        </a>
+      );
 
-		case "list-item":
-			return <li>{children}</li>;
+    case "numbered-list":
+      return <ol>{children}</ol>;
 
-		default:
-			return <Fragment>{children}</Fragment>;
-	}
+    case "bulleted-list":
+      return <ul>{children}</ul>;
+
+    case "list-item":
+      return <li>{children}</li>;
+
+    default:
+      return <Fragment>{children}</Fragment>;
+  }
 };

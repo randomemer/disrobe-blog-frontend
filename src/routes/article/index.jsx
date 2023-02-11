@@ -1,21 +1,20 @@
+import LogoFacebook from "@/assets/images/logos/facebook";
+import LogoLinkedin from "@/assets/images/logos/linkedin";
+import LogoTwitter from "@/assets/images/logos/twitter";
 import SideBar from "@/components/sidebar";
+import { analytics } from "@/modules/firebase";
 import { serializeToHTML } from "@/modules/slate/serialize";
 import { calcWordCount, getObjectPublicURL } from "@/utils";
-import { useLoaderData } from "react-router-dom";
-import "./style.scss";
-import { Node } from "slate";
 import { IonIcon } from "@ionic/react";
-import { linkOutline } from "ionicons/icons";
-import LogoFacebook from "@/assets/images/logos/facebook";
-import LogoTwitter from "@/assets/images/logos/twitter";
-import LogoLinkedin from "@/assets/images/logos/linkedin";
-
-// import LogoTwitter from "@/assets/images/logos/twitter.svg";
+import { logEvent } from "firebase/analytics";
+import { link } from "ionicons/icons";
+import { useLoaderData, useLocation, useParams } from "react-router-dom";
+import { Node } from "slate";
+import "./style.scss";
 
 export default function Story() {
   const data = useLoaderData();
 
-  console.log(data);
   const { story, author } = data;
 
   let { title, content } = story.data.draft; // TODO : change to story.data.live later
@@ -69,6 +68,43 @@ function StoryAuthor({ author, story, content }) {
 }
 
 function SocialsArea() {
+  const location = useLocation();
+  const params = useParams();
+  const storyLink = `${window.location.origin}${location.pathname}`;
+
+  const shareTwitter = () => {
+    logEvent(analytics, "share", {
+      item_id: params.id,
+      content_type: "story",
+      method: "twitter",
+    });
+  };
+
+  const shareFacebook = () => {
+    logEvent(analytics, "share", {
+      item_id: params.id,
+      content_type: "story",
+      method: "facebook",
+    });
+  };
+
+  const shareLinkedin = () => {
+    logEvent(analytics, "share", {
+      item_id: params.id,
+      content_type: "story",
+      method: "linkedin",
+    });
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(storyLink);
+    logEvent(analytics, "share", {
+      item_id: "",
+      content_type: "story",
+      method: "copy_link",
+    });
+  };
+
   return (
     <div className="story-sharing">
       <button className="share-twitter">
@@ -80,8 +116,8 @@ function SocialsArea() {
       <button className="share-linkedin">
         <LogoLinkedin className="social-icon" />
       </button>
-      <button className="share-link">
-        <IonIcon icon={linkOutline} />
+      <button className="share-link" onClick={copyLink}>
+        <IonIcon icon={link} />
       </button>
     </div>
   );

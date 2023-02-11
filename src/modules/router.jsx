@@ -1,13 +1,15 @@
 import App from "@/App";
-import { auth, currentUser, db } from "@/modules/firebase";
+import { auth, currentUser } from "@/modules/firebase";
 import Story from "@/routes/article";
+import storyRouteLoader from "@/routes/article/loader";
 import Auth from "@/routes/auth";
 import ErrorDevelopmentPage from "@/routes/error-dev";
 import Home from "@/routes/home";
 import Settings from "@/routes/settings";
 import Account from "@/routes/settings/account";
+import settingsRouteLoader from "@/routes/settings/loader";
 import Write from "@/routes/write";
-import { doc, getDoc } from "firebase/firestore";
+import writeRouteLoader from "@/routes/write/loader";
 import {
   createBrowserRouter,
   redirect,
@@ -35,52 +37,12 @@ export default createBrowserRouter([
       {
         path: "story/:id",
         element: <Story />,
-        loader: async ({ params }) => {
-          const docRef = doc(db, "stories", params.id);
-          const docSnapshot = await getDoc(docRef);
-          const story = docSnapshot.data();
-
-          // TODO : remove later after testing
-          story.is_published = true;
-
-          if (story === undefined || !story.is_published) {
-            throw new Response("", {
-              status: 404,
-              statusText: "Story doesn't exist",
-            });
-          }
-
-          const authorDocRef = doc(db, "authors", story.author);
-          const authorDocSnap = await getDoc(authorDocRef);
-          const author = authorDocSnap.data();
-
-          return { story, author };
-        },
+        loader: storyRouteLoader,
       },
       {
         path: "story/:id/edit",
         element: <Write edit={true} />,
-        loader: async ({ params }) => {
-          const docRef = doc(db, "stories", params.id);
-          const docSnapshot = await getDoc(docRef);
-          const data = docSnapshot.data();
-
-          if (data === undefined) {
-            throw new Response("", {
-              status: 404,
-              statusText: "Story doesn't exist",
-            });
-          }
-
-          if (data.author !== auth.currentUser.uid) {
-            throw new Response("", {
-              status: 401,
-              statusText: "This is not your Story!",
-            });
-          }
-
-          return { story: data };
-        },
+        loader: writeRouteLoader,
       },
       {
         path: "about",
@@ -88,7 +50,7 @@ export default createBrowserRouter([
       },
       {
         path: "auth",
-        element: withRouter(Auth),
+        element: <Auth />,
         loader: ({ request }) => {
           if (/\/auth(\/)?$/gm.test(request.url)) {
             throw redirect("/auth/login");
@@ -131,19 +93,7 @@ export default createBrowserRouter([
       {
         path: "settings",
         element: <Settings />,
-        loader: async ({ request }) => {
-          await currentUser;
-
-          if (auth.currentUser == null) {
-            throw redirect(
-              `/auth/login?redirect=${encodeURIComponent("/settings")}`
-            );
-          }
-
-          if (/\/settings(\/)?$/gm.test(request.url)) {
-            throw redirect("/settings/account");
-          }
-        },
+        loader: settingsRouteLoader,
         children: [
           {
             path: "account",
@@ -177,5 +127,3 @@ export function withRouter(Component) {
 
   return <ComponentWithRouterProp />;
 }
-
-// http://localhost:3000/story/qCw1Qqs5A3ikIL023KXA
