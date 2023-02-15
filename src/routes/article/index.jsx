@@ -1,15 +1,15 @@
 import LogoFacebook from "@/assets/images/logos/facebook";
 import LogoLinkedin from "@/assets/images/logos/linkedin";
 import LogoTwitter from "@/assets/images/logos/twitter";
+import StoryAuthor from "@/components/author";
 import SideBar from "@/components/sidebar";
 import { analytics } from "@/modules/firebase";
 import { serializeToHTML } from "@/modules/slate/serialize";
-import { calcWordCount, getObjectPublicURL } from "@/utils";
 import { IonIcon } from "@ionic/react";
 import { logEvent } from "firebase/analytics";
 import { link } from "ionicons/icons";
 import { useLoaderData, useLocation, useParams } from "react-router-dom";
-import { Node } from "slate";
+
 import "./style.scss";
 
 export default function Story() {
@@ -25,7 +25,7 @@ export default function Story() {
       <article className="story">
         <div className="story-heading-container">
           <div className="story-byline">
-            <StoryAuthor author={author} story={story} content={content} />
+            <StoryAuthor story={story} author={author} />
             <SocialsArea />
           </div>
           <h1 className="story-heading">{title}</h1>
@@ -34,36 +34,6 @@ export default function Story() {
       </article>
       <SideBar />
     </main>
-  );
-}
-
-function StoryAuthor({ author, story, content }) {
-  const publish_date = story.created_at.toDate().toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const contentString = content.map((node) => Node.string(node)).join("\n");
-  const { read: readTime } = calcWordCount(contentString);
-
-  const authorImage = getObjectPublicURL(author.picture);
-  return (
-    <div className="story-author">
-      <img
-        src={authorImage}
-        className="author-image"
-        alt={`author ${author.name}`}
-      />
-      <div className="author-details">
-        <span className="author-name">{author.name}</span>
-        <div className="story-info">
-          <span>{publish_date}</span>
-          <span>●</span>
-          <span>{readTime} read</span>
-        </div>
-      </div>
-    </div>
   );
 }
 

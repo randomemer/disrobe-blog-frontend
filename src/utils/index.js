@@ -4,19 +4,18 @@ import humanizeDuration from "humanize-duration";
 
 // VALUES / OBJECTS
 
-const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
+export const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
 
-const WORD_REGEX = /\b\w+\b/gm;
+export const WORD_REGEX = /\b\w+\b/gm;
 
-const readTimeHumanizer = humanizeDuration.humanizer({
+export const readTimeHumanizer = humanizeDuration.humanizer({
   language: "short_en",
   languages: {
     short_en: {
-      m: () => "m",
-      s: () => "s",
+      m: () => "min",
     },
   },
-  units: ["m", "s"],
+  units: ["m"],
   round: true,
 });
 

@@ -1,23 +1,17 @@
 import App from "@/App";
-import { auth, currentUser } from "@/modules/firebase";
+import { currentUser } from "@/modules/firebase";
 import Story from "@/routes/article";
 import storyRouteLoader from "@/routes/article/loader";
 import Auth from "@/routes/auth";
 import ErrorDevelopmentPage from "@/routes/error-dev";
 import Home from "@/routes/home";
+import homeRouteLoader from "@/routes/home/loader";
 import Settings from "@/routes/settings";
 import Account from "@/routes/settings/account";
 import settingsRouteLoader from "@/routes/settings/loader";
 import Write from "@/routes/write";
 import writeRouteLoader from "@/routes/write/loader";
-import {
-  createBrowserRouter,
-  redirect,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 
 export default createBrowserRouter([
   {
@@ -32,7 +26,8 @@ export default createBrowserRouter([
     children: [
       {
         index: true,
-        element: withRouter(Home),
+        element: <Home />,
+        loader: homeRouteLoader,
       },
       {
         path: "story/:id",
@@ -101,7 +96,7 @@ export default createBrowserRouter([
           },
           {
             path: "notifications",
-            element: withRouter(Account),
+            element: <Account />,
           },
         ],
       },
@@ -110,20 +105,3 @@ export default createBrowserRouter([
       process.env.NODE_ENV === "development" ? <ErrorDevelopmentPage /> : null,
   },
 ]);
-
-export function withRouter(Component) {
-  function ComponentWithRouterProp(props) {
-    let location = useLocation();
-    let navigate = useNavigate();
-    let params = useParams();
-    let loaderData = useLoaderData();
-    return (
-      <Component
-        {...props}
-        router={{ location, navigate, params, loaderData }}
-      />
-    );
-  }
-
-  return <ComponentWithRouterProp />;
-}

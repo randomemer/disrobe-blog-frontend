@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { collection, getFirestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { authorConverter, storyConveter } from "@/utils/backend";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -31,3 +32,6 @@ export const currentUser = new Promise((resolve, reject) => {
     error: (error) => reject(error),
   });
 });
+
+export const authors = collection(db, "authors").withConverter(authorConverter);
+export const stories = collection(db, "stories").withConverter(storyConveter);
