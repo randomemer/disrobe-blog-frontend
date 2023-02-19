@@ -57,3 +57,6 @@ export const storiesSlice = createSlice({
 
 // selectors
 export const selectStories = (state) => state.stories.value;
+export const selectStoryById = (state, storyId) => {
+  return state.stories.value.find((story) => story.id === storyId);
+};

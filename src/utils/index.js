@@ -1,6 +1,7 @@
 import { app, db } from "@/modules/firebase";
 import { doc, Timestamp, updateDoc } from "firebase/firestore";
 import humanizeDuration from "humanize-duration";
+import { Editor, Node } from "slate";
 
 // VALUES / OBJECTS
 
@@ -84,4 +85,12 @@ export function calcWordCount(content) {
     words,
     read: readTimeHumanizer(words * 300),
   };
+}
+
+export function getContentString(content) {
+  return content.map((node) => Node.string(node)).join("\n ");
+}
+
+export function getStoryThumb(content) {
+  return content.find((node) => node.type === "image");
 }

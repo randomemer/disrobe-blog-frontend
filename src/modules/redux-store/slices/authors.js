@@ -39,5 +39,7 @@ export const authorsSlice = createSlice({
 });
 
 // selectors
-export const selectAuthorById = (state, id) => state.authors[id];
+export const selectAuthorById = (state, id) => {
+  return state.authors.value.find((author) => author.id === id);
+};
 export const selectAuthorExists = (state, id) => id in state.authors;
