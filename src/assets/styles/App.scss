@@ -68,7 +68,7 @@ button {
   background-color: inherit;
 }
 
-/* 
+/*
 * apply placeholder styles to all pseudo selectors
 * because applying styles to all of them at once doesn't work
 */
@@ -101,7 +101,7 @@ a {
 
 *:focus {
   outline: none;
-  box-shadow: 0 0 0 2px general.$primary-color;
+  // box-shadow: 0 0 0 2px general.$primary-color;
 }
 
 .modal-container {

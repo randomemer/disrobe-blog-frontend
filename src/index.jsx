@@ -2,16 +2,20 @@ import "@/modules/firebase";
 import reduxStore from "@/modules/redux-store";
 import reportWebVitals from "@/modules/reportWebVitals";
 import router from "@/modules/router";
+import { ThemeProvider } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import * as Redux from "react-redux";
 import { RouterProvider } from "react-router-dom";
+import { theme } from "./modules/mui-config";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Redux.Provider store={reduxStore}>
-      <RouterProvider router={router} />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </Redux.Provider>
   </React.StrictMode>
 );

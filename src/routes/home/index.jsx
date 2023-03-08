@@ -1,6 +1,8 @@
 import StoryAuthor from "@/components/author";
 import { selectStories } from "@/modules/redux-store/slices/stories";
 import { getStoryThumb } from "@/utils";
+import { MailRounded } from "@mui/icons-material";
+import { InputAdornment, TextField } from "@mui/material";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Node } from "slate";
@@ -12,7 +14,7 @@ export default function Home() {
   // on Component Mount
   useEffect(() => {
     const rootDiv = document.getElementById("root");
-    rootDiv?.classList.add("route--home");
+    rootDiv.classList.add("route--home");
 
     const header = document.querySelector("header");
     const observerOptions = {
@@ -42,18 +44,48 @@ export default function Home() {
       <section className="splash-section">
         <div className="splash-container">
           <div className="splash-content">
-            <h1>Stories on art, people and the world.</h1>
+            <h1>
+              Stories on <span className="highlight">art</span>,{" "}
+              <span className="highlight">people</span> and the{" "}
+              <span className="highlight">world</span>.
+            </h1>
           </div>
         </div>
       </section>
 
-      <div className="stories-section">
-        <div className="stories-list">
-          {stories.map((story) => (
-            <StoryCard key={story.id} story={story} />
-          ))}
+      <section className="stories-section">
+        <div className="ads"></div>
+
+        <div className="middle">
+          <h2>Recently Published</h2>
+          <div className="stories-list">
+            {stories.map((story) => (
+              <StoryCard key={story.id} story={story} />
+            ))}
+          </div>
         </div>
-      </div>
+
+        <div className="sidebar">
+          <div className="cta-element">
+            <p className="tagline">Don't miss anything from us</p>
+
+            <TextField
+              fullWidth
+              hiddenLabel
+              variant="standard"
+              className="email-textfield"
+              placeholder="Your Email"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailRounded className="mail-icon" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -6,13 +6,19 @@ $splash-image: "@/assets/images/splash.png";
   .splash-section {
     // height: calc(100vh - var(--app-header-height));
     height: 100vh;
-    margin: 0 auto 6.4rem;
+    margin: 0 auto;
     padding-top: 25vh;
   }
 
   .stories-section {
-    max-width: 76rem;
-    margin: 7.2rem auto;
+    max-width: 128rem;
+    display: grid;
+
+    // $side-cols-width:
+    grid-template-columns: 1fr 72rem 1fr;
+    column-gap: 8.4rem;
+
+    margin: 4.8rem auto;
   }
 }
 
@@ -51,6 +57,43 @@ $splash-image: "@/assets/images/splash.png";
     h1 {
       font-size: 5.6rem;
       line-height: 1.1;
+
+      span.highlight {
+        text-decoration: underline;
+        text-decoration-color: general.$primary-color;
+      }
+    }
+  }
+}
+
+.stories-section {
+  .middle {
+    h2 {
+      font-size: 3.6rem;
+      color: general.$primary-color;
+      margin-bottom: 6.4rem;
+      // text-transform: uppercase;
+    }
+  }
+
+  .ads {
+    background-color: green;
+  }
+
+  .sidebar {
+    .cta-element {
+      .tagline {
+        font-size: 2.4rem;
+        margin-bottom: 1.8rem;
+      }
+
+      .email-textfield {
+        font-size: 1.6rem;
+      }
+
+      .mail-icon {
+        font-size: 2rem;
+      }
     }
   }
 }
