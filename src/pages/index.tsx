@@ -42,8 +42,6 @@ export default function Home(props: HomeRouteProps) {
     return props.stories.map((json) => new StoryModel(json));
   }, [props.stories]);
 
-  console.log("stories prop", stories);
-
   return (
     <BlogLayout>
       <SplashSection>

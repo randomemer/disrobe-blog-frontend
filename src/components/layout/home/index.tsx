@@ -2,6 +2,7 @@ import Head from "next/head";
 import AppHeader from "@/components/header";
 import { Main } from "./styles";
 import { PropsWithChildren } from "react";
+import Footer from "@/components/footer";
 
 export type BlogLayoutProps = PropsWithChildren<{}>;
 
@@ -17,6 +18,7 @@ export default function BlogLayout(props: BlogLayoutProps) {
 
       <AppHeader dynamicPosition />
       <Main id="main">{props.children}</Main>
+      <Footer />
     </>
   );
 }

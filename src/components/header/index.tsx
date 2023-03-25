@@ -16,7 +16,7 @@ const links = [
 ];
 
 export type AppHeaderProps = PropsWithoutRef<{
-  dynamicPosition: boolean;
+  dynamicPosition?: boolean;
 }>;
 
 export default function AppHeader(props: AppHeaderProps) {
