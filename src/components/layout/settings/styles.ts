@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export const SettingsMain = styled("main")`
   position: relative;
-  background-color: purple;
   max-width: 120rem;
   margin: 4.8rem auto;
 
@@ -15,8 +14,13 @@ export const SettingsMain = styled("main")`
   }
 `;
 
-export const SettingsTabs = styled(Tabs)`
-  /* background-color: aqua; */
+export const SettingsTabs = styled(Tabs)``;
+
+export const SettingsNavTab = styled(Tab<typeof Link>)`
+  font-size: 1.6rem;
+  font-weight: 600;
 `;
 
-export const SettingsNavTab = styled(Tab<typeof Link>)``;
+export const TabContent = styled("div")`
+  padding: 0 4.8rem;
+`;

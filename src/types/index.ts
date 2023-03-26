@@ -1,5 +1,6 @@
 import type { AuthorJSON } from "./backend";
 import type { GetServerSidePropsContext } from "next";
+import { ReactNode } from "react";
 
 declare module "next" {}
 
@@ -37,6 +38,11 @@ export type FormValidators<T = Record<string, any>> = {
 export interface RouteProps {
   author?: AuthorJSON;
   [key: string]: unknown;
+}
+
+export interface PageRoute {
+  (): null;
+  getLayout(): ReactNode;
 }
 
 export type ProtectedRouteContext = GetServerSidePropsContext & {

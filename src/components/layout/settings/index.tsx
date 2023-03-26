@@ -1,8 +1,14 @@
 import AppHeader from "@/components/header";
 import Head from "next/head";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
-import { SettingsMain, SettingsNavTab, SettingsTabs } from "./styles";
+import {
+  SettingsMain,
+  SettingsNavTab,
+  SettingsTabs,
+  TabContent,
+} from "./styles";
 
 const routes = [
   { label: "Account", path: "account" },
@@ -10,6 +16,8 @@ const routes = [
 ];
 
 export default function SettingsLayout(props: PropsWithChildren) {
+  const pathname = usePathname();
+
   return (
     <>
       <Head>
@@ -21,17 +29,18 @@ export default function SettingsLayout(props: PropsWithChildren) {
 
       <AppHeader />
       <SettingsMain>
-        <SettingsTabs orientation="vertical">
+        <SettingsTabs value={pathname} orientation="vertical">
           {routes.map((route) => (
             <SettingsNavTab
               key={route.path}
-              href={route.path}
+              value={`/settings/${route.path}`}
+              href={`/settings/${route.path}`}
               label={route.label}
               component={Link}
             />
           ))}
         </SettingsTabs>
-        {props.children}
+        <TabContent>{props.children}</TabContent>
       </SettingsMain>
     </>
   );

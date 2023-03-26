@@ -1,3 +1,5 @@
+"use client";
+
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
 import StoryModel from "@/modules/backend/client/models/story";

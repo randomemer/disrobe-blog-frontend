@@ -5,7 +5,6 @@ import "@/styles/globals.scss";
 import { ThemeProvider } from "@mui/material/styles";
 import { DM_Sans } from "next/font/google";
 import Head from "next/head";
-import "@/types/index";
 
 import { createEmotionCache } from "@/utils";
 import { CacheProvider, EmotionCache } from "@emotion/react";

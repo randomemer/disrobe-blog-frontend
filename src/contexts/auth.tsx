@@ -1,9 +1,11 @@
+"use client";
 import { getAuth, User } from "firebase/auth";
 import { createContext, useEffect } from "react";
 import nookies from "nookies";
+import { useImmer } from "use-immer";
 
-import type { PropsWithChildren, Dispatch, SetStateAction } from "react";
-import { Updater, useImmer } from "use-immer";
+import type { PropsWithChildren } from "react";
+import type { Updater } from "use-immer";
 import { AuthorJSON } from "@/types/backend";
 
 export interface AuthContextData {
