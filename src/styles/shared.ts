@@ -1,7 +1,11 @@
 import { theme } from "@/modules/mui-config";
 import { css } from "@emotion/react";
+import { TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
+
+import { inputClasses } from "@mui/material/Input";
+import { svgIconClasses } from "@mui/material/SvgIcon";
 
 export function elevation(value: number) {
   return css`
@@ -18,5 +22,20 @@ export const TextLink = styled(Link)`
   &:visited {
     color: inherit;
     text-decoration: none;
+  }
+`;
+
+export const InputField = styled(TextField)`
+  .${inputClasses.root} {
+    font-size: 1.6rem;
+  }
+
+  .Mui-focused {
+    .${svgIconClasses.root} {
+      color: ${({ theme }) => theme.palette.primary.main};
+    }
+  }
+  .${svgIconClasses.root} {
+    font-size: 2rem;
   }
 `;

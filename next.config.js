@@ -48,9 +48,6 @@ const nextConfig = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     MEASUREMENT_ID: process.env.MEASUREMENT_ID,
   },
-  experimental: {
-    appDir: true,
-  },
 };
 
 module.exports = nextConfig;

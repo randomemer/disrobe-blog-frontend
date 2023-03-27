@@ -22,5 +22,6 @@ export const SettingsNavTab = styled(Tab<typeof Link>)`
 `;
 
 export const TabContent = styled("div")`
-  padding: 0 4.8rem;
+  padding: 0 9.6rem;
+  flex: 1;
 `;

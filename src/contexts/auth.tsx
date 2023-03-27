@@ -1,4 +1,3 @@
-"use client";
 import { getAuth, User } from "firebase/auth";
 import { createContext, useEffect } from "react";
 import nookies from "nookies";

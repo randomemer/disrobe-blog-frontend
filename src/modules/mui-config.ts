@@ -8,4 +8,11 @@ export const theme = createTheme({
     error: { main: "#af1b3f" },
   },
   typography: { fontFamily: "inherit" },
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        variant: "standard",
+      },
+    },
+  },
 });

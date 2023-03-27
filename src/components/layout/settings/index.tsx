@@ -1,7 +1,7 @@
 import AppHeader from "@/components/header";
 import Head from "next/head";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 import {
   SettingsMain,
@@ -16,7 +16,7 @@ const routes = [
 ];
 
 export default function SettingsLayout(props: PropsWithChildren) {
-  const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function SettingsLayout(props: PropsWithChildren) {
 
       <AppHeader />
       <SettingsMain>
-        <SettingsTabs value={pathname} orientation="vertical">
+        <SettingsTabs value={router.pathname} orientation="vertical">
           {routes.map((route) => (
             <SettingsNavTab
               key={route.path}
