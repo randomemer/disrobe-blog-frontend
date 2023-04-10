@@ -14,5 +14,10 @@ export const theme = createTheme({
         variant: "standard",
       },
     },
+    MuiButton: {
+      defaultProps: {
+        style: { borderWidth: "2px", borderRadius: "0" },
+      },
+    },
   },
 });

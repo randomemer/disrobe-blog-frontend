@@ -2,6 +2,8 @@ import humanizeDuration from "humanize-duration";
 import { Descendant, Element, Node } from "slate";
 import createCache from "@emotion/cache";
 import { FormValidators, FormValues } from "@/types";
+import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
+import _ from "lodash";
 
 /**
 |--------------------------------------------------
@@ -43,6 +45,8 @@ export const FORM_VALIDATORS: FormValidators = {
     } else return null;
   },
 };
+
+export const url = string().url();
 
 /**
 |--------------------------------------------------
@@ -101,4 +105,26 @@ export function getFormData<T>(form: FormValues<T>): T {
     }),
     {}
   ) as T;
+}
+
+export function validateSchemaField<T extends Maybe<AnyObject>>(
+  schema: Schema<T>,
+  value: any
+) {
+  try {
+    schema.validateSync(value);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return error.message;
+    } else throw error;
+  }
+}
+
+export function objectDifference(obj1: object, obj2: object): any {
+  const changes = _.differenceWith(_.toPairs(obj1), _.toPairs(obj2), _.isEqual);
+  return _.fromPairs(changes);
+}
+
+export function isBlobURL(string: string) {
+  return string.startsWith("blob:");
 }

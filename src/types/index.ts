@@ -33,6 +33,10 @@ export type FormValidators<T = Record<string, any>> = {
   [K in keyof T]: (value: T[K]) => string | null;
 };
 
+export type FormErrors<T> = {
+  [K in keyof T]?: string;
+};
+
 // ============================================================
 
 export interface RouteProps {

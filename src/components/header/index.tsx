@@ -25,28 +25,33 @@ export default function AppHeader(props: AppHeaderProps) {
 
   // on Component Mount
   useEffect(() => {
-    if (!props.dynamicPosition) return;
+    if (props.dynamicPosition) {
+      const header = headerRef.current;
+      const observerOptions = {
+        threshold: 0,
+        rootMargin: `${-header!.offsetHeight}px`,
+      };
 
-    const header = headerRef.current;
-    const observerOptions = {
-      threshold: 0,
-      rootMargin: `${-header!.offsetHeight}px`,
-    };
+      const observer = new IntersectionObserver((entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          document.body.classList.remove("sticky-header");
+        } else {
+          document.body.classList.add("sticky-header");
+        }
+      }, observerOptions);
 
-    const observer = new IntersectionObserver((entries) => {
-      const [entry] = entries;
-      if (entry.isIntersecting) {
+      observer.observe(scrollContextRef!.current as Element);
+
+      return () => {
+        observer.disconnect();
+      };
+    } else {
+      document.body.classList.add("sticky-header");
+      return () => {
         document.body.classList.remove("sticky-header");
-      } else {
-        document.body.classList.add("sticky-header");
-      }
-    }, observerOptions);
-
-    observer.observe(scrollContextRef!.current as Element);
-
-    return () => {
-      observer.disconnect();
-    };
+      };
+    }
   }, [props.dynamicPosition]);
 
   return (

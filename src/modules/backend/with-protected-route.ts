@@ -13,12 +13,17 @@ export default function withProtectedRoute<
   ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>
 ): (context: ProtectedRouteContext) => Promise<GetServerSidePropsResult<P>> {
   return async (context) => {
+    console.log("middleware called");
     const { req, res } = context;
     try {
       const cookies = nookies.get(context);
       const token = await admin.auth().verifyIdToken(cookies.token);
 
+      console.log("cookies.token", cookies.token);
+
       const author = await new AdminAuthorRepo().fetchId(token.uid);
+
+      console.log(token.uid, author);
 
       req.user = { author: author.toJSON() };
 

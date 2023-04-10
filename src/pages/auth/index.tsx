@@ -65,29 +65,6 @@ export default function AuthRoute() {
 
   useEffect(() => {}, [activeTab]);
 
-  // useEffect(() => {
-  //   const observer = new ResizeObserver((entries) => {
-  //     const form = formBoxRef.current;
-  //     const entry = entries.find(
-  //       (entry) => entry.target === observerBoxRef.current
-  //     );
-  //     if (!entry) return;
-  //     console.log(entry.target.offsetHeight, entry.borderBoxSize[0].blockSize);
-
-  //     gsap.to(observerBoxRef.current, {
-  //       height: entry.borderBoxSize[0].blockSize,
-  //       ease: "expo.out",
-  //       duration: 0.3,
-  //     });
-  //   });
-
-  //   observer.observe(observerBoxRef.current);
-
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, []);
-
   const loginUser: LoginHandler = async (data, shouldRemember) => {
     setLoading(true);
     try {
@@ -111,7 +88,7 @@ export default function AuthRoute() {
       // });
 
       // @TODO :
-      // router.push("/settings/account");
+      router.push("/settings/account");
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {

@@ -1,6 +1,6 @@
 import { wrapLink } from "@/utils/editor-utils";
-import isUrl from "is-url";
 import { Element } from "slate";
+import { url } from "@/utils";
 
 import type { InlinesEditor, SlatePlugin } from "@/types/slate";
 
@@ -12,7 +12,7 @@ const withInlines: SlatePlugin<InlinesEditor> = function (editor) {
     isInline(element);
 
   editor.insertText = (text) => {
-    if (text && isUrl(text)) {
+    if (text && url.isValidSync(text)) {
       wrapLink(editor, text);
     } else {
       insertText(text);
@@ -22,7 +22,7 @@ const withInlines: SlatePlugin<InlinesEditor> = function (editor) {
   editor.insertData = (data) => {
     const text = data.getData("text/plain");
 
-    if (text && isUrl(text)) {
+    if (text && url.isValidSync(text)) {
       wrapLink(editor, text);
     } else {
       insertData(data);

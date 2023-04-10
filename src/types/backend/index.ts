@@ -23,8 +23,8 @@ export type FirestoreTimestampJSON = {
 export type AuthorJSON = {
   id: string;
   name: string;
-  picture: string;
-  bio: string;
+  picture?: string;
+  bio?: string;
 };
 
 // ============================================================
