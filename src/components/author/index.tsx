@@ -1,4 +1,3 @@
-import { getObjectPublicURL } from "@/modules/backend/utils";
 import { calcWordCount } from "@/utils";
 import { useMemo } from "react";
 import { Node } from "slate";
@@ -31,11 +30,14 @@ export default function StoryAuthor(props: StoryAuthorProps) {
     return calcWordCount(contentString);
   }, [story]);
 
-  const authorImage = getObjectPublicURL(author.picture);
   return (
     <Author className="story-author">
       <AuthorImageWrapper>
-        <AuthorImage fill src={authorImage} alt={`author ${author.name}`} />
+        <AuthorImage
+          fill
+          src={`/api/media/${author.picture}`}
+          alt={`author ${author.name}`}
+        />
       </AuthorImageWrapper>
 
       <AuthorDetails>

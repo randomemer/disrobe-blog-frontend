@@ -114,6 +114,7 @@ export default function LoginForm(props: LoginFormProps) {
           type={isPassHidden ? "password" : "text"}
           name="password"
           variant="standard"
+          autoComplete="on"
           placeholder="Password"
           value={data.password.value}
           onChange={onValueChange}

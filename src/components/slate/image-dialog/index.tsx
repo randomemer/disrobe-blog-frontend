@@ -1,13 +1,11 @@
 import FileDragArea from "@/components/file-drag-area";
-import { getObjectPublicURL } from "@/modules/backend/utils";
 import {
   AddPhotoAlternateOutlined,
   ImageOutlined,
   LinkOutlined,
 } from "@mui/icons-material";
 import { InputAdornment } from "@mui/material";
-import imageCompression from "browser-image-compression";
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { getStorage, ref } from "firebase/storage";
 import { extname } from "path-browserify";
 import { useEffect, useRef, useState } from "react";
 import { Transforms } from "slate";
@@ -29,6 +27,7 @@ import {
 import type { ImageElement } from "@/types/slate";
 import type { FormEvent, MouseEvent } from "react";
 import type { Editor } from "slate";
+import clientMediaRepo from "@/modules/backend/client/repos/media";
 
 const IMAGE_SIZE_LIMIT = 300_000; // in bytes
 
@@ -64,41 +63,11 @@ export default function ImageEditor(props: ImageEditorProps) {
     if (!event.target.files) return;
 
     let file = event.target.files[0];
-    const storage = getStorage();
     const path = `images/stories/${uuidv4()}${extname(file.name)}`;
-    const locationRef = ref(storage, path);
 
-    // compress image
-    if (file.size > IMAGE_SIZE_LIMIT) {
-      setStatus("compressing");
-      file = await imageCompression(file, {
-        maxSizeMB: IMAGE_SIZE_LIMIT / 1e6,
-        onProgress: (progress) => {
-          setProgress(progress);
-        },
-      });
-    }
+    await clientMediaRepo.upload(path, file);
 
-    console.log(file.size);
-
-    const uploadTask = uploadBytesResumable(locationRef, file);
-    setStatus("uploading");
-    uploadTask.on("state_changed", {
-      next: (snapshot) => {
-        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-      },
-      error: (error) => {
-        // TODO : show error dialog
-        console.error(error);
-      },
-      complete: () => {
-        const url = getObjectPublicURL(path);
-        const node = createImageNode(url);
-        addImageNode(editor, node);
-      },
-    });
-
-    await uploadTask;
+    setUrl(path);
 
     closeModal();
     setUploading(false);

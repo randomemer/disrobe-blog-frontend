@@ -9,8 +9,8 @@ export default class AuthorModel extends FirestoreModel<
 > {
   readonly id: string;
   readonly name: string;
-  readonly bio: string;
-  readonly picture: string;
+  readonly bio?: string;
+  readonly picture?: string;
 
   /**
    * POJO model for Author

@@ -81,7 +81,6 @@ export default function AuthRoute() {
         data.email,
         data.password
       );
-      console.log(result);
 
       // logEvent(analytics, "login", {
       //   method: "email",

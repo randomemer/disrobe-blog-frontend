@@ -11,6 +11,7 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import type { AppProps } from "next/app";
 import { EditorProvider } from "@/contexts/editor";
 import { RouteProps } from "@/types";
+import { useEffect } from "react";
 
 const clientEmotionCache = createEmotionCache();
 const DMSans = DM_Sans({
@@ -26,6 +27,8 @@ export interface DisrobeAppProps extends AppProps {
 
 export default function App(props: DisrobeAppProps) {
   const { Component, emotionCache = clientEmotionCache, pageProps } = props;
+
+  console.log("page-props", pageProps);
 
   return (
     <>

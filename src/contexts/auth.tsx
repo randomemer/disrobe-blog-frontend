@@ -35,6 +35,12 @@ export default function AuthProvider(props: AuthProviderProps) {
     author: props.author ?? null,
   });
 
+  console.log("context-props", props.author);
+
+  useEffect(() => {
+    console.log("props changed", props.author);
+  }, [props.author]);
+
   // listen for token changes
   // update state and set new token as a cookie
   useEffect(() => {

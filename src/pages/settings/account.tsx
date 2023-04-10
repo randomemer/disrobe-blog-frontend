@@ -27,6 +27,7 @@ import _ from "lodash";
 import ClientAuthorRepo from "@/modules/backend/client/repos/author";
 import path from "path-browserify";
 import clientMediaRepo from "@/modules/backend/client/repos/media";
+import { v4 } from "uuid";
 
 // ============================================================
 
@@ -143,11 +144,11 @@ export default function AccountSettingsRoute(props: RouteProps) {
       const original = profileSchema.cast(author, { stripUnknown: true });
       const diff = objectDifference(data, original);
 
-      // upload image
+      // upload image, only if the current url is from local (blob url)
       if (diff.picture && fileInputRef.current?.files) {
         const [file] = fileInputRef.current.files;
         const ext = path.extname(file.name);
-        const bucketPath = `images/authors/${author.id}/${Date.now()}${ext}`;
+        const bucketPath = `images/authors/${author.id}/${v4()}${ext}`;
         await clientMediaRepo.upload(bucketPath, file);
         diff.picture = bucketPath;
       }
@@ -160,6 +161,7 @@ export default function AccountSettingsRoute(props: RouteProps) {
       setForm((form) => {
         form.values = updated;
       });
+      fileInputRef.current!.value = "";
     } catch (error) {
       if (!(error instanceof Error)) return;
     }
