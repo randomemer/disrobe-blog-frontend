@@ -11,7 +11,6 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import type { AppProps } from "next/app";
 import { EditorProvider } from "@/contexts/editor";
 import { RouteProps } from "@/types";
-import { useEffect } from "react";
 
 const clientEmotionCache = createEmotionCache();
 const DMSans = DM_Sans({
