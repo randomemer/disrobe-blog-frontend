@@ -2139,15 +2139,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-image-compression@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "browser-image-compression@npm:2.0.2"
-  dependencies:
-    uzip: 0.20201231.0
-  checksum: 16051f07b0ec3927d30600d244d07d46bd41de16d6c44b872efe89f4b2b22dbd9dfbb66e3d1ff2c6282057722456a53759996e1478774dc520843ffb48f7441e
-  languageName: node
-  linkType: hard
-
 "buffer-equal-constant-time@npm:1.0.1":
   version: 1.0.1
   resolution: "buffer-equal-constant-time@npm:1.0.1"
@@ -3434,7 +3425,6 @@ __metadata:
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@types/uuid": ^9.0.1
-    browser-image-compression: ^2.0.2
     classnames: ^2.3.2
     cross-env: ^7.0.3
     eslint: ^8.35.0
@@ -6873,13 +6863,6 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
-  languageName: node
-  linkType: hard
-
-"uzip@npm:0.20201231.0":
-  version: 0.20201231.0
-  resolution: "uzip@npm:0.20201231.0"
-  checksum: 34253f4c3d996571b10b659eea415bec952bde940e1fd44090ce19687b6dbaae411d8e6321b9028e44aa442379659d71bb39e95ba15de0626cfe970d90b24f40
   languageName: node
   linkType: hard
 

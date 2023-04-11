@@ -5,6 +5,8 @@ import { parseForm } from "@/utils/node";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
+const IMAGE_SIZE_LIMIT = 300_000; // in bytes
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -37,19 +39,18 @@ export default async function handler(
         const { files } = await parseForm(req);
 
         const formFile = Array.isArray(files.file) ? files.file[0] : files.file;
-        const buffer = fs.readFileSync(formFile.filepath);
+        let buffer = fs.readFileSync(formFile.filepath);
         fs.unlinkSync(formFile.filepath); // cleanup downloaded file
 
-        // compress image, attempt jpeg conversion
-        const image = sharp(buffer).jpeg({ quality: 50 });
-        const imageMetadata = await image.metadata();
-        const imageBuf = await image.toBuffer();
+        if (formFile.size > IMAGE_SIZE_LIMIT) {
+          // compress image, attempt jpeg conversion
+          const image = sharp(buffer).jpeg({ quality: 50 });
+          buffer = await image.toBuffer();
+        }
 
         // save to bucket
         const fileRef = bucket.file(bucketPath);
-        await fileRef.save(imageBuf, {
-          contentType: `image/${imageMetadata.format}`,
-        });
+        await fileRef.save(buffer);
 
         res.status(200).send({
           bucket_path: bucketPath,

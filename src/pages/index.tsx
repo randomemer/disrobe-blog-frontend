@@ -1,5 +1,3 @@
-"use client";
-
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
 import StoryModel from "@/modules/backend/client/models/story";
@@ -113,7 +111,16 @@ function StoryCard(props: StoryCardProps) {
       <StoryAuthor story={story} />
       <StoryCardContent>
         <ThumbnailWrapper>
-          <StoryThumbnail fill src={thumb?.url || ""} alt="Story Thumbnail" />
+          <StoryThumbnail
+            fill
+            src={
+              (Element.isElement(thumb) &&
+                thumb.type === "image" &&
+                thumb?.url) ||
+              ""
+            }
+            alt="Story Thumbnail"
+          />
         </ThumbnailWrapper>
         <StoryCardRight>
           <h3 className="title">{title}</h3>

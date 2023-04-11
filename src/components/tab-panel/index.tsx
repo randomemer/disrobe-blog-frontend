@@ -1,13 +1,15 @@
-import { HTMLProps } from "react";
+import { HTMLAttributes } from "react";
 import { TabPanelDiv } from "./styles";
 
-export type TabPanelProps = HTMLProps<"div"> & {
+export type TabPanelProps = HTMLAttributes<HTMLDivElement> & {
   index: number | string;
+  value: number | string;
   label: string;
 };
 
 export default function TabPanel(props: TabPanelProps) {
   const { label, value, index, children, ...otherProps } = props;
+
   return (
     <TabPanelDiv
       role="tabpanel"

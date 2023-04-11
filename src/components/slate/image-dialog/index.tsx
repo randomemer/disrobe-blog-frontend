@@ -5,9 +5,8 @@ import {
   LinkOutlined,
 } from "@mui/icons-material";
 import { InputAdornment } from "@mui/material";
-import { getStorage, ref } from "firebase/storage";
 import { extname } from "path-browserify";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Transforms } from "slate";
 import { useSlate } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
@@ -29,8 +28,6 @@ import type { FormEvent, MouseEvent } from "react";
 import type { Editor } from "slate";
 import clientMediaRepo from "@/modules/backend/client/repos/media";
 
-const IMAGE_SIZE_LIMIT = 300_000; // in bytes
-
 export interface ImageEditorProps {
   closeModal: () => void;
 }
@@ -43,10 +40,9 @@ export default function ImageEditor(props: ImageEditorProps) {
 
   const [isUploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState("");
   const [url, setUrl] = useState("");
 
-  useEffect(() => {}, [isUploading, progress, status]);
+  useEffect(() => {}, [isUploading, progress]);
 
   const addImageNode = (editor: Editor, node: ImageElement) => {
     const index = editor.selection
@@ -57,7 +53,7 @@ export default function ImageEditor(props: ImageEditorProps) {
   };
 
   // For local images
-  const onImageUpload = async (event: Event & { target: HTMLInputElement }) => {
+  const onImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     setUploading(true);
 
     if (!event.target.files) return;
@@ -67,7 +63,9 @@ export default function ImageEditor(props: ImageEditorProps) {
 
     await clientMediaRepo.upload(path, file);
 
-    setUrl(path);
+    const node = createImageNode(`${location.origin}/api/media/${path}`);
+    console.log(node);
+    addImageNode(editor, node);
 
     closeModal();
     setUploading(false);
@@ -92,11 +90,14 @@ export default function ImageEditor(props: ImageEditorProps) {
         {!isUploading ? (
           <>
             <FileDragArea
-              id="image-input"
               icon={<ImageOutlined />}
               inputRef={inputImageRef}
               onDrop={onImageUpload}
-              inputProps={{ accept: "image/*", onChange: onImageUpload }}
+              inputProps={{
+                id: "image-input",
+                accept: "image/*",
+                onChange: onImageUpload,
+              }}
             />
 
             <div>
@@ -131,7 +132,7 @@ export default function ImageEditor(props: ImageEditorProps) {
         ) : (
           <UploadInfo>
             <UploadProgress variant="determinate" value={progress} />
-            <UploadStatus>{`${status} : ${progress.toFixed(0)}%`}</UploadStatus>
+            <UploadStatus>{`${progress.toFixed(0)}%`}</UploadStatus>
           </UploadInfo>
         )}
       </ImageModalContent>
