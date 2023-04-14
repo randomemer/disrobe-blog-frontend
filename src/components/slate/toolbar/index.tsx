@@ -195,9 +195,9 @@ export default function ArticleToolbar() {
             </SettingsButton>
           </StoryActions>
           <ContentInfo>
-            <div className="word-count">{storyInfo.wordCount} words</div>
+            <div className="word-count">{storyInfo.words} words</div>
             <span>●</span>
-            <div className="read-time">{storyInfo.readTime}</div>
+            <div className="read-time">{storyInfo.read}</div>
           </ContentInfo>
           <SavingIndicator />
         </StoryStatus>

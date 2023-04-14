@@ -4,8 +4,7 @@ import sharp from "sharp";
 import { parseForm } from "@/utils/node";
 
 import type { NextApiRequest, NextApiResponse } from "next";
-
-const IMAGE_SIZE_LIMIT = 300_000; // in bytes
+import { IMAGE_SIZE_LIMIT } from "@/utils/config";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,22 +18,6 @@ export default async function handler(
     const bucket = storage.bucket();
 
     switch (req.method) {
-      case "GET":
-        const mediaRef = bucket.file(bucketPath);
-
-        const [file] = await mediaRef.get();
-        const metadata = file.metadata;
-
-        res.writeHead(200, {
-          "Content-Type": metadata.contentType,
-          "Content-Length": metadata.size,
-        });
-
-        const readStream = file.createReadStream();
-        readStream.pipe(res);
-
-        break;
-
       case "POST":
         const { files } = await parseForm(req);
 

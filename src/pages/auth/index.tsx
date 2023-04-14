@@ -2,7 +2,6 @@ import LoginForm from "@/components/auth/login-form";
 import SignupForm from "@/components/auth/signup-form";
 import TabPanel from "@/components/tab-panel";
 import { FormContainer, FormTab, FormTabs } from "@/styles/auth.styles";
-import { FORM_VALIDATORS } from "@/utils";
 import { FirebaseError } from "firebase/app";
 import {
   browserLocalPersistence,
@@ -18,9 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
-import type { ImmerReducer } from "use-immer";
 import type { SyntheticEvent } from "react";
-import { FormValues } from "@/types";
 
 export type LoginFormData = {
   email: string;

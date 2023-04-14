@@ -25,6 +25,14 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: "/media/:path*",
+        destination: `https://firebasestorage.googleapis.com/v0/b/${process.env.FIREBASE_STORAGE_BUCKET}/o/:path*?alt=media`,
+      },
+    ];
+  },
   modularizeImports: {
     "@mui/material": {
       transform: "@mui/material/{{member}}",

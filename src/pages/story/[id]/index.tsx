@@ -15,13 +15,13 @@ import {
 } from "@/styles/story.styles";
 import { LinkOutlined } from "@mui/icons-material";
 import Head from "next/head";
-import { useRouter } from "next/router";
-
-import type { GetServerSideProps } from "next";
 import { StoryJSON } from "@/types/backend";
 import StoryModel from "@/modules/backend/client/models/story";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import { app } from "@/modules/backend/client";
+import { useRouter } from "next/router";
+
+import type { GetServerSideProps } from "next";
 
 export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   context
