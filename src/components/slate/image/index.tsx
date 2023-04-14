@@ -73,7 +73,6 @@ export default function ArticleImage(props: EditorImageProps) {
     [caption, applyCaptionChange]
   );
 
-  console.log();
   return (
     // Need `contentEditable={false}` or Firefox has issues with certain input types.
     <EimageContainer

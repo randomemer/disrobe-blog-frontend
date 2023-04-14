@@ -1,4 +1,4 @@
-import { formDataReducer, SignupHandler } from "@/pages/auth";
+import { SignupFormData, SignupHandler } from "@/pages/auth";
 import {
   AuthForm,
   FormButton,
@@ -6,7 +6,8 @@ import {
   FormHeader,
   FormTextField,
 } from "@/styles/auth.styles";
-import { createFormValue, FORM_VALIDATORS, getFormData } from "@/utils";
+import { FormErrors } from "@/types";
+import { validateSchemaField } from "@/utils";
 import {
   KeyOutlined,
   MailOutlineRounded,
@@ -16,69 +17,68 @@ import {
   VisibilityOutlined,
 } from "@mui/icons-material";
 import { IconButton, InputAdornment } from "@mui/material";
-import {
-  ChangeEventHandler,
-  FocusEventHandler,
-  FormEventHandler,
-  useState,
-} from "react";
-import { useImmerReducer } from "use-immer";
+import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import { useImmer } from "use-immer";
+import { object, ObjectSchema, reach, string } from "yup";
 
-const formData = {
-  full_name: createFormValue(""),
-  email: createFormValue(""),
-  password: createFormValue(""),
-};
+const signupSchema: ObjectSchema<SignupFormData> = object({
+  full_name: string().trim().required().default(""),
+  email: string().trim().required().default(""),
+  password: string().trim().required().default(""),
+});
 
 export interface SignupFormProps {
   loading: boolean;
   signupUser: SignupHandler;
 }
 
+export interface SignupFormState {
+  values: SignupFormData;
+  errors: FormErrors<SignupFormData>;
+}
+
 export default function SignupForm(props: SignupFormProps) {
-  const [data, dispatch] = useImmerReducer(formDataReducer, formData);
+  const [{ values, errors }, setForm] = useImmer<SignupFormState>({
+    values: signupSchema.cast({}),
+    errors: {},
+  });
+
   const [isPassHidden, setPassHidden] = useState(true);
 
-  const isFormDataValid = () => {
-    let flag = true;
-    for (const key in data) {
-      const { value } = data[key];
-      const error = FORM_VALIDATORS[key](value) !== null;
-      dispatch({ type: "validate_field", field: key });
+  const validate = () => {
+    const errors: string[] = [];
 
-      if (error) {
-        flag = false;
+    setForm((form) => {
+      let key: keyof SignupFormData;
+      for (key in form.values) {
+        const value = form.values[key];
+        const field = reach(signupSchema, key) as any;
+        const message = validateSchemaField(field, value);
+        form.errors[key] = message;
+        if (message) errors.push(message);
       }
-    }
+    });
 
-    return flag;
+    return errors.length === 0;
   };
 
   const onValueChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    dispatch({
-      type: "value_change",
-      field: event.target.name,
-      value: event.target.value,
-    });
-  };
+    const name = event.target.name as keyof SignupFormData;
+    const value = event.target.value!;
 
-  const onInputBlur: FocusEventHandler<HTMLInputElement> = (event) => {
-    dispatch({
-      type: "validate_field",
-      field: event.target.name,
+    const field = reach(signupSchema, name) as any;
+    const message = validateSchemaField(field, value);
+
+    setForm((form) => {
+      form.values[name] = value;
+      form.errors[name] = message;
     });
   };
 
   const onFormSubmit: FormEventHandler = (event) => {
     event.preventDefault();
-    dispatch({ type: "validate_all" });
-
-    if (!isFormDataValid()) {
-      // @TODO : show modal / toast with error
-    } else {
-      const formData = getFormData(data);
-      props.signupUser(formData);
-    }
+    if (!validate()) return;
+    props.signupUser(values);
   };
 
   return (
@@ -91,9 +91,8 @@ export default function SignupForm(props: SignupFormProps) {
           name="full_name"
           variant="standard"
           placeholder="Full name"
-          value={data.full_name.value}
+          value={values.full_name}
           onChange={onValueChange}
-          onBlur={onInputBlur}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -101,8 +100,8 @@ export default function SignupForm(props: SignupFormProps) {
               </InputAdornment>
             ),
           }}
-          error={data.full_name.error}
-          helperText={data.full_name.errorMessage}
+          error={!!errors.full_name}
+          helperText={errors.full_name}
         />
 
         <FormTextField
@@ -110,9 +109,8 @@ export default function SignupForm(props: SignupFormProps) {
           name="email"
           variant="standard"
           placeholder="Email"
-          value={data.email.value}
+          value={values.email}
           onChange={onValueChange}
-          onBlur={onInputBlur}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -120,8 +118,8 @@ export default function SignupForm(props: SignupFormProps) {
               </InputAdornment>
             ),
           }}
-          error={data.email.error}
-          helperText={data.email.errorMessage}
+          error={!!errors.email}
+          helperText={errors.email}
         />
 
         <FormTextField
@@ -129,9 +127,8 @@ export default function SignupForm(props: SignupFormProps) {
           name="password"
           variant="standard"
           placeholder="Password"
-          value={data.password.value}
+          value={values.password}
           onChange={onValueChange}
-          onBlur={onInputBlur}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -153,8 +150,8 @@ export default function SignupForm(props: SignupFormProps) {
               </InputAdornment>
             ),
           }}
-          error={data.password.error}
-          helperText={data.password.errorMessage}
+          error={!!errors.password}
+          helperText={errors.password}
         />
       </FormFields>
 

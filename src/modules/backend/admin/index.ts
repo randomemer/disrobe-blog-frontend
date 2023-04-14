@@ -1,12 +1,12 @@
 import admin from "firebase-admin";
-import serviceAccount from "./secret.json";
-
 import type { ServiceAccount } from "firebase-admin";
+
+const key = JSON.parse(process.env.SERVICE_ACCOUNT_KEY!) as ServiceAccount;
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as ServiceAccount),
-    storageBucket: "stories-blog-15b84.appspot.com",
+    credential: admin.credential.cert(key),
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   });
 }
 

@@ -2,7 +2,6 @@ import LoginForm from "@/components/auth/login-form";
 import SignupForm from "@/components/auth/signup-form";
 import TabPanel from "@/components/tab-panel";
 import { FormContainer, FormTab, FormTabs } from "@/styles/auth.styles";
-import { FORM_VALIDATORS } from "@/utils";
 import { FirebaseError } from "firebase/app";
 import {
   browserLocalPersistence,
@@ -18,9 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
-import type { ImmerReducer } from "use-immer";
 import type { SyntheticEvent } from "react";
-import { FormValues } from "@/types";
 
 export type LoginFormData = {
   email: string;
@@ -185,49 +182,3 @@ export default function AuthRoute() {
 function tabProps(key: string) {
   return { id: `auth-tab-${key}`, "aria-controls": `auth-tabpanel-${key}` };
 }
-
-export type FormReducerAction<T> =
-  | {
-      type: "value_change";
-      field: keyof T;
-      value: T[keyof T];
-    }
-  | { type: "validate_field"; field: keyof T }
-  | { type: "validate_all" };
-
-export type FormImmerReducer<T> = ImmerReducer<
-  FormValues<T>,
-  FormReducerAction<T>
->;
-
-export const formDataReducer: FormImmerReducer<
-  LoginFormData | SignupFormData
-> = (draft, action) => {
-  let key: keyof typeof draft;
-  switch (action.type) {
-    case "value_change":
-      draft[action.field].value = action.value;
-      break;
-
-    case "validate_field":
-      key = action.field;
-      const { value } = draft[key];
-      const message = FORM_VALIDATORS[key](value);
-
-      draft[key].error = message !== null;
-      draft[key].errorMessage = message;
-
-      break;
-
-    case "validate_all":
-      for (key in draft) {
-        const { value } = draft[key];
-        const message = FORM_VALIDATORS[key](value);
-
-        draft[key].error = message !== null;
-        draft[key].errorMessage = message;
-      }
-
-      break;
-  }
-};

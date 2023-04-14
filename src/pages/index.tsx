@@ -1,5 +1,3 @@
-"use client";
-
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
 import StoryModel from "@/modules/backend/client/models/story";
@@ -17,8 +15,9 @@ import {
   StoryCardRight,
   StoryThumbnail,
   ThumbnailWrapper,
+  StyledLink,
 } from "@/styles/home.styles";
-import { getStoryThumb } from "@/utils";
+import { getStoryGist, getStoryThumb } from "@/utils";
 import { MailRounded } from "@mui/icons-material";
 import { InputAdornment } from "@mui/material";
 import { Element, Node } from "slate";
@@ -108,16 +107,30 @@ function StoryCard(props: StoryCardProps) {
   );
   const thumb = getStoryThumb(content);
 
+  const path = `/story/${story.id}`;
+
   return (
     <StoryCardDiv>
       <StoryAuthor story={story} />
       <StoryCardContent>
-        <ThumbnailWrapper>
-          <StoryThumbnail fill src={thumb?.url || ""} alt="Story Thumbnail" />
-        </ThumbnailWrapper>
+        {Element.isElement(thumb) && thumb.type === "image" && thumb.url && (
+          <ThumbnailWrapper>
+            <StyledLink href={path} underline="none">
+              <StoryThumbnail fill src={thumb.url} alt="Story Thumbnail" />
+            </StyledLink>
+          </ThumbnailWrapper>
+        )}
         <StoryCardRight>
-          <h3 className="title">{title}</h3>
-          <p className="gist">{paragraph ? Node.string(paragraph) : null}</p>
+          <h3 className="title">
+            <StyledLink href={path} underline="none">
+              {title}
+            </StyledLink>
+          </h3>
+          <p className="gist">
+            <StyledLink href={path} underline="none">
+              {getStoryGist(content)}
+            </StyledLink>
+          </p>
         </StoryCardRight>
       </StoryCardContent>
     </StoryCardDiv>

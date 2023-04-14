@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { Link, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { elevation } from "./shared";
@@ -40,7 +40,7 @@ export const StoriesSection = styled("section")`
   grid-template-columns: 1fr 72rem 1fr;
   column-gap: 8.4rem;
 
-  margin: 4.8rem auto;
+  margin: 4.8rem auto 6rem;
 `;
 
 export const SectionHeading = styled("h2")`
@@ -56,7 +56,7 @@ export const StoryCardDiv = styled("div")`
 
   position: relative;
   overflow: hidden;
-  height: 30rem;
+  min-height: 30rem;
   padding: 1.8rem 3rem;
   margin-bottom: 4.8rem;
   ${elevation(0.1)}
@@ -83,7 +83,7 @@ export const StoryThumbnail = styled(Image)`
 `;
 
 export const StoryCardRight = styled("div")`
-  overflow: hidden;
+  /* overflow: hidden; */
 
   .title {
     font-size: 3rem;
@@ -93,18 +93,11 @@ export const StoryCardRight = styled("div")`
 
   .gist {
     display: block;
-    height: calc(100%);
+    height: 100%;
 
     font-size: 1.7rem;
     font-weight: 400;
     line-height: 1.4;
-    text-overflow: ellipsis;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    white-space: pre-wrap;
   }
 `;
 
@@ -128,4 +121,8 @@ export const EmailTextField = styled(TextField)`
   .MuiSvgIcon-root {
     font-size: 2rem;
   }
+`;
+
+export const StyledLink = styled(Link)`
+  color: inherit;
 `;

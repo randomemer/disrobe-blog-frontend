@@ -1,3 +1,4 @@
+import { LoginHandler } from "@/pages/auth";
 import {
   AuthForm,
   FormButton,
@@ -5,7 +6,7 @@ import {
   FormHeader,
   FormTextField,
 } from "@/styles/auth.styles";
-import { createFormValue, FORM_VALIDATORS, getFormData } from "@/utils";
+import { createFormValue, validateSchemaField } from "@/utils";
 import {
   KeyRounded,
   LoginOutlined,
@@ -15,22 +16,28 @@ import {
 } from "@mui/icons-material";
 import { IconButton, InputAdornment } from "@mui/material";
 import { useState } from "react";
+import { useImmer } from "use-immer";
+import { object, ObjectSchema, reach, string } from "yup";
 import { CheckboxLabel, LoginOptions, RememberMeCheckbox } from "./styles";
-import { useImmerReducer } from "use-immer";
-import { formDataReducer, LoginHandler } from "@/pages/auth";
 
 import type { LoginFormData } from "@/pages/auth";
-import type { FormValues } from "@/types";
-import type {
-  FocusEventHandler,
-  ChangeEventHandler,
-  FormEventHandler,
-} from "react";
+import type { FormErrors, FormValues } from "@/types";
+import type { ChangeEventHandler, FormEventHandler } from "react";
 
 const formData: FormValues<LoginFormData> = {
   email: createFormValue(""),
   password: createFormValue(""),
 };
+
+const loginSchema: ObjectSchema<LoginFormData> = object({
+  email: string().trim().required("Email can't be empty").default(""),
+  password: string().trim().required("Password can't be empty").default(""),
+});
+
+interface LoginFormState {
+  values: LoginFormData;
+  errors: FormErrors<LoginFormData>;
+}
 
 export interface LoginFormProps {
   loading: boolean;
@@ -38,52 +45,47 @@ export interface LoginFormProps {
 }
 
 export default function LoginForm(props: LoginFormProps) {
-  const [data, dispatch] = useImmerReducer(formDataReducer, formData);
+  const [{ values, errors }, setForm] = useImmer<LoginFormState>({
+    values: loginSchema.cast({}),
+    errors: {},
+  });
   const [isPassHidden, setPassHidden] = useState(true);
   const [shouldRemember, setRemember] = useState(false);
 
-  const isFormDataValid = () => {
-    let flag = true;
+  const validate = () => {
+    const errors: string[] = [];
 
-    let key: keyof LoginFormData;
-    for (key in data) {
-      const { value } = data[key];
-      const error = FORM_VALIDATORS[key](value) !== null;
-      dispatch({ type: "validate_field", field: key });
-
-      if (error) {
-        flag = false;
+    setForm((form) => {
+      let key: keyof LoginFormData;
+      for (key in form.values) {
+        const value = form.values[key];
+        const field = reach(loginSchema, key) as any;
+        const message = validateSchemaField(field, value);
+        form.errors[key] = message;
+        if (message) errors.push(message);
       }
-    }
+    });
 
-    return flag;
+    return errors.length === 0;
   };
 
   const onValueChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    dispatch({
-      type: "value_change",
-      field: event.target.name as keyof LoginFormData,
-      value: event.target.value,
-    });
-  };
+    const name = event.target.name as keyof LoginFormData;
+    const value = event.target.value!;
 
-  const onInputBlur: FocusEventHandler<HTMLInputElement> = (event) => {
-    dispatch({
-      type: "validate_field",
-      field: event.target.name as keyof LoginFormData,
+    const field = reach(loginSchema, name) as any;
+    const message = validateSchemaField(field, value);
+
+    setForm((form) => {
+      form.values[name] = value;
+      form.errors[name] = message;
     });
   };
 
   const onFormSubmit: FormEventHandler = (event) => {
     event.preventDefault();
-    dispatch({ type: "validate_all" });
-
-    if (!isFormDataValid()) {
-      // @TODO : show modal / toast with error
-    } else {
-      const formData = getFormData(data);
-      props.loginUser(formData, shouldRemember);
-    }
+    if (!validate()) return;
+    props.loginUser(values, shouldRemember);
   };
 
   return (
@@ -96,9 +98,8 @@ export default function LoginForm(props: LoginFormProps) {
           name="email"
           variant="standard"
           placeholder="Email"
-          value={data.email.value}
+          value={values.email}
           onChange={onValueChange}
-          onBlur={onInputBlur}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -106,8 +107,8 @@ export default function LoginForm(props: LoginFormProps) {
               </InputAdornment>
             ),
           }}
-          error={data.email.error}
-          helperText={data.email.errorMessage}
+          error={!!errors.email}
+          helperText={errors.email}
         />
 
         <FormTextField
@@ -116,11 +117,10 @@ export default function LoginForm(props: LoginFormProps) {
           variant="standard"
           autoComplete="on"
           placeholder="Password"
-          value={data.password.value}
+          value={values.password}
           onChange={onValueChange}
-          onBlur={onInputBlur}
-          error={data.password.error}
-          helperText={data.password.errorMessage}
+          error={!!errors.password}
+          helperText={errors.password}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

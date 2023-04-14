@@ -4,6 +4,7 @@ import sharp from "sharp";
 import { parseForm } from "@/utils/node";
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import { IMAGE_SIZE_LIMIT } from "@/utils/config";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,39 +18,22 @@ export default async function handler(
     const bucket = storage.bucket();
 
     switch (req.method) {
-      case "GET":
-        const mediaRef = bucket.file(bucketPath);
-
-        const [file] = await mediaRef.get();
-        const metadata = file.metadata;
-
-        res.writeHead(200, {
-          "Content-Type": metadata.contentType,
-          "Content-Length": metadata.size,
-        });
-
-        const readStream = file.createReadStream();
-        readStream.pipe(res);
-
-        break;
-
       case "POST":
         const { files } = await parseForm(req);
 
         const formFile = Array.isArray(files.file) ? files.file[0] : files.file;
-        const buffer = fs.readFileSync(formFile.filepath);
+        let buffer = fs.readFileSync(formFile.filepath);
         fs.unlinkSync(formFile.filepath); // cleanup downloaded file
 
-        // compress image, attempt jpeg conversion
-        const image = sharp(buffer).jpeg({ quality: 50 });
-        const imageMetadata = await image.metadata();
-        const imageBuf = await image.toBuffer();
+        if (formFile.size > IMAGE_SIZE_LIMIT) {
+          // compress image, attempt jpeg conversion
+          const image = sharp(buffer).jpeg({ quality: 50 });
+          buffer = await image.toBuffer();
+        }
 
         // save to bucket
         const fileRef = bucket.file(bucketPath);
-        await fileRef.save(imageBuf, {
-          contentType: `image/${imageMetadata.format}`,
-        });
+        await fileRef.save(buffer);
 
         res.status(200).send({
           bucket_path: bucketPath,
