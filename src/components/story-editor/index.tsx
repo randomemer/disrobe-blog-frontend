@@ -3,7 +3,7 @@ import ArticleToolbar from "@/components/slate/toolbar";
 import useEditorContext from "@/hooks/use-editor-data";
 import withInlines from "@/modules/slate/inlines";
 import withVoids from "@/modules/slate/voids";
-import { withPlugins } from "@/utils/editor-utils";
+import { withPlugins } from "@/modules/utils/editor-utils";
 import {
   ChangeEventHandler,
   useCallback,

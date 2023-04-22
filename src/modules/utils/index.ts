@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import humanizeDuration from "humanize-duration";
 import { Descendant, Element, Node } from "slate";
 import createCache from "@emotion/cache";
@@ -103,4 +104,28 @@ export function getStoryGist(children: Descendant[]) {
   const content = getContentString(children);
   const trimmed = content.slice(0, 245) + "...";
   return trimmed;
+}
+
+export function getMediaURL(bucketPath: string) {
+  return `/media/${encodeURIComponent(bucketPath)}`;
+}
+
+export function autoId(length: number = 10) {
+  const chars = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`;
+  let autoId = "";
+
+  while (autoId.length < length) {
+    const bytes = randomBytes(40);
+    bytes.forEach((b) => {
+      /**
+       * Length of `chars` is 62. We only take bytes between 0 and (62 * 4 - 1) (both inclusive).
+       * The value is then evenly mapped to indices of `char` via a modulo operation.
+       */
+      const maxValue = 62 * 4 - 1;
+      if (autoId.length < length && b <= maxValue) {
+        autoId += chars.charAt(b % 62);
+      }
+    });
+  }
+  return autoId;
 }

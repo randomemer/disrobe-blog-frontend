@@ -6,11 +6,11 @@ import { ThemeProvider } from "@mui/material/styles";
 import { DM_Sans } from "next/font/google";
 import Head from "next/head";
 
-import { createEmotionCache } from "@/utils";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import type { AppProps } from "next/app";
 import { EditorProvider } from "@/contexts/editor";
 import { RouteProps } from "@/types";
+import { createEmotionCache } from "@/modules/utils";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import type { AppProps } from "next/app";
 
 const clientEmotionCache = createEmotionCache();
 const DMSans = DM_Sans({

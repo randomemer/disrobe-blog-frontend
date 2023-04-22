@@ -1,10 +1,10 @@
 import admin from "@/modules/backend/admin";
 import fs from "fs";
 import sharp from "sharp";
-import { parseForm } from "@/utils/node";
+import { parseForm } from "@/modules/utils/node";
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { IMAGE_SIZE_LIMIT } from "@/utils/config";
+import { IMAGE_SIZE_LIMIT } from "@/modules/utils/config";
 
 export default async function handler(
   req: NextApiRequest,

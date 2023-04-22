@@ -12,7 +12,11 @@ import {
 import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
 import { InputField } from "@/styles/shared";
 import { FormErrors, RouteProps } from "@/types";
-import { isBlobURL, objectDifference, validateSchemaField } from "@/utils";
+import {
+  isBlobURL,
+  objectDifference,
+  validateSchemaField,
+} from "@/modules/utils";
 import {
   DescriptionOutlined,
   EditSharp,
@@ -24,7 +28,6 @@ import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import { useImmer } from "use-immer";
 import { object, ObjectSchema, reach, string } from "yup";
 import _ from "lodash";
-import ClientAuthorRepo from "@/modules/backend/client/repos/author";
 import path from "path-browserify";
 import clientMediaRepo from "@/modules/backend/client/repos/media";
 import { v4 } from "uuid";
@@ -153,7 +156,8 @@ export default function AccountSettingsRoute(props: RouteProps) {
         diff.picture = bucketPath;
       }
 
-      await new ClientAuthorRepo().update(author.id, diff);
+      await AuthorModel.query().findById(author.id).patch(diff);
+
       const updated = { ...auth.author, ...diff };
       setAuth((auth) => {
         auth.author = updated;

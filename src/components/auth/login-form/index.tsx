@@ -6,7 +6,7 @@ import {
   FormHeader,
   FormTextField,
 } from "@/styles/auth.styles";
-import { createFormValue, validateSchemaField } from "@/utils";
+import { createFormValue, validateSchemaField } from "@/modules/utils";
 import {
   KeyRounded,
   LoginOutlined,

@@ -1,4 +1,4 @@
-import { calcWordCount } from "@/utils";
+import { calcWordCount, getMediaURL } from "@/modules/utils";
 import { useMemo } from "react";
 import { Node } from "slate";
 import {
@@ -8,17 +8,18 @@ import {
   AuthorImageWrapper,
 } from "./styles";
 
-import StoryModel from "@/modules/backend/client/models/story";
+import { StoryModel } from "@/modules/backend";
+import { ModelObject } from "objection";
 
 export interface StoryAuthorProps {
-  story: StoryModel;
+  story: ModelObject<StoryModel>;
 }
 
 export default function StoryAuthor(props: StoryAuthorProps) {
   const { story } = props;
   const { author } = story;
 
-  const publish_date = story.created_at.toDate().toLocaleDateString("en-US", {
+  const publish_date = new Date(story.created_at).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -35,7 +36,7 @@ export default function StoryAuthor(props: StoryAuthorProps) {
       <AuthorImageWrapper>
         <AuthorImage
           fill
-          src={`/api/media/${author.picture}`}
+          src={author.picture && getMediaURL(author.picture)}
           alt={`author ${author.name}`}
         />
       </AuthorImageWrapper>

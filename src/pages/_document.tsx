@@ -1,6 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { getInitColorSchemeScript } from "@mui/material/styles";
-import { createEmotionCache } from "@/utils";
+import { createEmotionCache } from "@/modules/utils";
 import createEmotionServer from "@emotion/server/create-instance";
 
 import type { AppType } from "next/app";

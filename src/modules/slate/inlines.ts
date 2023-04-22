@@ -1,6 +1,6 @@
-import { wrapLink } from "@/utils/editor-utils";
+import { wrapLink } from "@/modules/utils/editor-utils";
 import { Element } from "slate";
-import { url } from "@/utils";
+import { url } from "@/modules/utils";
 
 import type { InlinesEditor, SlatePlugin } from "@/types/slate";
 

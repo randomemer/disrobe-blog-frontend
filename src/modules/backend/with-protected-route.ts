@@ -1,9 +1,9 @@
-import AdminAuthorRepo from "./admin/repos/author";
 import nookies from "nookies";
 import admin from "./admin";
 
 import type { GetServerSidePropsResult } from "next";
 import type { ProtectedRouteContext } from "@/types";
+import { AuthorModel } from ".";
 
 export default function withProtectedRoute<
   P extends { [key: string]: unknown } = { [key: string]: unknown }
@@ -18,9 +18,9 @@ export default function withProtectedRoute<
       const cookies = nookies.get(context);
       const token = await admin.auth().verifyIdToken(cookies.token);
 
-      const author = await new AdminAuthorRepo().fetchId(token.uid);
+      const result = await AuthorModel.query().findById(token.uid);
 
-      req.user = { author: author.toJSON() };
+      req.user = { author: result!.toJSON() };
 
       return handler(context);
     } catch (error) {

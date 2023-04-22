@@ -1,6 +1,7 @@
-import type { AuthorJSON } from "./backend";
+import type { AuthorModel } from "@/modules/backend";
 import type { GetServerSidePropsContext } from "next";
-import { ReactNode } from "react";
+import type { ModelObject } from "objection";
+import type { ReactNode } from "react";
 
 declare module "next" {}
 
@@ -14,7 +15,7 @@ export type AsyncStatus = "idle" | "pending" | "fulfilled" | "rejected";
 
 export type User = {
   id: string;
-  data: AuthorJSON;
+  data: ModelObject<AuthorModel>;
 };
 
 // ============================================================
@@ -40,7 +41,7 @@ export type FormErrors<T> = {
 // ============================================================
 
 export interface RouteProps {
-  author?: AuthorJSON;
+  author?: ModelObject<AuthorModel>;
   [key: string]: unknown;
 }
 
@@ -52,7 +53,7 @@ export interface PageRoute {
 export type ProtectedRouteContext = GetServerSidePropsContext & {
   req: {
     user: {
-      author: AuthorJSON;
+      author: ModelObject<AuthorModel>;
     };
   };
 };

@@ -6,7 +6,7 @@ import type { Updater } from "use-immer";
 import type { AsyncStatus } from "@/types";
 import type { StoryJSON } from "@/types/backend";
 import { Descendant } from "slate";
-import { DEFAULT_PARAGRAPH } from "@/utils/editor-utils";
+import { DEFAULT_PARAGRAPH } from "@/modules/utils/editor-utils";
 
 export interface EditorContextData {
   status: AsyncStatus;

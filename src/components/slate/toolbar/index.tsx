@@ -7,7 +7,7 @@ import {
   toggleBlock,
   toggleLink,
   toggleMark,
-} from "@/utils/editor-utils";
+} from "@/modules/utils/editor-utils";
 import {
   CloudDoneOutlined,
   CloudOffOutlined,

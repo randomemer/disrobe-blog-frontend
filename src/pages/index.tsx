@@ -1,7 +1,5 @@
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
-import StoryModel from "@/modules/backend/client/models/story";
-import AdminStoryRepo from "@/modules/backend/admin/repos/story";
 import {
   EmailTextField,
   SectionHeading,
@@ -17,17 +15,26 @@ import {
   ThumbnailWrapper,
   StyledLink,
 } from "@/styles/home.styles";
-import { getStoryGist, getStoryThumb } from "@/utils";
+import { getStoryGist, getStoryThumb } from "@/modules/utils";
 import { MailRounded } from "@mui/icons-material";
 import { InputAdornment } from "@mui/material";
-import { Element, Node } from "slate";
-import { StoryJSON } from "@/types/backend";
-import { useMemo } from "react";
+import { Element } from "slate";
+import { StoryModel } from "@/modules/backend";
+import { ModelObject } from "objection";
 
 export const getServerSideProps = async () => {
   try {
-    const stories = await new AdminStoryRepo().fetchFeed();
-    return { props: { stories: stories.map((story) => story.toJSON()) } };
+    console.time("home_feed");
+
+    const results = await StoryModel.query()
+      .withGraphJoined({ author: true, draft: true })
+      .limit(25);
+
+    console.timeEnd("home_feed");
+
+    const serialized = results.map((r) => r.toJSON());
+
+    return { props: { stories: serialized } };
   } catch (error) {
     console.error("Error occured while fetching feed\n", error);
     return { props: { stories: [] } };
@@ -35,13 +42,11 @@ export const getServerSideProps = async () => {
 };
 
 export interface HomeRouteProps {
-  stories: StoryJSON[];
+  stories: any[];
 }
 
 export default function Home(props: HomeRouteProps) {
-  const stories = useMemo(() => {
-    return props.stories.map((json) => new StoryModel(json));
-  }, [props.stories]);
+  const { stories } = props;
 
   return (
     <BlogLayout>
@@ -94,7 +99,7 @@ export default function Home(props: HomeRouteProps) {
 }
 
 export interface StoryCardProps {
-  story: StoryModel;
+  story: ModelObject<StoryModel>;
 }
 
 function StoryCard(props: StoryCardProps) {
@@ -102,9 +107,6 @@ function StoryCard(props: StoryCardProps) {
 
   // TODO : change to live in production
   const { title, content } = story.draft;
-  const paragraph = content.find(
-    (node) => Element.isElement(node) && node.type === "paragraph"
-  );
   const thumb = getStoryThumb(content);
 
   const path = `/story/${story.id}`;

@@ -18,10 +18,8 @@
 # misc
 .DS_Store
 secret.json
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
+.env.*
 
 # debug
 npm-debug.log*

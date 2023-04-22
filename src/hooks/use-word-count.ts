@@ -1,4 +1,4 @@
-import { calcWordCount, getContentString } from "@/utils";
+import { calcWordCount, getContentString } from "@/modules/utils";
 import _ from "lodash";
 import { useMemo } from "react";
 import { useSlate } from "slate-react";
