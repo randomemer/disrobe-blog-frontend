@@ -1,10 +1,11 @@
 import AppLayout from "@/components/layout/app";
 import StoryEditor from "@/components/story-editor";
 import useEditorContext from "@/hooks/use-editor-data";
-import { AuthorModel, StoryModel } from "@/modules/backend";
+import { StoryModel } from "@/modules/backend";
 import withProtectedRoute from "@/modules/backend/with-protected-route";
+import { jsonify } from "@/modules/utils";
 import { RouteProps } from "@/types";
-import { ModelObject } from "objection";
+import { AuthorJSON, StoryJoinedJSON } from "@/types/backend";
 import { useEffect } from "react";
 
 export const getServerSideProps = withProtectedRoute<StoryEditRouteProps>(
@@ -19,17 +20,21 @@ export const getServerSideProps = withProtectedRoute<StoryEditRouteProps>(
       })
       .findById(storyId);
 
-    if (!result || result.author.id !== author.id) {
+    const transformed = jsonify(result?.toJSON()) as
+      | StoryJoinedJSON
+      | undefined;
+
+    if (!transformed || transformed.author.id !== author.id) {
       return { notFound: true };
     }
 
-    return { props: { author, story: result.toJSON() } };
+    return { props: { author: transformed.author, story: transformed } };
   }
 );
 
 export interface StoryEditRouteProps extends RouteProps {
-  author: ModelObject<AuthorModel>;
-  story: ModelObject<StoryModel>;
+  author: AuthorJSON;
+  story: StoryJoinedJSON;
 }
 
 export default function StoryEdit(props: StoryEditRouteProps) {

@@ -1,9 +1,13 @@
-import { Model, ModelObject } from "objection";
+import {
+  JSONSchema,
+  Model,
+  RelationMappings,
+  RelationMappingsThunk,
+} from "objection";
 import AuthorModel from "./author";
-import BaseModel from "./base";
 import StorySnapshotModel from "./story-snapshot";
 
-export default class StoryModel extends BaseModel {
+export default class StoryModel extends Model {
   static tableName = "Story";
   static idColumn = "id";
 
@@ -15,10 +19,22 @@ export default class StoryModel extends BaseModel {
   created_at!: Date;
   updated_at!: Date;
 
-  author!: ModelObject<AuthorModel>;
-  draft!: ModelObject<StorySnapshotModel>;
+  static jsonSchema: JSONSchema = {
+    type: "object",
+    required: ["id", "author_id", "draft_snap_id"],
+    properties: {
+      id: { type: "string" },
+      author_id: { type: "string" },
+      is_published: { type: "boolean", default: false },
+      draft_snap_id: { type: "string" },
+      live_snap_id: { type: ["string", "null"] },
+      created_at: { type: "string" },
+      updated_at: { type: "string" },
+    },
+    additionalProperties: false,
+  };
 
-  static relationMappings = {
+  static relationMappings: RelationMappings | RelationMappingsThunk = {
     author: {
       relation: Model.BelongsToOneRelation,
       modelClass: AuthorModel,

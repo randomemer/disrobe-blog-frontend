@@ -4,7 +4,7 @@ import { useImmer } from "use-immer";
 import type { PropsWithChildren } from "react";
 import type { Updater } from "use-immer";
 import type { AsyncStatus } from "@/types";
-import type { StoryJSON } from "@/types/backend";
+import type { StoryJoinedJSON } from "@/types/backend";
 import { Descendant } from "slate";
 import { DEFAULT_PARAGRAPH } from "@/modules/utils/editor-utils";
 
@@ -12,7 +12,7 @@ export interface EditorContextData {
   status: AsyncStatus;
   title: string;
   content: Descendant[];
-  story?: StoryJSON;
+  story?: StoryJoinedJSON;
 }
 
 export interface EditorProviderValue {

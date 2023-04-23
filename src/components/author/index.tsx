@@ -7,12 +7,10 @@ import {
   AuthorImage,
   AuthorImageWrapper,
 } from "./styles";
-
-import { StoryModel } from "@/modules/backend";
-import { ModelObject } from "objection";
+import { StoryJoinedJSON } from "@/types/backend";
 
 export interface StoryAuthorProps {
-  story: ModelObject<StoryModel>;
+  story: StoryJoinedJSON;
 }
 
 export default function StoryAuthor(props: StoryAuthorProps) {
@@ -34,11 +32,13 @@ export default function StoryAuthor(props: StoryAuthorProps) {
   return (
     <Author className="story-author">
       <AuthorImageWrapper>
-        <AuthorImage
-          fill
-          src={author.picture && getMediaURL(author.picture)}
-          alt={`author ${author.name}`}
-        />
+        {author.picture ? (
+          <AuthorImage
+            fill
+            src={getMediaURL(author.picture)}
+            alt={`author ${author.name}`}
+          />
+        ) : null}
       </AuthorImageWrapper>
 
       <AuthorDetails>

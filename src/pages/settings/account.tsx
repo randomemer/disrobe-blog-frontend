@@ -29,7 +29,7 @@ import { useImmer } from "use-immer";
 import { object, ObjectSchema, reach, string } from "yup";
 import _ from "lodash";
 import path from "path-browserify";
-import clientMediaRepo from "@/modules/backend/client/repos/media";
+import clientMediaRepo from "@/modules/backend/repos/media";
 import { v4 } from "uuid";
 
 // ============================================================

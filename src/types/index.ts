@@ -2,6 +2,7 @@ import type { AuthorModel } from "@/modules/backend";
 import type { GetServerSidePropsContext } from "next";
 import type { ModelObject } from "objection";
 import type { ReactNode } from "react";
+import { AuthorJSON } from "./backend";
 
 declare module "next" {}
 
@@ -30,10 +31,6 @@ export type FormValues<T = Record<string, any>> = {
   [K in keyof T]: FormValue<T[K]>;
 };
 
-export type FormValidators<T = Record<string, any>> = {
-  [K in keyof T]: (value: T[K]) => string | null;
-};
-
 export type FormErrors<T> = {
   [K in keyof T]?: string;
 };
@@ -41,7 +38,7 @@ export type FormErrors<T> = {
 // ============================================================
 
 export interface RouteProps {
-  author?: ModelObject<AuthorModel>;
+  author?: AuthorJSON;
   [key: string]: unknown;
 }
 
@@ -53,7 +50,7 @@ export interface PageRoute {
 export type ProtectedRouteContext = GetServerSidePropsContext & {
   req: {
     user: {
-      author: ModelObject<AuthorModel>;
+      author: AuthorJSON;
     };
   };
 };

@@ -41,6 +41,8 @@ export default function AuthRoute() {
   const router = useRouter();
 
   const routerQueryType = router.query.type as string;
+
+  const [redirect, setRedirect] = useState("/settings/account");
   const [isLoading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(
     routerQueryType || "login"
@@ -54,13 +56,22 @@ export default function AuthRoute() {
   };
 
   useEffect(() => {
+    const redirect = router.query.redirect;
+
+    if (redirect) {
+      const url = decodeURIComponent(redirect as string);
+      setRedirect(url);
+    }
+
+    console.log(redirect);
+  }, [router.query.redirect]);
+
+  useEffect(() => {
     if (routerQueryType !== activeTab) {
       setActiveTab(routerQueryType);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
-
-  useEffect(() => {}, [activeTab]);
 
   const loginUser: LoginHandler = async (data, shouldRemember) => {
     setLoading(true);
@@ -84,7 +95,7 @@ export default function AuthRoute() {
       // });
 
       // @TODO :
-      router.push("/settings/account");
+      router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {

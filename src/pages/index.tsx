@@ -1,5 +1,7 @@
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
+import { StoryModel } from "@/modules/backend";
+import { getStoryGist, getStoryThumb } from "@/modules/utils";
 import {
   EmailTextField,
   SectionHeading,
@@ -12,15 +14,13 @@ import {
   StoryCardDiv,
   StoryCardRight,
   StoryThumbnail,
-  ThumbnailWrapper,
   StyledLink,
+  ThumbnailWrapper,
 } from "@/styles/home.styles";
-import { getStoryGist, getStoryThumb } from "@/modules/utils";
+import { StoryJoinedJSON } from "@/types/backend";
 import { MailRounded } from "@mui/icons-material";
 import { InputAdornment } from "@mui/material";
 import { Element } from "slate";
-import { StoryModel } from "@/modules/backend";
-import { ModelObject } from "objection";
 
 export const getServerSideProps = async () => {
   try {
@@ -99,7 +99,7 @@ export default function Home(props: HomeRouteProps) {
 }
 
 export interface StoryCardProps {
-  story: ModelObject<StoryModel>;
+  story: StoryJoinedJSON;
 }
 
 function StoryCard(props: StoryCardProps) {

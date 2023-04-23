@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import humanizeDuration from "humanize-duration";
 import { Descendant, Element, Node } from "slate";
 import createCache from "@emotion/cache";
-import { FormValidators, FormValues } from "@/types";
+import { FormValues } from "@/types";
 import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
 
@@ -128,4 +128,8 @@ export function autoId(length: number = 10) {
     });
   }
   return autoId;
+}
+
+export function jsonify(value: any) {
+  return JSON.parse(JSON.stringify(value));
 }

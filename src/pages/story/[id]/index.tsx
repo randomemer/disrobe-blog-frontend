@@ -20,7 +20,8 @@ import { app } from "@/modules/backend/client";
 import { useRouter } from "next/router";
 
 import type { GetServerSideProps } from "next";
-import { ModelObject } from "objection";
+import { StoryJoinedJSON } from "@/types/backend";
+import { jsonify } from "@/modules/utils";
 
 export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   context
@@ -31,15 +32,15 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
     .withGraphJoined({ author: true, draft: true })
     .findById(id);
 
-  if (!result) {
-    throw new Error("Story Not Found");
-  }
+  if (!result) throw new Error("Story Not Found");
 
-  return { props: { story: result.toJSON() } };
+  const transformed = jsonify(result.toJSON());
+
+  return { props: { story: transformed } };
 };
 
 export interface StoryRouteProps {
-  story: ModelObject<StoryModel>;
+  story: StoryJoinedJSON;
 }
 
 export default function StoryRoute(props: StoryRouteProps) {
