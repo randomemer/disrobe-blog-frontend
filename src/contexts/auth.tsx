@@ -5,12 +5,11 @@ import { useImmer } from "use-immer";
 
 import type { PropsWithChildren } from "react";
 import type { Updater } from "use-immer";
-import { ModelObject } from "objection";
-import { AuthorModel } from "@/modules/backend";
+import type { AuthorJSON } from "@/types/backend";
 
 export interface AuthContextData {
   user: User | null;
-  author: ModelObject<AuthorModel> | null;
+  author: AuthorJSON | null;
 }
 
 export interface AuthProviderValue {
@@ -27,7 +26,7 @@ export const AuthContext = createContext<AuthProviderValue>({
 });
 
 type AuthProviderProps = PropsWithChildren<{
-  author?: ModelObject<AuthorModel>;
+  author?: AuthorJSON;
 }>;
 
 export default function AuthProvider(props: AuthProviderProps) {

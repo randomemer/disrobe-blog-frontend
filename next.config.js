@@ -17,6 +17,13 @@ const nextConfig = {
         port: "",
         pathname: "**",
       },
+      // @TODO : remove in production
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+        pathname: "**",
+      },
     ],
   },
   async redirects() {

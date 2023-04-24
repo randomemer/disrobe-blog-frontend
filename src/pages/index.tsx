@@ -1,7 +1,7 @@
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
 import { StoryModel } from "@/modules/backend";
-import { getStoryGist, getStoryThumb } from "@/modules/utils";
+import { getStoryGist, getStoryThumb, jsonify } from "@/modules/utils";
 import {
   EmailTextField,
   SectionHeading,
@@ -32,7 +32,7 @@ export const getServerSideProps = async () => {
 
     console.timeEnd("home_feed");
 
-    const serialized = results.map((r) => r.toJSON());
+    const serialized = results.map((r) => jsonify(r.toJSON()));
 
     return { props: { stories: serialized } };
   } catch (error) {

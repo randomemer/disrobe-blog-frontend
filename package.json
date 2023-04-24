@@ -29,7 +29,7 @@
     "lodash": "^4.17.21",
     "mdi-material-ui": "^7.6.0",
     "mysql2": "^3.2.3",
-    "next": "latest",
+    "next": "^13.3.1",
     "nookies": "^2.5.2",
     "objection": "^3.0.1",
     "path-browserify": "^1.0.1",

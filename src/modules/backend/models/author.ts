@@ -12,7 +12,7 @@ export default class AuthorModel extends Model {
   updated_at!: Date;
 
   static jsonSchema: JSONSchema = {
-    type: " object",
+    type: "object",
     required: ["id", "name"],
     properties: {
       id: { type: "string" },

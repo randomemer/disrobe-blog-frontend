@@ -13,6 +13,7 @@ import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
 import { InputField } from "@/styles/shared";
 import { FormErrors, RouteProps } from "@/types";
 import {
+  getMediaURL,
   isBlobURL,
   objectDifference,
   validateSchemaField,
@@ -44,8 +45,8 @@ export const getServerSideProps = withProtectedRoute<AccountSettingsRouteProps>(
 
 interface ProfileFormValues {
   name: string;
-  bio?: string;
-  picture?: string;
+  bio: string | null;
+  picture?: string | null;
 }
 
 interface ProfileForm {
@@ -62,8 +63,8 @@ const profileSchema: ObjectSchema<ProfileFormValues> = object({
       (name) => !!name && !!name.trim()
     )
     .required(),
-  bio: string().trim(),
-  picture: string(),
+  bio: string().trim().nullable().default(null),
+  picture: string().nullable().default(null),
 });
 
 // ============================================================
@@ -89,9 +90,7 @@ export default function AccountSettingsRoute(props: RouteProps) {
 
   const imageURL =
     values.picture &&
-    (isBlobURL(values.picture)
-      ? values.picture
-      : `/api/media/${values.picture}`);
+    (isBlobURL(values.picture) ? values.picture : getMediaURL(values.picture));
 
   useEffect(() => {
     setChanged(
@@ -156,9 +155,13 @@ export default function AccountSettingsRoute(props: RouteProps) {
         diff.picture = bucketPath;
       }
 
-      await AuthorModel.query().findById(author.id).patch(diff);
+      const resp = await fetch(`/api/author/${author.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(diff),
+      });
+      const updated = await resp.json();
 
-      const updated = { ...auth.author, ...diff };
       setAuth((auth) => {
         auth.author = updated;
       });
@@ -193,7 +196,7 @@ export default function AccountSettingsRoute(props: RouteProps) {
               </AvatarEditButton>
             }
           >
-            <UserAvatar alt={author.name} src={imageURL} />
+            <UserAvatar alt={author.name} src={imageURL || undefined} />
           </Badge>
           <ProfileForm>
             <InputField
