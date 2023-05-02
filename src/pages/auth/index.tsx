@@ -94,7 +94,6 @@ export default function AuthRoute() {
       //   method: "email",
       // });
 
-      // @TODO :
       router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -140,8 +139,7 @@ export default function AuthRoute() {
         name: data.full_name,
       });
 
-      // @TODO :
-      // router.push("/settings/account")
+      router.push("/settings/account");
     } catch (error) {
       if (error instanceof FirebaseError) {
         console.log(error.code, error.name, error.message);
