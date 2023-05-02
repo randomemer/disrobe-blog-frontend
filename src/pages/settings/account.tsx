@@ -37,7 +37,7 @@ import { v4 } from "uuid";
 
 export const getServerSideProps = withProtectedRoute<AccountSettingsRouteProps>(
   async (ctx) => {
-    return { props: { author: ctx.req.user.author ?? null } };
+    return { props: { author: ctx.req.user.author } };
   }
 );
 

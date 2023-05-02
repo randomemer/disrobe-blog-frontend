@@ -20,7 +20,9 @@ export default function withProtectedRoute<
       const token = await admin.auth().verifyIdToken(cookies.token);
 
       const result = await AuthorModel.query().findById(token.uid);
-      const transformed = jsonify(result!.toJSON());
+      if (!result) throw new Error("No author found");
+
+      const transformed = jsonify(result.toJSON());
 
       req.user = { author: transformed };
 
