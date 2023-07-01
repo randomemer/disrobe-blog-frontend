@@ -73,7 +73,7 @@ interface AccountSettingsRouteProps extends RouteProps {}
 
 export default function AccountSettingsRoute(props: RouteProps) {
   const [auth, setAuth] = useAuth();
-  const author = auth.author!;
+  const author = props.author || auth.author!;
 
   const [changed, setChanged] = useState(false);
   const [loading, setLoading] = useState(false);

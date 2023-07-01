@@ -84,16 +84,13 @@ export default function AuthRoute() {
         await setPersistence(auth, browserSessionPersistence);
       }
 
-      const result = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
+      await signInWithEmailAndPassword(auth, data.email, data.password);
 
       // logEvent(analytics, "login", {
       //   method: "email",
       // });
 
+      console.log("Redirecting...");
       router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {

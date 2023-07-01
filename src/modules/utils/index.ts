@@ -133,3 +133,19 @@ export function autoId(length: number = 10) {
 export function jsonify(value: any) {
   return JSON.parse(JSON.stringify(value));
 }
+
+export function facebookURL(url: string): string {
+  return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    url
+  )}`;
+}
+
+export function twitterURL(content: string): string {
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(content)}`;
+}
+
+export function linkedinURL(url: string): string {
+  return `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+    url
+  )}`;
+}

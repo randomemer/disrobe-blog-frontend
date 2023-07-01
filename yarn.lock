@@ -1605,7 +1605,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.149, @types/lodash@npm:^4.14.191":
+"@types/lodash@npm:^4.14.149":
+  version: 4.14.195
+  resolution: "@types/lodash@npm:4.14.195"
+  checksum: 39b75ca635b3fa943d17d3d3aabc750babe4c8212485a4df166fe0516e39288e14b0c60afc6e21913cc0e5a84734633c71e617e2bd14eaa1cf51b8d7799c432e
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.14.191":
   version: 4.14.191
   resolution: "@types/lodash@npm:4.14.191"
   checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
@@ -3543,9 +3550,9 @@ __metadata:
     react-dom: ^18.2.0
     sass: ^1.58.3
     sharp: ^0.32.0
-    slate: ^0.91.4
-    slate-history: ^0.86.0
-    slate-react: ^0.91.10
+    slate: ^0.94.1
+    slate-history: ^0.93.0
+    slate-react: ^0.97.1
     typescript: ^4.9.5
     use-immer: ^0.8.1
     uuid: ^9.0.0
@@ -4127,10 +4134,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^9.0.19, immer@npm:^9.0.6":
+"immer@npm:^9.0.19":
   version: 9.0.19
   resolution: "immer@npm:9.0.19"
   checksum: f02ee53989989c287cd548a3d817fccf0bfe56db919755ee94a72ea3ae78a00363fba93ee6c010fe54a664380c29c53d44ed4091c6a86cae60957ad2cfabc010
+  languageName: node
+  linkType: hard
+
+"immer@npm:^9.0.6":
+  version: 9.0.21
+  resolution: "immer@npm:9.0.21"
+  checksum: 70e3c274165995352f6936695f0ef4723c52c92c92dd0e9afdfe008175af39fa28e76aafb3a2ca9d57d1fb8f796efc4dd1e1cc36f18d33fa5b74f3dfb0375432
   languageName: node
   linkType: hard
 
@@ -6513,20 +6527,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slate-history@npm:^0.86.0":
-  version: 0.86.0
-  resolution: "slate-history@npm:0.86.0"
+"slate-history@npm:^0.93.0":
+  version: 0.93.0
+  resolution: "slate-history@npm:0.93.0"
   dependencies:
     is-plain-object: ^5.0.0
   peerDependencies:
     slate: ">=0.65.3"
-  checksum: 1adb1997056b87ddac83ab5e69efd317ece443458a3f40aa82429121b4f79501576b16a8b143bc9b6c7ba2374cbcf5f9e9bd05b1377ab6238a52086cd3b94838
+  checksum: 4ce44a9ecbccbfd3b9c023e5bc20c6e151f1064fb2a6dd42cfec72bd6f8fd29e60f533e74130bb69f4706e86802929eb6fd89eb271dda34924ab46965c36a3e2
   languageName: node
   linkType: hard
 
-"slate-react@npm:^0.91.10":
-  version: 0.91.10
-  resolution: "slate-react@npm:0.91.10"
+"slate-react@npm:^0.97.1":
+  version: 0.97.1
+  resolution: "slate-react@npm:0.97.1"
   dependencies:
     "@juggle/resize-observer": ^3.4.0
     "@types/is-hotkey": ^0.1.1
@@ -6541,18 +6555,18 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
     slate: ">=0.65.3"
-  checksum: 4ca69e7dbf34e855ce94184efc0d032691e9bfde5111c7f104d4026d3bb418ed2779207ffc30a3127ef320a524a1ce1ba16ff9b16ab79212b509b8fffe82f24e
+  checksum: 065adf2d3662de5bec11f753c368c2dc13dc80da72164b085343e1916353fbb0190cb1cc306ef94edf013849c2b1431f618c619aef25460020ab1d78158e0b77
   languageName: node
   linkType: hard
 
-"slate@npm:^0.91.4":
-  version: 0.91.4
-  resolution: "slate@npm:0.91.4"
+"slate@npm:^0.94.1":
+  version: 0.94.1
+  resolution: "slate@npm:0.94.1"
   dependencies:
     immer: ^9.0.6
     is-plain-object: ^5.0.0
     tiny-warning: ^1.0.3
-  checksum: 70164a5106cac7caaa681b0eca5dba5cf172b2c406f769744babb28350906ca92dc496a0d9224911564bd4ee0650a19be7279d917bba02159e1672f37475d74d
+  checksum: 07666fe3373e59aaa19261366fd3cf1df546edfc0162fb88d675d71f158ebd1bf0630fd00ecc9152ab6547080f3e90c9f6d1504e09c25b3bf980cceb9b15c3c1
   languageName: node
   linkType: hard
 

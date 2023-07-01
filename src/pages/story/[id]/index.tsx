@@ -18,10 +18,10 @@ import { StoryModel } from "@/modules/backend";
 import { getAnalytics } from "firebase/analytics";
 import { app } from "@/modules/backend/client";
 import { useRouter } from "next/router";
+import { StoryJoinedJSON } from "@/types/backend";
+import { facebookURL, jsonify, linkedinURL, twitterURL } from "@/modules/utils";
 
 import type { GetServerSideProps } from "next";
-import { StoryJoinedJSON } from "@/types/backend";
-import { jsonify } from "@/modules/utils";
 
 export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   context
@@ -75,6 +75,8 @@ function StorySocials() {
   const analytics = app && getAnalytics(app);
 
   const shareTwitter = () => {
+    const shareLink = twitterURL(storyLink);
+    window.open(shareLink, "_blank", "noreferrer");
     // logEvent(analytics, "share", {
     //   item_id: id,
     //   content_type: "story",
@@ -83,6 +85,8 @@ function StorySocials() {
   };
 
   const shareFacebook = () => {
+    const shareLink = facebookURL(storyLink);
+    window.open(shareLink, "_blank", "noreferrer");
     // logEvent(analytics, "share", {
     //   item_id: id,
     //   content_type: "story",
@@ -91,6 +95,8 @@ function StorySocials() {
   };
 
   const shareLinkedin = () => {
+    const shareLink = linkedinURL(storyLink);
+    window.open(shareLink, "_blank", "noreferrer");
     // logEvent(analytics, "share", {
     //   item_id: id,
     //   content_type: "story",
@@ -109,15 +115,15 @@ function StorySocials() {
 
   return (
     <StorySharing>
-      <ShareButton id="share-fb">
+      <ShareButton id="share-fb" onClick={shareFacebook}>
         <FacebookLogo />
       </ShareButton>
 
-      <ShareButton id="share-lnkd">
+      <ShareButton id="share-lnkd" onClick={shareLinkedin}>
         <LinkedinLogo />
       </ShareButton>
 
-      <ShareButton id="share-twt">
+      <ShareButton id="share-twt" onClick={shareTwitter}>
         <TwitterLogo />
       </ShareButton>
 

@@ -1,3 +1,4 @@
+import { INSTA_URL } from "@/modules/utils/config";
 import { TextLink } from "@/styles/shared";
 import {
   FacebookRounded,
@@ -34,7 +35,7 @@ export default function Footer() {
             <SocialLink href={"/"} rel="noopener">
               <FacebookRounded />
             </SocialLink>
-            <SocialLink href={"/"} rel="noopener">
+            <SocialLink target="_blank" href={INSTA_URL} rel="noopener">
               <Instagram />
             </SocialLink>
             <SocialLink href={"/"} rel="noopener">

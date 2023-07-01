@@ -36,9 +36,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sharp": "^0.32.0",
-    "slate": "^0.91.4",
-    "slate-history": "^0.86.0",
-    "slate-react": "^0.91.10",
+    "slate": "^0.94.1",
+    "slate-history": "^0.93.0",
+    "slate-react": "^0.97.1",
     "use-immer": "^0.8.1",
     "uuid": "^9.0.0",
     "yup": "^1.0.2"

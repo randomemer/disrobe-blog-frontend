@@ -34,6 +34,7 @@ yarn-error.log*
 *.pem
 /references
 /.vscode
+/.idea
 
 # vercel
 .vercel
