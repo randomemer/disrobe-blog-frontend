@@ -75,7 +75,7 @@ export default function StoryEditor(props: StoryEditorProps) {
   };
 
   return (
-    <Slate editor={editor} value={content} onChange={onEditorChange}>
+    <Slate editor={editor} initialValue={content} onChange={onEditorChange}>
       <ContentWrapper>
         <StoryTitle
           variant="standard"

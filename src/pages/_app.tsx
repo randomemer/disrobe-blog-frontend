@@ -27,8 +27,6 @@ export interface DisrobeAppProps extends AppProps {
 export default function App(props: DisrobeAppProps) {
   const { Component, emotionCache = clientEmotionCache, pageProps } = props;
 
-  console.log("page-props", pageProps);
-
   return (
     <>
       <style jsx global>{`
