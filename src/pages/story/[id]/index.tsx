@@ -1,25 +1,20 @@
-import FacebookLogo from "@/assets/images/icons/facebook-logo";
-import LinkedinLogo from "@/assets/images/icons/linkedin-logo";
-import TwitterLogo from "@/assets/images/icons/twitter-logo";
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
 import { serializeToHTML } from "@/modules/slate/serialize";
 import {
   Article,
-  ShareButton,
+  ArticleGrid,
   StoryByLine,
   StoryContent,
   StoryHeading,
-  StorySharing,
+  StoryHeadingBox,
 } from "@/styles/story.styles";
-import { LinkOutlined } from "@mui/icons-material";
 import Head from "next/head";
 import { StoryModel } from "@/modules/backend";
-import { getAnalytics } from "firebase/analytics";
-import { app } from "@/modules/backend/client";
-import { useRouter } from "next/router";
 import { StoryJoinedJSON } from "@/types/backend";
-import { facebookURL, jsonify, linkedinURL, twitterURL } from "@/modules/utils";
+import { jsonify } from "@/modules/utils";
+import StorySocials from "@/components/socials";
+import SuggestedArticles from "@/components/suggested-articles";
 
 import type { GetServerSideProps } from "next";
 
@@ -28,19 +23,32 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
 ) => {
   const id = context?.params?.id as string;
 
-  const result = await StoryModel.query()
+  const story = await StoryModel.query()
     .withGraphJoined({ author: true, draft: true })
     .findById(id);
 
-  if (!result) throw new Error("Story Not Found");
+  if (!story) throw new Error("Story Not Found");
 
-  const transformed = jsonify(result.toJSON());
+  const suggestedStories = await StoryModel.query()
+    .withGraphJoined({
+      author: true,
+      draft: true,
+    })
+    .where(`${StoryModel.tableName}.id`, "!=", id)
+    .orderBy("created_at", "DESC")
+    .limit(5);
 
-  return { props: { story: transformed } };
+  return {
+    props: {
+      story: jsonify(story),
+      suggested: jsonify(suggestedStories),
+    },
+  };
 };
 
 export interface StoryRouteProps {
   story: StoryJoinedJSON;
+  suggested: StoryJoinedJSON[];
 }
 
 export default function StoryRoute(props: StoryRouteProps) {
@@ -53,83 +61,21 @@ export default function StoryRoute(props: StoryRouteProps) {
         <title>{`${title} | Disrobe`}</title>
       </Head>
 
-      <Article>
-        <StoryHeading>{title}</StoryHeading>
-        <StoryByLine>
-          <StoryAuthor story={story} />
-          <StorySocials />
-        </StoryByLine>
+      <ArticleGrid>
+        <Article>
+          <StoryHeadingBox>
+            <StoryHeading>{title}</StoryHeading>
+            <StoryByLine>
+              <StoryAuthor story={story} />
+              <StorySocials />
+            </StoryByLine>
+          </StoryHeadingBox>
 
-        <StoryContent>{serializeToHTML(content)}</StoryContent>
-      </Article>
+          <StoryContent>{serializeToHTML(content)}</StoryContent>
+        </Article>
+
+        <SuggestedArticles stories={props.suggested} />
+      </ArticleGrid>
     </BlogLayout>
-  );
-}
-
-function StorySocials() {
-  const router = useRouter();
-  const origin = typeof location !== "undefined" ? location.origin : "";
-  const id = router.query.id as string;
-  const storyLink = `${origin}${router.asPath}`;
-  console.log("firebase app", app);
-  const analytics = app && getAnalytics(app);
-
-  const shareTwitter = () => {
-    const shareLink = twitterURL(storyLink);
-    window.open(shareLink, "_blank", "noreferrer");
-    // logEvent(analytics, "share", {
-    //   item_id: id,
-    //   content_type: "story",
-    //   method: "twitter",
-    // });
-  };
-
-  const shareFacebook = () => {
-    const shareLink = facebookURL(storyLink);
-    window.open(shareLink, "_blank", "noreferrer");
-    // logEvent(analytics, "share", {
-    //   item_id: id,
-    //   content_type: "story",
-    //   method: "facebook",
-    // });
-  };
-
-  const shareLinkedin = () => {
-    const shareLink = linkedinURL(storyLink);
-    window.open(shareLink, "_blank", "noreferrer");
-    // logEvent(analytics, "share", {
-    //   item_id: id,
-    //   content_type: "story",
-    //   method: "linkedin",
-    // });
-  };
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(storyLink);
-    // logEvent(analytics, "share", {
-    //   item_id: "",
-    //   content_type: "story",
-    //   method: "copy_link",
-    // });
-  };
-
-  return (
-    <StorySharing>
-      <ShareButton id="share-fb" onClick={shareFacebook}>
-        <FacebookLogo />
-      </ShareButton>
-
-      <ShareButton id="share-lnkd" onClick={shareLinkedin}>
-        <LinkedinLogo />
-      </ShareButton>
-
-      <ShareButton id="share-twt" onClick={shareTwitter}>
-        <TwitterLogo />
-      </ShareButton>
-
-      <ShareButton id="share-twt" onClick={copyLink}>
-        <LinkOutlined />
-      </ShareButton>
-    </StorySharing>
   );
 }

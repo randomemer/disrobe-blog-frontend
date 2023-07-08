@@ -1,3 +1,4 @@
+import ImageWithFallback from "@/components/image";
 import { Link, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";
@@ -73,18 +74,18 @@ export const StoryCardContent = styled("div")`
   flex: 1;
 `;
 
-export const ThumbnailWrapper = styled("div")`
-  position: relative;
-  background-color: grey;
-`;
+export const StoryThumbnail = styled(ImageWithFallback)`
+  height: 100%;
+  width: 100%;
 
-export const StoryThumbnail = styled(Image)`
-  object-fit: cover;
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
 `;
 
 export const StoryCardRight = styled("div")`
-  /* overflow: hidden; */
-
   .title {
     font-size: 3rem;
     margin-bottom: 1.8rem;

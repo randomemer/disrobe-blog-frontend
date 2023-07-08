@@ -5,6 +5,7 @@ import createCache from "@emotion/cache";
 import { FormValues } from "@/types";
 import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
+import { ImageElement, SlateElement } from "@/types/slate";
 
 /**
 |--------------------------------------------------
@@ -52,7 +53,7 @@ export function getContentString(content: Descendant[]) {
 export function getStoryThumb(content: Descendant[]) {
   return content.find(
     (node) => Element.isElement(node) && node.type === "image"
-  );
+  ) as ImageElement | undefined;
 }
 
 export function createFormValue<T>(val: T | null, other?: Record<string, any>) {
@@ -148,4 +149,11 @@ export function linkedinURL(url: string): string {
   return `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
     url
   )}`;
+}
+
+export function extractParagraphs(text: string) {
+  const pattern = /\n\s*\n/g;
+  const paragraphs = text.split(pattern);
+
+  return paragraphs;
 }

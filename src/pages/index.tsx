@@ -15,7 +15,6 @@ import {
   StoryCardRight,
   StoryThumbnail,
   StyledLink,
-  ThumbnailWrapper,
 } from "@/styles/home.styles";
 import { StoryJoinedJSON } from "@/types/backend";
 import { MailRounded } from "@mui/icons-material";
@@ -115,13 +114,9 @@ function StoryCard(props: StoryCardProps) {
     <StoryCardDiv>
       <StoryAuthor story={story} />
       <StoryCardContent>
-        {Element.isElement(thumb) && thumb.type === "image" && thumb.url && (
-          <ThumbnailWrapper>
-            <StyledLink href={path} underline="none">
-              <StoryThumbnail fill src={thumb.url} alt="Story Thumbnail" />
-            </StyledLink>
-          </ThumbnailWrapper>
-        )}
+        <StyledLink href={path} underline="none">
+          <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
+        </StyledLink>
         <StoryCardRight>
           <h3 className="title">
             <StyledLink href={path} underline="none">

@@ -1,6 +1,8 @@
 import { Element, Text } from "slate";
 
 import type { Descendant } from "slate";
+import ImageWithFallback from "@/components/image";
+import { Typography } from "@mui/material";
 
 export function serializeToHTML(content: Descendant[]) {
   return (
@@ -42,7 +44,7 @@ function HTMLElement({ node }: { node: Element | Text }): JSX.Element {
 
     switch (node.type) {
       case "heading":
-        return <h2>{children}</h2>;
+        return <Typography variant={`h${node.level}`}>{children}</Typography>;
 
       case "paragraph":
         return <p>{children}</p>;
@@ -50,7 +52,7 @@ function HTMLElement({ node }: { node: Element | Text }): JSX.Element {
       case "image":
         return (
           <figure>
-            <img src={node.url} alt={node.alt} />
+            <ImageWithFallback ImageProps={{ src: node.url, alt: node.alt }} />
             <figcaption>{node.caption}</figcaption>
           </figure>
         );
