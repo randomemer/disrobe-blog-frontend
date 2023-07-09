@@ -80,6 +80,7 @@ export default function AuthRoute() {
 
       if (shouldRemember) {
         await setPersistence(auth, browserLocalPersistence);
+        console.log("set local persistence");
       } else {
         await setPersistence(auth, browserSessionPersistence);
       }

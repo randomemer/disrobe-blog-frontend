@@ -1,8 +1,6 @@
 import { BoxProps } from "@mui/material";
-import { ImageProps } from "next/image";
 import { HTMLProps, useState } from "react";
 import { BrokenImage, ImageRoot } from "./styles";
-import NextImage from "next/image";
 import classNames from "classnames";
 
 interface HandledImageProps extends BoxProps {

@@ -3,9 +3,8 @@ import BlogLayout from "@/components/layout/home";
 import { StoryModel } from "@/modules/backend";
 import { getStoryGist, getStoryThumb, jsonify } from "@/modules/utils";
 import {
-  EmailTextField,
+  Gist,
   SectionHeading,
-  Sidebar,
   SplashContainer,
   SplashContent,
   SplashSection,
@@ -13,13 +12,11 @@ import {
   StoryCardContent,
   StoryCardDiv,
   StoryCardRight,
+  StoryCardTitle,
   StoryThumbnail,
-  StyledLink,
 } from "@/styles/home.styles";
+import { PlainLink } from "@/styles/shared";
 import { StoryJoinedJSON } from "@/types/backend";
-import { MailRounded } from "@mui/icons-material";
-import { InputAdornment } from "@mui/material";
-import { Element } from "slate";
 
 export const getServerSideProps = async () => {
   try {
@@ -62,18 +59,20 @@ export default function Home(props: HomeRouteProps) {
       </SplashSection>
 
       <StoriesSection>
-        <div className="ads"></div>
+        {/* TODO : Add ads to the site */}
+        {/* <div className="ads"></div> */}
 
-        <div className="middle-col">
+        <div>
           <SectionHeading>Recently Published</SectionHeading>
-          <div className="stories-list">
+          <div>
             {stories.map((story) => (
               <StoryCard key={story.id} story={story} />
             ))}
           </div>
         </div>
 
-        <Sidebar>
+        {/* TODO : Add a mail subscription */}
+        {/* <Sidebar>
           <div className="cta-element">
             <p className="tagline">Don&apos;t miss anything from us</p>
 
@@ -91,7 +90,7 @@ export default function Home(props: HomeRouteProps) {
               }}
             />
           </div>
-        </Sidebar>
+        </Sidebar> */}
       </StoriesSection>
     </BlogLayout>
   );
@@ -114,20 +113,16 @@ function StoryCard(props: StoryCardProps) {
     <StoryCardDiv>
       <StoryAuthor story={story} />
       <StoryCardContent>
-        <StyledLink href={path} underline="none">
+        <PlainLink href={path}>
           <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
-        </StyledLink>
+        </PlainLink>
         <StoryCardRight>
-          <h3 className="title">
-            <StyledLink href={path} underline="none">
-              {title}
-            </StyledLink>
-          </h3>
-          <p className="gist">
-            <StyledLink href={path} underline="none">
-              {getStoryGist(content)}
-            </StyledLink>
-          </p>
+          <PlainLink href={path}>
+            <StoryCardTitle>{title}</StoryCardTitle>
+          </PlainLink>
+          <PlainLink href={path}>
+            <Gist>{getStoryGist(content)}</Gist>
+          </PlainLink>
         </StoryCardRight>
       </StoryCardContent>
     </StoryCardDiv>

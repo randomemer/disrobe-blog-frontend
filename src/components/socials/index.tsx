@@ -23,7 +23,6 @@ export default function StorySocials() {
   const storyLink = `${origin}${router.asPath}`;
 
   const analytics = app && getAnalytics(app);
-  console.log(analytics);
 
   const onHover: MouseEventHandler<HTMLDivElement> = (event) => {
     const target = event.target as HTMLDivElement;

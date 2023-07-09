@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 
 export const ArticleGrid = styled("div")`
-  margin: 4.8rem auto;
+  margin: 4.8rem auto 12.8rem;
   max-width: 120rem;
   display: grid;
 

@@ -1,3 +1,4 @@
+import ImageWithFallback from "@/components/image";
 import { elevation } from "@/styles/shared";
 import { Button, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -14,19 +15,29 @@ export const ImageContainer = styled("figure")`
   gap: 0.8rem;
 `;
 
-export const ImageWrapper = styled("div")`
+export const EImage = styled(ImageWithFallback)`
   position: relative;
+
+  &.broken {
+    height: 48rem;
+    width: 100%;
+  }
+
+  img {
+    transition: all 0.3s;
+    /* max-height: 48rem; */
+    max-width: 100%;
+    object-fit: cover;
+
+    .selected & {
+      box-shadow: 0px 0px 0px 3px ${({ theme }) => theme.palette.primary.main};
+    }
+  }
 `;
 
-export const EImage = styled("img")`
-  transition: all 0.3s;
-  max-height: 48rem;
-  max-width: 100%;
-  object-fit: cover;
-
-  .selected & {
-    box-shadow: 0px 0px 0px 3px ${({ theme }) => theme.palette.primary.main};
-  }
+export const ImageWrapper = styled("div")`
+  position: relative;
+  width: 100%;
 `;
 
 export const ImageCaption = styled("figcaption")`

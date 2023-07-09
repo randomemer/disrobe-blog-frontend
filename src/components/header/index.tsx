@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import {
   Header,
+  HeaderNav,
   Logo,
   LogoWrapper,
   NavItems,
@@ -9,6 +10,7 @@ import {
 } from "./styles";
 
 import type { PropsWithoutRef } from "react";
+import useAuth from "@/hooks/use-user";
 
 const links = [
   { href: "/", text: "Home" },
@@ -22,6 +24,9 @@ export type AppHeaderProps = PropsWithoutRef<{
 export default function AppHeader(props: AppHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const scrollContextRef = useRef<HTMLDivElement>(null);
+
+  const [auth] = useAuth();
+  console.log(auth);
 
   // on Component Mount
   useEffect(() => {
@@ -63,7 +68,7 @@ export default function AppHeader(props: AppHeaderProps) {
           <Logo>DISROBE</Logo>
         </LogoWrapper>
 
-        <nav className="header-nav">
+        <HeaderNav>
           <NavItems>
             {links.map(({ text, href }) => (
               <li key={href}>
@@ -71,7 +76,7 @@ export default function AppHeader(props: AppHeaderProps) {
               </li>
             ))}
           </NavItems>
-        </nav>
+        </HeaderNav>
       </Header>
     </>
   );

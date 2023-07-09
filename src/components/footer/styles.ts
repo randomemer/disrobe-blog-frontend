@@ -1,4 +1,4 @@
-import { elevation, TextLink } from "@/styles/shared";
+import { elevation, PlainLink } from "@/styles/shared";
 import { styled } from "@mui/material/styles";
 import { List, ListItem, Typography } from "@mui/material";
 import Link from "next/link";
@@ -66,7 +66,7 @@ export const FooterColTitle = styled(Typography)`
 
 export const Contacts = styled(List)``;
 
-export const ContactListItem = styled(ListItem<typeof TextLink>)`
+export const ContactListItem = styled(ListItem<typeof PlainLink>)`
   .${listItemIconClasses.root} {
     min-width: unset;
     margin-right: 1.4rem;
@@ -90,6 +90,6 @@ export const QuickLinks = styled(List)`
   gap: 1rem;
 `;
 
-export const QuickLink = styled(ListItem<typeof TextLink>)`
+export const QuickLink = styled(ListItem<typeof PlainLink>)`
   font-size: 1.8rem;
 `;

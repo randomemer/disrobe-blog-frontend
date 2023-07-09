@@ -16,7 +16,7 @@ export const AboutBackground = styled(Box)`
 `;
 
 export const AboutContent = styled(Box)`
-  margin: 9.6rem auto;
+  margin: 9.6rem auto 12.8rem;
   max-width: 96rem;
   display: flex;
   flex-direction: column;
