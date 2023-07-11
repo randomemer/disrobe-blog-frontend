@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   setPersistence,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
@@ -102,14 +103,13 @@ export default function AuthRoute() {
             );
             break;
           case "auth/wrong-password":
-            console.log("Your password in incorrect");
+            console.log("Your password is incorrect");
             break;
           default:
             break;
         }
       }
       console.error(error);
-      console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)));
     }
     setLoading(false);
   };
@@ -117,26 +117,27 @@ export default function AuthRoute() {
   const signupUser: SignupHandler = async (data) => {
     setLoading(true);
     try {
-      console.log(data);
       const auth = getAuth();
-      const db = getFirestore();
-      // create new user
-      const credentials = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
+
+      const resp = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          displayName: data.full_name,
+        }),
+      });
+      const body = await resp.json();
+
+      console.log("body", body);
+      await signInWithCustomToken(auth, body.token);
+
       // logEvent(analytics, "sign_up", {
       //   method: "email",
       // });
-      console.log(credentials);
-
-      // add document to authors collection
-      const docRef = doc(db, "authors", credentials.user.uid);
-      await setDoc(docRef, {
-        name: data.full_name,
-      });
-
       router.push("/settings/account");
     } catch (error) {
       if (error instanceof FirebaseError) {
