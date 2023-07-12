@@ -1,11 +1,10 @@
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
-import StoryModel from "@/modules/backend/client/models/story";
-import AdminStoryRepo from "@/modules/backend/admin/repos/story";
+import { StoryModel } from "@/modules/backend";
+import { getStoryGist, getStoryThumb, jsonify } from "@/modules/utils";
 import {
-  EmailTextField,
+  Gist,
   SectionHeading,
-  Sidebar,
   SplashContainer,
   SplashContent,
   SplashSection,
@@ -13,21 +12,25 @@ import {
   StoryCardContent,
   StoryCardDiv,
   StoryCardRight,
+  StoryCardTitle,
   StoryThumbnail,
-  ThumbnailWrapper,
-  StyledLink,
 } from "@/styles/home.styles";
-import { getStoryGist, getStoryThumb } from "@/utils";
-import { MailRounded } from "@mui/icons-material";
-import { InputAdornment } from "@mui/material";
-import { Element, Node } from "slate";
-import { StoryJSON } from "@/types/backend";
-import { useMemo } from "react";
+import { PlainLink } from "@/styles/shared";
+import { StoryJoinedJSON } from "@/types/backend";
 
 export const getServerSideProps = async () => {
   try {
-    const stories = await new AdminStoryRepo().fetchFeed();
-    return { props: { stories: stories.map((story) => story.toJSON()) } };
+    console.time("home_feed");
+
+    const results = await StoryModel.query()
+      .withGraphJoined({ author: true, draft: true })
+      .limit(25);
+
+    console.timeEnd("home_feed");
+
+    const serialized = results.map((r) => jsonify(r.toJSON()));
+
+    return { props: { stories: serialized } };
   } catch (error) {
     console.error("Error occured while fetching feed\n", error);
     return { props: { stories: [] } };
@@ -35,13 +38,11 @@ export const getServerSideProps = async () => {
 };
 
 export interface HomeRouteProps {
-  stories: StoryJSON[];
+  stories: any[];
 }
 
 export default function Home(props: HomeRouteProps) {
-  const stories = useMemo(() => {
-    return props.stories.map((json) => new StoryModel(json));
-  }, [props.stories]);
+  const { stories } = props;
 
   return (
     <BlogLayout>
@@ -58,18 +59,20 @@ export default function Home(props: HomeRouteProps) {
       </SplashSection>
 
       <StoriesSection>
-        <div className="ads"></div>
+        {/* TODO : Add ads to the site */}
+        {/* <div className="ads"></div> */}
 
-        <div className="middle-col">
+        <div>
           <SectionHeading>Recently Published</SectionHeading>
-          <div className="stories-list">
+          <div>
             {stories.map((story) => (
               <StoryCard key={story.id} story={story} />
             ))}
           </div>
         </div>
 
-        <Sidebar>
+        {/* TODO : Add a mail subscription */}
+        {/* <Sidebar>
           <div className="cta-element">
             <p className="tagline">Don&apos;t miss anything from us</p>
 
@@ -87,14 +90,14 @@ export default function Home(props: HomeRouteProps) {
               }}
             />
           </div>
-        </Sidebar>
+        </Sidebar> */}
       </StoriesSection>
     </BlogLayout>
   );
 }
 
 export interface StoryCardProps {
-  story: StoryModel;
+  story: StoryJoinedJSON;
 }
 
 function StoryCard(props: StoryCardProps) {
@@ -102,9 +105,6 @@ function StoryCard(props: StoryCardProps) {
 
   // TODO : change to live in production
   const { title, content } = story.draft;
-  const paragraph = content.find(
-    (node) => Element.isElement(node) && node.type === "paragraph"
-  );
   const thumb = getStoryThumb(content);
 
   const path = `/story/${story.id}`;
@@ -113,24 +113,16 @@ function StoryCard(props: StoryCardProps) {
     <StoryCardDiv>
       <StoryAuthor story={story} />
       <StoryCardContent>
-        {Element.isElement(thumb) && thumb.type === "image" && thumb.url && (
-          <ThumbnailWrapper>
-            <StyledLink href={path} underline="none">
-              <StoryThumbnail fill src={thumb.url} alt="Story Thumbnail" />
-            </StyledLink>
-          </ThumbnailWrapper>
-        )}
+        <PlainLink href={path}>
+          <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
+        </PlainLink>
         <StoryCardRight>
-          <h3 className="title">
-            <StyledLink href={path} underline="none">
-              {title}
-            </StyledLink>
-          </h3>
-          <p className="gist">
-            <StyledLink href={path} underline="none">
-              {getStoryGist(content)}
-            </StyledLink>
-          </p>
+          <PlainLink href={path}>
+            <StoryCardTitle>{title}</StoryCardTitle>
+          </PlainLink>
+          <PlainLink href={path}>
+            <Gist>{getStoryGist(content)}</Gist>
+          </PlainLink>
         </StoryCardRight>
       </StoryCardContent>
     </StoryCardDiv>

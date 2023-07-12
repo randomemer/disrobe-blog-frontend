@@ -17,7 +17,7 @@ export function elevation(value: number) {
   `;
 }
 
-export const TextLink = styled(Link)`
+export const PlainLink = styled(Link)`
   &:link,
   &:visited {
     color: inherit;

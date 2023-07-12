@@ -1,6 +1,8 @@
-import type { AuthorJSON } from "./backend";
+import type { AuthorModel } from "@/modules/backend";
 import type { GetServerSidePropsContext } from "next";
-import { ReactNode } from "react";
+import type { ModelObject } from "objection";
+import type { ReactNode } from "react";
+import { AuthorJSON } from "./backend";
 
 declare module "next" {}
 
@@ -14,7 +16,7 @@ export type AsyncStatus = "idle" | "pending" | "fulfilled" | "rejected";
 
 export type User = {
   id: string;
-  data: AuthorJSON;
+  data: ModelObject<AuthorModel>;
 };
 
 // ============================================================
@@ -27,10 +29,6 @@ export type FormValue<T = any> = {
 
 export type FormValues<T = Record<string, any>> = {
   [K in keyof T]: FormValue<T[K]>;
-};
-
-export type FormValidators<T = Record<string, any>> = {
-  [K in keyof T]: (value: T[K]) => string | null;
 };
 
 export type FormErrors<T> = {

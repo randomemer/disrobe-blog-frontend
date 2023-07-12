@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { EditorEvents } from "@/utils/editor-utils";
+import { EditorEvents } from "@/modules/utils/editor-utils";
 import { useSlate } from "slate-react";
 
 import type { KeyboardEventHandler } from "react";

@@ -18,10 +18,8 @@
 # misc
 .DS_Store
 secret.json
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
+.env.*
 
 # debug
 npm-debug.log*
@@ -36,6 +34,7 @@ yarn-error.log*
 *.pem
 /references
 /.vscode
+/.idea
 
 # vercel
 .vercel
@@ -52,5 +51,9 @@ yarn-error.log*
 # Documentation here: https://yarnpkg.com/features/zero-installs
 # !.yarn/cache
 .pnp.*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 
 

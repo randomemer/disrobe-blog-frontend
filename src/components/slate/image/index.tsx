@@ -24,6 +24,7 @@ import type {
   MouseEventHandler,
 } from "react";
 import type { RenderElementProps } from "slate-react";
+import ImageWithFallback from "@/components/image";
 
 export interface EditorImageProps extends RenderElementProps {
   element: ImageElement;
@@ -85,7 +86,7 @@ export default function ArticleImage(props: EditorImageProps) {
       <ImageContainer>
         <ImageWrapper>
           <ImageButtons />
-          <EImage src={String(element.url)} alt={element.caption} />
+          <EImage ImageProps={{ src: element.url, alt: element.caption }} />
         </ImageWrapper>
         <ImageCaption>
           <CaptionField

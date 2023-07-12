@@ -1,4 +1,7 @@
 const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config({ path: `./env/.env.${process.env.NODE_ENV}` });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +15,13 @@ const nextConfig = {
         protocol: "https",
         hostname: "**",
         port: "",
+        pathname: "**",
+      },
+      // @TODO : remove in production
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
         pathname: "**",
       },
     ],

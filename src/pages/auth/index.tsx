@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   setPersistence,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
@@ -41,6 +42,8 @@ export default function AuthRoute() {
   const router = useRouter();
 
   const routerQueryType = router.query.type as string;
+
+  const [redirect, setRedirect] = useState("/settings/account");
   const [isLoading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(
     routerQueryType || "login"
@@ -54,13 +57,22 @@ export default function AuthRoute() {
   };
 
   useEffect(() => {
+    const redirect = router.query.redirect;
+
+    if (redirect) {
+      const url = decodeURIComponent(redirect as string);
+      setRedirect(url);
+    }
+
+    console.log(redirect);
+  }, [router.query.redirect]);
+
+  useEffect(() => {
     if (routerQueryType !== activeTab) {
       setActiveTab(routerQueryType);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
-
-  useEffect(() => {}, [activeTab]);
 
   const loginUser: LoginHandler = async (data, shouldRemember) => {
     setLoading(true);
@@ -69,22 +81,19 @@ export default function AuthRoute() {
 
       if (shouldRemember) {
         await setPersistence(auth, browserLocalPersistence);
+        console.log("set local persistence");
       } else {
         await setPersistence(auth, browserSessionPersistence);
       }
 
-      const result = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
+      await signInWithEmailAndPassword(auth, data.email, data.password);
 
       // logEvent(analytics, "login", {
       //   method: "email",
       // });
 
-      // @TODO :
-      router.push("/settings/account");
+      console.log("Redirecting...");
+      router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -94,14 +103,13 @@ export default function AuthRoute() {
             );
             break;
           case "auth/wrong-password":
-            console.log("Your password in incorrect");
+            console.log("Your password is incorrect");
             break;
           default:
             break;
         }
       }
       console.error(error);
-      console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)));
     }
     setLoading(false);
   };
@@ -109,28 +117,28 @@ export default function AuthRoute() {
   const signupUser: SignupHandler = async (data) => {
     setLoading(true);
     try {
-      console.log(data);
       const auth = getAuth();
-      const db = getFirestore();
-      // create new user
-      const credentials = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
+
+      const resp = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          displayName: data.full_name,
+        }),
+      });
+      const body = await resp.json();
+
+      console.log("body", body);
+      await signInWithCustomToken(auth, body.token);
+
       // logEvent(analytics, "sign_up", {
       //   method: "email",
       // });
-      console.log(credentials);
-
-      // add document to authors collection
-      const docRef = doc(db, "authors", credentials.user.uid);
-      await setDoc(docRef, {
-        name: data.full_name,
-      });
-
-      // @TODO :
-      // router.push("/settings/account")
+      router.push("/settings/account");
     } catch (error) {
       if (error instanceof FirebaseError) {
         console.log(error.code, error.name, error.message);

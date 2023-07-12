@@ -1,9 +1,10 @@
 import AppLayout from "@/components/layout/app";
 import StoryEditor from "@/components/story-editor";
 import withProtectedRoute from "@/modules/backend/with-protected-route";
-import { RouteProps, User } from "@/types";
-import { AuthorJSON } from "@/types/backend";
 import Head from "next/head";
+
+import type { RouteProps } from "@/types";
+import type { AuthorJSON } from "@/types/backend";
 
 export const getServerSideProps = withProtectedRoute<WriteRouteProps>(
   async (context) => {

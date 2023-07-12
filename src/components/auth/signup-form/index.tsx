@@ -7,7 +7,7 @@ import {
   FormTextField,
 } from "@/styles/auth.styles";
 import { FormErrors } from "@/types";
-import { validateSchemaField } from "@/utils";
+import { validateSchemaField } from "@/modules/utils";
 import {
   KeyOutlined,
   MailOutlineRounded,

@@ -1,14 +1,23 @@
-import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const Article = styled("article")`
-  margin: 4.8rem auto;
+export const ArticleGrid = styled("div")`
+  margin: 4.8rem auto 12.8rem;
   max-width: 120rem;
+  display: grid;
+
+  grid-template-columns: 1fr 28rem;
+  gap: 6.4rem;
+`;
+
+export const Article = styled("article")``;
+
+export const StoryHeadingBox = styled("div")`
+  margin-bottom: 5.6rem;
 `;
 
 export const StoryHeading = styled("h1")`
   font-size: 4.8rem;
-  margin-bottom: 4.8rem;
+  margin-bottom: 1.4rem;
   line-height: 1.3;
 `;
 
@@ -28,15 +37,15 @@ export const StoryContent = styled("div")`
     font-weight: 400;
   }
 
-  // in-line elements
+  /* in-line elements */
 
-  // all code elements
+  /* all code elements */
   code {
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     font-size: inherit;
   }
 
-  // Code in text
+  /* Code in text */
   p > code,
   li > code {
     background: #333;
@@ -47,23 +56,26 @@ export const StoryContent = styled("div")`
   }
 
   a {
-    text-decoration: underline;
-
     &:link,
     &:visited {
-      color: general.$primary-color;
+      color: ${({ theme }) => theme.palette.primary.main};
+    }
+
+    &:active,
+    &:hover {
+      text-decoration: underline;
     }
   }
 
-  // block elements
+  /* block elements */
 
   h2 {
-    font-size: 3.9rem;
+    /* font-size: 3.9rem; */
     font-weight: 700;
   }
 
   h3 {
-    font-size: 3rem;
+    /* font-size: 3rem; */
     font-weight: 600;
   }
 
@@ -84,7 +96,7 @@ export const StoryContent = styled("div")`
     figcaption {
       align-self: center;
       font-size: 1.6rem;
-      color: rgb(255, 255, 255, 0.5);
+      color: rgb(255, 255, 255, 0.75);
     }
   }
 
@@ -109,17 +121,5 @@ export const StoryContent = styled("div")`
     > li {
       list-style-type: disc;
     }
-  }
-`;
-
-export const StorySharing = styled("div")`
-  display: flex;
-  align-items: center;
-  /* gap: 1.8rem; */
-`;
-
-export const ShareButton = styled(IconButton)`
-  .MuiSvgIcon-root {
-    font-size: 2.4rem;
   }
 `;

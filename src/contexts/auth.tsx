@@ -5,7 +5,7 @@ import { useImmer } from "use-immer";
 
 import type { PropsWithChildren } from "react";
 import type { Updater } from "use-immer";
-import { AuthorJSON } from "@/types/backend";
+import type { AuthorJSON } from "@/types/backend";
 
 export interface AuthContextData {
   user: User | null;
@@ -35,11 +35,11 @@ export default function AuthProvider(props: AuthProviderProps) {
     author: props.author ?? null,
   });
 
-  console.log("context-props", props.author);
-
   useEffect(() => {
-    console.log("props changed", props.author);
-  }, [props.author]);
+    setAuth((auth) => {
+      auth.author = props.author || null;
+    });
+  }, [props.author, setAuth]);
 
   // listen for token changes
   // update state and set new token as a cookie

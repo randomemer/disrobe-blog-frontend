@@ -1,4 +1,4 @@
-import { getActiveLinkNode } from "@/utils/editor-utils";
+import { getActiveLinkNode } from "@/modules/utils/editor-utils";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useSlate } from "slate-react";

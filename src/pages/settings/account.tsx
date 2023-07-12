@@ -12,7 +12,12 @@ import {
 import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
 import { InputField } from "@/styles/shared";
 import { FormErrors, RouteProps } from "@/types";
-import { isBlobURL, objectDifference, validateSchemaField } from "@/utils";
+import {
+  getMediaURL,
+  isBlobURL,
+  objectDifference,
+  validateSchemaField,
+} from "@/modules/utils";
 import {
   DescriptionOutlined,
   EditSharp,
@@ -24,9 +29,8 @@ import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import { useImmer } from "use-immer";
 import { object, ObjectSchema, reach, string } from "yup";
 import _ from "lodash";
-import ClientAuthorRepo from "@/modules/backend/client/repos/author";
 import path from "path-browserify";
-import clientMediaRepo from "@/modules/backend/client/repos/media";
+import clientMediaRepo from "@/modules/backend/repos/media";
 import { v4 } from "uuid";
 
 // ============================================================
@@ -41,8 +45,8 @@ export const getServerSideProps = withProtectedRoute<AccountSettingsRouteProps>(
 
 interface ProfileFormValues {
   name: string;
-  bio?: string;
-  picture?: string;
+  bio: string | null;
+  picture?: string | null;
 }
 
 interface ProfileForm {
@@ -59,8 +63,8 @@ const profileSchema: ObjectSchema<ProfileFormValues> = object({
       (name) => !!name && !!name.trim()
     )
     .required(),
-  bio: string().trim(),
-  picture: string(),
+  bio: string().trim().nullable().default(null),
+  picture: string().nullable().default(null),
 });
 
 // ============================================================
@@ -69,7 +73,7 @@ interface AccountSettingsRouteProps extends RouteProps {}
 
 export default function AccountSettingsRoute(props: RouteProps) {
   const [auth, setAuth] = useAuth();
-  const author = auth.author!;
+  const author = props.author || auth.author!;
 
   const [changed, setChanged] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,9 +90,7 @@ export default function AccountSettingsRoute(props: RouteProps) {
 
   const imageURL =
     values.picture &&
-    (isBlobURL(values.picture)
-      ? values.picture
-      : `/api/media/${values.picture}`);
+    (isBlobURL(values.picture) ? values.picture : getMediaURL(values.picture));
 
   useEffect(() => {
     setChanged(
@@ -153,8 +155,13 @@ export default function AccountSettingsRoute(props: RouteProps) {
         diff.picture = bucketPath;
       }
 
-      await new ClientAuthorRepo().update(author.id, diff);
-      const updated = { ...auth.author, ...diff };
+      const resp = await fetch(`/api/author/${author.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(diff),
+      });
+      const updated = await resp.json();
+
       setAuth((auth) => {
         auth.author = updated;
       });
@@ -189,7 +196,7 @@ export default function AccountSettingsRoute(props: RouteProps) {
               </AvatarEditButton>
             }
           >
-            <UserAvatar alt={author.name} src={imageURL} />
+            <UserAvatar alt={author.name} src={imageURL || undefined} />
           </Badge>
           <ProfileForm>
             <InputField

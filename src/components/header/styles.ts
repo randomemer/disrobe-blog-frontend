@@ -49,7 +49,6 @@ export const Logo = styled("span")`
   font-size: 2.4rem;
   font-weight: 600;
   letter-spacing: 2px;
-  // @TODO
   color: ${({ theme }) => theme.palette.primary.main};
 `;
 

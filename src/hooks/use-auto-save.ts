@@ -1,8 +1,4 @@
-import AuthorModel from "@/modules/backend/client/models/author";
-import StoryModel from "@/modules/backend/client/models/story";
-import StoryRepository from "@/modules/backend/client/repos/story";
-import { Timestamp } from "firebase/firestore";
-import produce from "immer";
+import { StoryJoinedJSON, StorySnapshotJSON } from "@/types/backend";
 import { useRouter } from "next/router";
 import { RefObject, useCallback, useRef } from "react";
 import { Editor } from "slate";
@@ -30,7 +26,6 @@ export function useAutoSave(props: AutoSaveHookProps) {
       data.status = "pending";
     });
     try {
-      let story: StoryModel;
       const title = titleRef.current?.value;
       const content = editorRef.current?.children;
 
@@ -42,27 +37,39 @@ export function useAutoSave(props: AutoSaveHookProps) {
       }
 
       if (!data.story) {
-        const author = new AuthorModel(auth.author!.id, auth.author!);
-        story = await new StoryRepository().createNewDraft(
-          { title, content },
-          author
-        );
+        const storyData = {
+          author_id: auth.author!.id,
+          draft: { title, content },
+        };
+        const resp = await fetch(`/api/story`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(storyData),
+        });
+        const story: StoryJoinedJSON = await resp.json();
 
+        setData((draft) => {
+          draft.status = "fulfilled";
+          draft.story = story;
+        });
         router.push(`/story/${story.id}/edit`, undefined, { shallow: true });
       } else {
-        const updatedStory = produce(data.story, (draft) => {
-          draft.data.draft.title = title;
-          draft.data.draft.content = content;
-          draft.data.draft.timestamp = Timestamp.now();
-        });
-        story = new StoryModel(updatedStory);
-        await new StoryRepository().update(story);
-      }
+        const draftData = { title, content };
+        const resp = await fetch(
+          `/api/story/${data.story.id}/snapshot/${data.story.draft_snap_id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(draftData),
+          }
+        );
+        const updatedDraft: StorySnapshotJSON = await resp.json();
 
-      setData((data) => {
-        data.status = "fulfilled";
-        data.story = story.toJSON();
-      });
+        setData((draft) => {
+          draft.status = "fulfilled";
+          draft.story!.draft = updatedDraft;
+        });
+      }
     } catch (error) {
       console.error(error);
       setData((data) => {

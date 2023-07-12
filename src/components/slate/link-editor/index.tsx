@@ -12,15 +12,17 @@ export default function LinkEditor() {
   const linkNodeEntry = useLinkNode();
 
   const [linkUrl, setLinkUrl] = useState(linkNodeEntry?.[0].url);
-
-  const linkEl = useRef<HTMLElement>();
+  const [linkEl, setLinkEl] = useState<HTMLElement | null>(null);
 
   // When link node entry alone changes, toggle link editor
   useEffect(() => {
-    if (!linkNodeEntry) return;
+    if (!linkNodeEntry) {
+      setLinkEl(null);
+      return;
+    }
 
     const [node] = linkNodeEntry;
-    linkEl.current = ReactEditor.toDOMNode(editor, node);
+    setLinkEl(ReactEditor.toDOMNode(editor, node));
     setLinkUrl(node.url);
   }, [editor, linkNodeEntry]);
 
@@ -34,7 +36,7 @@ export default function LinkEditor() {
   return (
     <Popper
       open={linkNodeEntry !== undefined}
-      anchorEl={linkEl.current}
+      anchorEl={linkEl}
       placement="top"
       modifiers={[
         {

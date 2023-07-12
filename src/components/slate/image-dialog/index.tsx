@@ -26,7 +26,7 @@ import {
 import type { ImageElement } from "@/types/slate";
 import type { FormEvent, MouseEvent } from "react";
 import type { Editor } from "slate";
-import clientMediaRepo from "@/modules/backend/client/repos/media";
+import clientMediaRepo from "@/modules/backend/repos/media";
 
 export interface ImageEditorProps {
   closeModal: () => void;
@@ -63,7 +63,10 @@ export default function ImageEditor(props: ImageEditorProps) {
 
     await clientMediaRepo.upload(path, file);
 
-    const node = createImageNode(`${location.origin}/api/media/${path}`);
+    const pathURIEncoded = `${location.origin}/media/${encodeURIComponent(
+      path
+    )}`;
+    const node = createImageNode(pathURIEncoded);
     console.log(node);
     addImageNode(editor, node);
 

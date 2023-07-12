@@ -1,4 +1,5 @@
-import { TextLink } from "@/styles/shared";
+import { INSTA_URL } from "@/modules/utils/config";
+import { PlainLink } from "@/styles/shared";
 import {
   FacebookRounded,
   Instagram,
@@ -34,7 +35,7 @@ export default function Footer() {
             <SocialLink href={"/"} rel="noopener">
               <FacebookRounded />
             </SocialLink>
-            <SocialLink href={"/"} rel="noopener">
+            <SocialLink target="_blank" href={INSTA_URL} rel="noopener">
               <Instagram />
             </SocialLink>
             <SocialLink href={"/"} rel="noopener">
@@ -58,7 +59,7 @@ export default function Footer() {
             <ContactListItem
               disableGutters
               href={"phone:+919962606241"}
-              component={TextLink}
+              component={PlainLink}
             >
               <ListItemIcon>
                 <PhoneOutline />
@@ -69,7 +70,7 @@ export default function Footer() {
             <ContactListItem
               disableGutters
               href={"phone:+919962606241"}
-              component={TextLink}
+              component={PlainLink}
             >
               <ListItemIcon>
                 <PhoneOutline />
@@ -80,7 +81,7 @@ export default function Footer() {
             <ContactListItem
               disableGutters
               href={"mailto:disrobeblog@gmail.com"}
-              component={TextLink}
+              component={PlainLink}
             >
               <ListItemIcon>
                 <MailOutline />
@@ -94,10 +95,10 @@ export default function Footer() {
           <FooterColTitle>Quick Links</FooterColTitle>
 
           <QuickLinks>
-            <QuickLink disableGutters href="/" component={TextLink}>
+            <QuickLink disableGutters href="/" component={PlainLink}>
               Home
             </QuickLink>
-            <QuickLink disableGutters href="/about" component={TextLink}>
+            <QuickLink disableGutters href="/about" component={PlainLink}>
               About
             </QuickLink>
           </QuickLinks>
