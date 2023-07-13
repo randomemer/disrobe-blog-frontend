@@ -5,12 +5,15 @@ import "@/styles/globals.scss";
 import { ThemeProvider } from "@mui/material/styles";
 import { DM_Sans } from "next/font/google";
 import Head from "next/head";
-
 import { EditorProvider } from "@/contexts/editor";
-import { RouteProps } from "@/types";
-import { createEmotionCache } from "@/modules/utils";
+import ModalProvider from "mui-modal-provider";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import { createEmotionCache } from "@/modules/utils";
+import { SnackbarProvider } from "material-ui-snackbar-provider";
+
+import { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
+import AppSnackbar from "@/components/snackbar";
 
 const clientEmotionCache = createEmotionCache();
 const DMSans = DM_Sans({
@@ -51,7 +54,13 @@ export default function App(props: DisrobeAppProps) {
         <AuthProvider author={pageProps.author}>
           <ThemeProvider theme={theme}>
             <EditorProvider>
-              <Component {...pageProps} />
+              <ModalProvider>
+                <SnackbarProvider
+                  SnackbarComponent={(props) => <AppSnackbar {...props} />}
+                >
+                  <Component {...pageProps} />
+                </SnackbarProvider>
+              </ModalProvider>
             </EditorProvider>
           </ThemeProvider>
         </AuthProvider>

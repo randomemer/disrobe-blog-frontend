@@ -5,7 +5,7 @@ import createCache from "@emotion/cache";
 import { FormValues } from "@/types";
 import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
-import { ImageElement, SlateElement } from "@/types/slate";
+import { ImageElement } from "@/types/slate";
 
 /**
 |--------------------------------------------------

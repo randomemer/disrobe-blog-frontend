@@ -3540,7 +3540,9 @@ __metadata:
     is-hotkey: ^0.2.0
     knex: ^2.4.2
     lodash: ^4.17.21
+    material-ui-snackbar-provider: ^2.0.0
     mdi-material-ui: ^7.6.0
+    mui-modal-provider: ^2.2.0
     mysql2: ^3.2.3
     next: 13.2.0
     nookies: ^2.5.2
@@ -5059,6 +5061,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"material-ui-snackbar-provider@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "material-ui-snackbar-provider@npm:2.0.0"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    react: ^17.0.2 || ^18.0.0
+  checksum: af091bcb8a0f5592cbd22e3113cef84082df9d2fecfb88c435217c17bb3596e038d08a919895594e810a50a04eed6a50128af291df12318cf8253a53e1ba0414
+  languageName: node
+  linkType: hard
+
 "mdi-material-ui@npm:^7.6.0":
   version: 7.6.0
   resolution: "mdi-material-ui@npm:7.6.0"
@@ -5261,6 +5275,20 @@ __metadata:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: aa92de608021b242401676e35cfa5aa42dd70cbdc082b916da7fb925c542173e36bce97ea3e804923fe92c0ad991434e4a38327e15a1b5b5f945d66df615ae6d
+  languageName: node
+  linkType: hard
+
+"mui-modal-provider@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "mui-modal-provider@npm:2.2.0"
+  peerDependencies:
+    "@types/react": ^16.8.6 || ^17.0.0 || ^18.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 4c33defdaa07ffd160b2129f5f2eb73964b6a441e6369c4db655236f1a9bf70fd0e0640c347ad5d520ba930fc57bfeca9cd77a1de15878ef480ff8d4d380d63c
   languageName: node
   linkType: hard
 
@@ -5864,7 +5892,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
