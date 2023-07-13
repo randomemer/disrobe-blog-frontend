@@ -2,6 +2,7 @@ import { StoryJoinedJSON, StorySnapshotJSON } from "@/types/backend";
 import { useRouter } from "next/router";
 import { RefObject, useCallback, useRef } from "react";
 import { Editor } from "slate";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import useEditorContext from "./use-editor-data";
 import useAuth from "./use-user";
 
@@ -17,6 +18,7 @@ export function useAutoSave(props: AutoSaveHookProps) {
   const [data, setData] = useEditorContext();
   const [auth] = useAuth();
   const router = useRouter();
+  const snackbar = useSnackbar();
 
   const timer = useRef<NodeJS.Timeout | null>(null);
   const saved = useRef<number | null>(null);
@@ -71,10 +73,13 @@ export function useAutoSave(props: AutoSaveHookProps) {
         });
       }
     } catch (error) {
-      console.error(error);
       setData((data) => {
         data.status = "rejected";
       });
+      snackbar.showMessage((error as Error).message, "OK", () => {}, {
+        severity: "error",
+      } as any);
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setData, data.story, auth.author, router]);

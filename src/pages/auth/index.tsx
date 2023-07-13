@@ -1,6 +1,7 @@
 import LoginForm from "@/components/auth/login-form";
 import SignupForm from "@/components/auth/signup-form";
 import TabPanel from "@/components/tab-panel";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import { FormContainer, FormTab, FormTabs } from "@/styles/auth.styles";
 import { FirebaseError } from "firebase/app";
 import {
@@ -41,6 +42,7 @@ export type SignupHandler = (data: SignupFormData) => Promise<void>;
 export default function AuthRoute() {
   const router = useRouter();
   const modal = useModal();
+  const snackbar = useSnackbar();
 
   const routerQueryType = (router.query.type as string) || "login";
 
@@ -92,18 +94,9 @@ export default function AuthRoute() {
       router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
-        const errorModal = modal.showModal(AlertModal, {
-          title: "Login Error",
-          description: error.message,
-          actions: [
-            {
-              label: "ok",
-              handler: () => {
-                errorModal.destroy();
-              },
-            },
-          ],
-        });
+        snackbar.showMessage(error.message, "OK", () => {}, {
+          severity: "error",
+        } as any);
       }
       console.error(error);
     }
@@ -138,18 +131,9 @@ export default function AuthRoute() {
       // });
       router.push("/settings/account");
     } catch (error) {
-      const errorModal = modal.showModal(AlertModal, {
-        title: "Signup Error",
-        description: (error as Error).message,
-        actions: [
-          {
-            label: "ok",
-            handler: () => {
-              errorModal.destroy();
-            },
-          },
-        ],
-      });
+      snackbar.showMessage((error as Error).message, "OK", () => {}, {
+        severity: "error",
+      } as any);
       console.error(error);
     }
     setLoading(false);

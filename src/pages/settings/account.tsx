@@ -1,6 +1,7 @@
 import SettingsLayout from "@/components/layout/settings";
 import useAuth from "@/hooks/use-user";
 import withProtectedRoute from "@/modules/backend/with-protected-route";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import {
   AvatarEditButton,
   AvatarFileInput,
@@ -74,6 +75,7 @@ interface AccountSettingsRouteProps extends RouteProps {}
 export default function AccountSettingsRoute(props: RouteProps) {
   const [auth, setAuth] = useAuth();
   const author = props.author || auth.author!;
+  const snackbar = useSnackbar();
 
   const [changed, setChanged] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -170,7 +172,9 @@ export default function AccountSettingsRoute(props: RouteProps) {
       });
       fileInputRef.current!.value = "";
     } catch (error) {
-      if (!(error instanceof Error)) return;
+      snackbar.showMessage((error as Error).message, "OK", () => {}, {
+        severity: "error",
+      } as any);
     }
     setLoading(false);
   };
