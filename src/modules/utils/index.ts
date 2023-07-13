@@ -157,3 +157,11 @@ export function extractParagraphs(text: string) {
 
   return paragraphs;
 }
+
+export function attemptJsonParse(str: any) {
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    return undefined;
+  }
+}
