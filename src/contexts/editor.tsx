@@ -3,7 +3,7 @@ import { useImmer } from "use-immer";
 
 import type { PropsWithChildren } from "react";
 import type { Updater } from "use-immer";
-import type { AsyncStatus } from "@/types";
+import { AsyncStatus } from "@/types";
 import type { StoryJoinedJSON } from "@/types/backend";
 import { Descendant } from "slate";
 import { DEFAULT_PARAGRAPH } from "@/modules/utils/editor-utils";
@@ -21,7 +21,7 @@ export interface EditorProviderValue {
 }
 
 const initialData: EditorContextData = {
-  status: "idle",
+  status: AsyncStatus.IDLE,
   title: "",
   content: [DEFAULT_PARAGRAPH],
 };

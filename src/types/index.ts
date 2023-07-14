@@ -10,7 +10,12 @@ export interface SocialMediaIcon {
   colored?: boolean;
 }
 
-export type AsyncStatus = "idle" | "pending" | "fulfilled" | "rejected";
+export enum AsyncStatus {
+  IDLE = "idle",
+  PENDING = "pending",
+  FULFILLED = "fulfilled",
+  REJECTED = "rejected",
+}
 
 // ============================================================
 

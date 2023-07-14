@@ -165,3 +165,13 @@ export function attemptJsonParse(str: any) {
     return undefined;
   }
 }
+
+export function extractBearerToken(header: string) {
+  const matches = header.match(/Bearer\s+([^\s]+)/i);
+
+  if (matches && matches.length > 1) {
+    return matches[1];
+  }
+
+  return null;
+}

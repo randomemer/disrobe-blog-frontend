@@ -5,6 +5,7 @@ import { Editor } from "slate";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import useEditorContext from "./use-editor-data";
 import useAuth from "./use-user";
+import { AsyncStatus } from "@/types";
 
 const DELAY = 5000;
 
@@ -25,7 +26,7 @@ export function useAutoSave(props: AutoSaveHookProps) {
 
   const uploadDraft = useCallback(async () => {
     setData((data) => {
-      data.status = "pending";
+      data.status = AsyncStatus.PENDING;
     });
     try {
       const title = titleRef.current?.value;
@@ -51,7 +52,7 @@ export function useAutoSave(props: AutoSaveHookProps) {
         const story: StoryJoinedJSON = await resp.json();
 
         setData((draft) => {
-          draft.status = "fulfilled";
+          draft.status = AsyncStatus.FULFILLED;
           draft.story = story;
         });
         router.push(`/story/${story.id}/edit`, undefined, { shallow: true });
@@ -68,13 +69,13 @@ export function useAutoSave(props: AutoSaveHookProps) {
         const updatedDraft: StorySnapshotJSON = await resp.json();
 
         setData((draft) => {
-          draft.status = "fulfilled";
+          draft.status = AsyncStatus.FULFILLED;
           draft.story!.draft = updatedDraft;
         });
       }
     } catch (error) {
       setData((data) => {
-        data.status = "rejected";
+        data.status = AsyncStatus.REJECTED;
       });
       snackbar.showMessage((error as Error).message, "OK", () => {}, {
         severity: "error",
