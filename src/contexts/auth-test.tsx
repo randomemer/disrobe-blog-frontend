@@ -6,7 +6,7 @@ import { AsyncStatus } from "@/types";
 import axios from "axios";
 
 export interface AuthContextData {
-  status: AsyncStatus;
+  status: { user: AsyncStatus; author: AsyncStatus };
   uid: string | null;
   author: AuthorJSON | null;
 }
@@ -18,50 +18,68 @@ export interface AuthProviderValue {
 
 export const AuthContext = createContext<AuthProviderValue>({
   auth: {
-    status: AsyncStatus.IDLE,
+    status: { user: AsyncStatus.IDLE, author: AsyncStatus.IDLE },
     uid: null,
     author: null,
   },
   setAuth: () => {},
 });
 
+function getAuthUser() {
+  return new Promise<User | null>((resolve) => {
+    getAuth().onAuthStateChanged((user) => resolve(user));
+  });
+}
+
 export default function AuthTestProvider(props: PropsWithChildren) {
   const [auth, setAuth] = useImmer<AuthContextData>({
-    status: AsyncStatus.PENDING,
+    status: { user: AsyncStatus.PENDING, author: AsyncStatus.IDLE },
     uid: null,
     author: null,
   });
 
+  const fetchUser = async () => {
+    setAuth((auth) => {
+      auth.status.user = AsyncStatus.PENDING;
+    });
+
+    console.time("auth-user");
+    const user = await getAuthUser();
+    console.timeEnd("auth-user");
+
+    setAuth((auth) => {
+      auth.uid = user?.uid ?? null;
+      auth.status.user = AsyncStatus.FULFILLED;
+      if (user) auth.status.author = AsyncStatus.PENDING;
+    });
+  };
+
   const fetchAuthor = async () => {
     setAuth((auth) => {
-      auth.status = AsyncStatus.PENDING;
+      auth.status.author = AsyncStatus.PENDING;
     });
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const user = await axios.get("/api/me", {
+      const resp = await axios.get("/api/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("fetched user", user);
       setAuth((auth) => {
-        auth.status = AsyncStatus.FULFILLED;
+        auth.status.author = AsyncStatus.FULFILLED;
+        auth.author = resp.data;
       });
     } catch (error) {
       console.error(error);
       setAuth((auth) => {
-        auth.status = AsyncStatus.REJECTED;
+        auth.status.author = AsyncStatus.REJECTED;
       });
     }
   };
 
   useEffect(() => {
-    console.time("auth-user");
-    return getAuth().onAuthStateChanged((user) => {
-      console.timeEnd("auth-user");
-      setAuth((auth) => {
-        auth.uid = user?.uid ?? null;
-      });
-    });
+    fetchUser();
+    if (auth.status.user === AsyncStatus.IDLE) {
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -71,7 +89,7 @@ export default function AuthTestProvider(props: PropsWithChildren) {
       fetchAuthor();
     } else {
       setAuth((auth) => {
-        auth.status = AsyncStatus.IDLE;
+        auth.status.author = AsyncStatus.IDLE;
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

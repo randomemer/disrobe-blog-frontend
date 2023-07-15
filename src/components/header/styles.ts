@@ -1,5 +1,6 @@
 import { elevation } from "@/styles/shared";
 import { styled } from "@mui/material/styles";
+import Link from "next/link";
 
 export const ScrollContext = styled("div")`
   position: absolute;
@@ -52,7 +53,10 @@ export const Logo = styled("span")`
   color: ${({ theme }) => theme.palette.primary.main};
 `;
 
-export const HeaderNav = styled("nav")``;
+export const HeaderNav = styled("nav")`
+  display: flex;
+  gap: 3rem;
+`;
 
 export const NavItems = styled("ul")`
   display: flex;
@@ -62,7 +66,7 @@ export const NavItems = styled("ul")`
   transition: all 0.3s ease;
 `;
 
-export const NavLink = styled("a")`
+export const NavLink = styled(Link)`
   font-size: 1.8rem;
   position: relative;
 
@@ -73,12 +77,11 @@ export const NavLink = styled("a")`
 
   &:visited,
   &:link {
-    // color: general.$primary-color;
     color: inherit;
     text-decoration: none;
   }
 
-  // hover effects
+  /* hover effects */
   &::after {
     content: "";
     position: absolute;
