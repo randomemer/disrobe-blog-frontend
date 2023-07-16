@@ -18,6 +18,8 @@ import { ContentWrapper, StoryTitle } from "./styles";
 
 import type { RouteProps } from "@/types";
 import { useAutoSave } from "@/hooks/use-auto-save";
+import { Skeleton, Typography } from "@mui/material";
+import ToolbarSkeleton from "@/components/slate/toolbar/skeleton";
 
 export interface StoryEditorProps extends RouteProps {
   edit?: boolean;
@@ -88,5 +90,38 @@ export default function StoryEditor(props: StoryEditorProps) {
       </ContentWrapper>
       <ArticleToolbar />
     </Slate>
+  );
+}
+
+export function StoryEditorSkeleton() {
+  useEffect(() => {
+    document.body.classList.add("editor");
+
+    return () => {
+      document.body.classList.remove("editor");
+    };
+  }, []);
+
+  return (
+    <>
+      <ContentWrapper>
+        <Typography variant="h2" marginBottom="2.4rem">
+          <Skeleton variant="text" />
+        </Typography>
+
+        <Skeleton
+          variant="rectangular"
+          height="30rem"
+          sx={{ marginBottom: "4.8rem" }}
+        />
+
+        {Array(4)
+          .fill(null)
+          .map((val, i) => (
+            <Skeleton key={i} variant="text" sx={{ lineHeight: 1.6 }} />
+          ))}
+      </ContentWrapper>
+      <ToolbarSkeleton />
+    </>
   );
 }

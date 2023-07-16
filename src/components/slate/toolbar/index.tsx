@@ -60,7 +60,7 @@ import { AsyncStatus } from "@/types";
 
 type MarkStylesConfig = { style: EditorMark; Icon: ReactNode }[];
 
-const CHARACTER_STYLES: MarkStylesConfig = [
+export const CHARACTER_STYLES: MarkStylesConfig = [
   { style: "bold", Icon: <FormatBoldOutlined /> },
   { style: "italic", Icon: <FormatItalicOutlined /> },
   { style: "strikethrough", Icon: <FormatStrikethroughOutlined /> },
@@ -72,7 +72,7 @@ const CHARACTER_STYLES: MarkStylesConfig = [
 
 type BlockStylesConfig = { style: Element["type"]; Icon: ReactNode }[];
 
-const LIST_STYLES: BlockStylesConfig = [
+export const LIST_STYLES: BlockStylesConfig = [
   { style: "numbered-list", Icon: <FormatListNumberedOutlined /> },
   { style: "bulleted-list", Icon: <FormatListBulletedOutlined /> },
 ];
@@ -81,7 +81,7 @@ const LIST_STYLES: BlockStylesConfig = [
 
 type HeadingStylesConfig = { level: HeadingLevels; Icon: ReactNode }[];
 
-const HEADING_STYLES: HeadingStylesConfig = [
+export const HEADING_STYLES: HeadingStylesConfig = [
   { level: 2, Icon: <FormatHeader2 /> },
   { level: 3, Icon: <FormatHeader3 /> },
   { level: 4, Icon: <FormatHeader4 /> },
@@ -94,7 +94,6 @@ const HEADING_STYLES: HeadingStylesConfig = [
 export default function ArticleToolbar() {
   const editor = useSlate();
   const storyInfo = useWordCount();
-  // const storyID = useSelector(selectStoryDraftID);
 
   const [isImageModalOpen, setImageModalOpen] = useState(false);
 

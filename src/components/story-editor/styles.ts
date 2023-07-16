@@ -13,7 +13,7 @@ export const ContentWrapper = styled("div")`
     border-left: solid 3px #aaa;
     margin-bottom: 4.8rem;
 
-    // when the cursor is in that block
+    /* when the cursor is in that block */
     &:focus,
     &--selected {
       border-color: general.$primary-color;
