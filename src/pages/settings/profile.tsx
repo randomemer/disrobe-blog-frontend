@@ -33,6 +33,8 @@ import path from "path-browserify";
 import clientMediaRepo from "@/modules/backend/repos/media";
 import { v4 } from "uuid";
 import withAuth from "@/components/auth/hoc";
+import axios from "axios";
+import { getAuth } from "firebase/auth";
 
 // ============================================================
 
@@ -160,12 +162,12 @@ function AccountSettingsRoute() {
         diff.picture = bucketPath;
       }
 
-      const resp = await fetch(`/api/author/${author!.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(diff),
+      const token = await getAuth().currentUser!.getIdToken();
+      const resp = await axios.put("/api/me", diff, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      const updated = await resp.json();
+
+      const updated = resp.data;
 
       setAuth((auth) => {
         auth.author = updated;
