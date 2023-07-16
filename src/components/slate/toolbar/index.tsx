@@ -54,6 +54,7 @@ import type { EditorMark, HeadingLevels } from "@/types/slate";
 import type { MouseEventHandler, ReactNode } from "react";
 import type { Element } from "slate";
 import useEditorContext from "@/hooks/use-editor-data";
+import { AsyncStatus } from "@/types";
 
 // ============================================================
 
@@ -225,17 +226,17 @@ function SavingIndicator() {
   let icon: ReactNode, message: string;
 
   switch (status) {
-    case "pending":
+    case AsyncStatus.PENDING:
       icon = <CloudUploadOutlined />;
       message = "Saving";
       break;
 
-    case "fulfilled":
+    case AsyncStatus.FULFILLED:
       icon = <CloudDoneOutlined />;
       message = "Saved";
       break;
 
-    case "rejected":
+    case AsyncStatus.REJECTED:
       icon = <ErrorOutlined />;
       message = "Saving Failed";
       break;

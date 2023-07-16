@@ -14,7 +14,6 @@ import { SnackbarProvider } from "material-ui-snackbar-provider";
 import { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
 import AppSnackbar from "@/components/snackbar";
-import AuthTestProvider from "@/contexts/auth-test";
 
 const clientEmotionCache = createEmotionCache();
 const DMSans = DM_Sans({
@@ -52,21 +51,19 @@ export default function App(props: DisrobeAppProps) {
       </Head>
 
       <CacheProvider value={emotionCache}>
-        <AuthTestProvider>
-          <AuthProvider author={pageProps.author}>
-            <ThemeProvider theme={theme}>
-              <EditorProvider>
-                <ModalProvider>
-                  <SnackbarProvider
-                    SnackbarComponent={(props) => <AppSnackbar {...props} />}
-                  >
-                    <Component {...pageProps} />
-                  </SnackbarProvider>
-                </ModalProvider>
-              </EditorProvider>
-            </ThemeProvider>
-          </AuthProvider>
-        </AuthTestProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <EditorProvider>
+              <ModalProvider>
+                <SnackbarProvider
+                  SnackbarComponent={(props) => <AppSnackbar {...props} />}
+                >
+                  <Component {...pageProps} />
+                </SnackbarProvider>
+              </ModalProvider>
+            </EditorProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </CacheProvider>
     </>
   );

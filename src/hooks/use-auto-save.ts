@@ -4,7 +4,7 @@ import { RefObject, useCallback, useRef } from "react";
 import { Editor } from "slate";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import useEditorContext from "./use-editor-data";
-import useAuth from "./use-user";
+import useAuth from "./use-auth";
 import { AsyncStatus } from "@/types";
 
 const DELAY = 5000;

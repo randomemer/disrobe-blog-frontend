@@ -1,4 +1,4 @@
-import { AuthContext, AuthContextData } from "@/contexts/auth-test";
+import { AuthContext, AuthContextData } from "@/contexts/auth";
 import { useContext } from "react";
 import { Updater } from "use-immer";
 

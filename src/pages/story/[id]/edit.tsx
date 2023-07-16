@@ -1,54 +1,42 @@
 import AppLayout from "@/components/layout/app";
 import StoryEditor from "@/components/story-editor";
 import useEditorContext from "@/hooks/use-editor-data";
-import { StoryModel } from "@/modules/backend";
-import withProtectedRoute from "@/modules/backend/with-protected-route";
-import { jsonify } from "@/modules/utils";
-import { RouteProps } from "@/types";
-import { AuthorJSON, StoryJoinedJSON } from "@/types/backend";
-import { useEffect } from "react";
+import { AsyncStatus } from "@/types";
+import { StoryJoinedJSON } from "@/types/backend";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-export const getServerSideProps = withProtectedRoute<StoryEditRouteProps>(
-  async (context) => {
-    const author = context.req.user.author;
-    const storyId = context.query.id as string;
-
-    const result = await StoryModel.query()
-      .withGraphJoined({
-        author: true,
-        draft: true,
-      })
-      .findById(storyId);
-
-    const transformed = jsonify(result?.toJSON()) as
-      | StoryJoinedJSON
-      | undefined;
-
-    if (!transformed || transformed.author.id !== author.id) {
-      return { notFound: true };
-    }
-
-    return { props: { author: transformed.author, story: transformed } };
-  }
-);
-
-export interface StoryEditRouteProps extends RouteProps {
-  author: AuthorJSON;
-  story: StoryJoinedJSON;
-}
-
-export default function StoryEdit(props: StoryEditRouteProps) {
+export default function StoryEditRoute() {
   const [, setEditorData] = useEditorContext();
+  const router = useRouter();
+  const [status, setStatus] = useState(AsyncStatus.PENDING);
 
-  const draft = props.story.draft;
+  const fetchArticle = async () => {
+    setStatus(AsyncStatus.PENDING);
+    try {
+      const id = router.query.id as string;
+      const resp = await axios.get<StoryJoinedJSON>(`/api/story/${id}`);
+
+      const story = resp.data;
+      const draft = story.draft;
+
+      setEditorData((data) => {
+        data.title = draft.title;
+        data.content = draft.content;
+        data.story = story;
+      });
+      setStatus(AsyncStatus.FULFILLED);
+    } catch (error) {
+      console.error(error);
+      setStatus(AsyncStatus.REJECTED);
+    }
+  };
 
   useEffect(() => {
-    setEditorData((data) => {
-      data.title = draft.title;
-      data.content = draft.content;
-      data.story = props.story;
-    });
-
+    if (status !== AsyncStatus.PENDING) {
+      fetchArticle();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
