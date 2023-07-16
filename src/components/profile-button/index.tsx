@@ -1,7 +1,7 @@
 import useAuth from "@/hooks/use-auth";
 import { getMediaURL } from "@/modules/utils";
 import { AsyncStatus } from "@/types";
-import { LogoutSharp, PersonSharp } from "@mui/icons-material";
+import { EditSharp, LogoutSharp, PersonSharp } from "@mui/icons-material";
 import {
   Divider,
   IconButton,
@@ -59,16 +59,22 @@ export default function AccountMenuButton() {
               <Typography variant="body1" fontWeight={600}>
                 {author.name}
               </Typography>
-              <Typography variant="body2" color={grey[500]}>
+              <Typography variant="body2" color={grey[400]}>
                 {getAuth().currentUser?.email}
               </Typography>
             </AccountDetails>
             <Divider />
-            <MenuItem href="/settings/account" component={Link}>
+            <MenuItem href="/settings/profile" component={Link}>
               <ListItemIcon>
                 <PersonSharp fontSize="small" />
               </ListItemIcon>
               Profile
+            </MenuItem>
+            <MenuItem href="/write" component={Link}>
+              <ListItemIcon>
+                <EditSharp fontSize="small" />
+              </ListItemIcon>
+              Write
             </MenuItem>
             <MenuItem onClick={onLogout}>
               <ListItemIcon>

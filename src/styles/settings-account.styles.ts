@@ -10,7 +10,7 @@ export const ProfileContent = styled("div")`
 `;
 
 export const ProfileForm = styled("div")`
-  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;

@@ -11,7 +11,7 @@ import {
 } from "./styles";
 
 const routes = [
-  { label: "Account", path: "account" },
+  { label: "Profile", path: "profile" },
   { label: "Notifications", path: "notifications" },
 ];
 
