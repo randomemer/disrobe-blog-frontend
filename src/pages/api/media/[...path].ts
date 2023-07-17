@@ -43,14 +43,16 @@ export default async function handler(
 
       default:
         // unsupported method
+        res.setHeader("Allow", "POST");
         res.status(405).send(undefined);
         break;
     }
   } catch (error) {
-    if (error instanceof Error) {
-      console.error(error);
-      res.status(500).send({ error: error.name, message: error.message });
-    }
+    console.error(error);
+    res.status(500).send({
+      error: (error as Error).name,
+      message: (error as Error).message,
+    });
   }
 }
 

@@ -11,19 +11,13 @@ const updateSchema = object({
 });
 
 export default async function me(req: NextApiRequest, res: NextApiResponse) {
-  const authorization = req.headers.authorization;
+  const token = extractBearerToken(req.headers.authorization);
   try {
-    if (
-      !authorization ||
-      !authorization.startsWith("Bearer") ||
-      !extractBearerToken(authorization)
-    ) {
-      return res
-        .status(401)
-        .send({ message: "Bearer token not present or invalid" });
+    if (!token) {
+      res.status(401);
+      return res.send({ message: "Bearer token not present or invalid" });
     }
 
-    const token = extractBearerToken(authorization)!;
     const decoded = await admin.auth().verifyIdToken(token);
 
     switch (req.method) {

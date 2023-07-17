@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 function StoryEditRoute() {
-  const [, setEditorData] = useEditorContext();
+  const [editorData, setEditorData] = useEditorContext();
   const router = useRouter();
   const [status, setStatus] = useState(AsyncStatus.PENDING);
 
@@ -50,6 +50,9 @@ function StoryEditRoute() {
     }
 
     case AsyncStatus.FULFILLED: {
+      if (editorData.story?.author_id !== getAuth().currentUser!.uid) {
+        router.push("/");
+      }
       return (
         <AppLayout>
           <StoryEditor edit={true} />

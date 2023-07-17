@@ -166,7 +166,9 @@ export function attemptJsonParse(str: any) {
   }
 }
 
-export function extractBearerToken(header: string) {
+export function extractBearerToken(header: string | undefined) {
+  if (!header) return null;
+
   const matches = header.match(/Bearer\s+([^\s]+)/i);
 
   if (matches && matches.length > 1) {

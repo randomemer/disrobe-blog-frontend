@@ -17,9 +17,15 @@ import {
 } from "@/styles/home.styles";
 import { PlainLink } from "@/styles/shared";
 import { StoryJoinedJSON } from "@/types/backend";
+import { GetServerSidePropsContext } from "next";
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
+    ctx.res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=10, stale-while-revalidate=59"
+    );
+
     console.time("home_feed");
 
     const results = await StoryModel.query()
@@ -32,7 +38,7 @@ export const getServerSideProps = async () => {
 
     return { props: { stories: serialized } };
   } catch (error) {
-    console.error("Error occured while fetching feed\n", error);
+    console.error("Error occured while fetching feed", error);
     return { props: { stories: [] } };
   }
 };

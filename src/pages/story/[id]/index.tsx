@@ -38,6 +38,11 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
     .orderBy("created_at", "DESC")
     .limit(5);
 
+  context.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
+
   return {
     props: {
       story: jsonify(story),

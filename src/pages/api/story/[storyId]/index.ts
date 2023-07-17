@@ -15,10 +15,8 @@ export default async function handler(
           .withGraphJoined({ draft: true, author: true });
         if (!story) return res.status(404).send(undefined);
 
-        return res
-          .status(200)
-          .setHeader("Content-Type", "application/json")
-          .send(JSON.stringify(story.toJSON()));
+        res.setHeader("Content-Type", "application/json");
+        return res.status(200).send(JSON.stringify(story.toJSON()));
       }
 
       // @TODO
@@ -30,7 +28,9 @@ export default async function handler(
         return res.setHeader("Allow", "GET, PUT").status(405).send(undefined);
     }
   } catch (error) {
-    if (!(error instanceof Error)) return;
-    res.status(500).send({ error: error.name, message: error.message });
+    res.status(500).send({
+      error: (error as Error).name,
+      message: (error as Error).message,
+    });
   }
 }
