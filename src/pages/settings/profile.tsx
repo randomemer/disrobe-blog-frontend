@@ -64,7 +64,7 @@ const profileSchema: ObjectSchema<ProfileFormValues> = object({
 
 // ============================================================
 
-function AccountSettingsRoute() {
+function SettingsProfileRoute() {
   const [auth, setAuth] = useAuth();
   const author = auth.author;
   const snackbar = useSnackbar();
@@ -260,7 +260,7 @@ function AccountSettingsRoute() {
     }
 
     case AsyncStatus.PENDING: {
-      return <AccountSettingsLoader />;
+      return <SettingsProfileSkeleton />;
     }
 
     default: {
@@ -269,7 +269,7 @@ function AccountSettingsRoute() {
   }
 }
 
-function AccountSettingsLoader() {
+function SettingsProfileSkeleton() {
   return (
     <SettingsLayout>
       <SettingsSection>
@@ -287,6 +287,6 @@ function AccountSettingsLoader() {
 }
 
 export default withAuth({
-  whenAuthed: AccountSettingsRoute,
-  beforeAuth: AccountSettingsLoader,
+  whenAuthed: SettingsProfileRoute,
+  beforeAuth: SettingsProfileSkeleton,
 });

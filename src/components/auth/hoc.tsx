@@ -19,8 +19,14 @@ export default function withAuth(config: AuthHOCConfig) {
       }
 
       case AsyncStatus.FULFILLED: {
-        if (!auth.uid) return router.push("/auth?type=login");
-        else return <config.whenAuthed />;
+        if (!auth.uid) {
+          router.push("/auth?type=login");
+          return <config.beforeAuth />;
+        } else return <config.whenAuthed />;
+      }
+
+      default: {
+        return <>Error</>;
       }
     }
   };

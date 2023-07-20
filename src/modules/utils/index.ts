@@ -3,7 +3,7 @@ import humanizeDuration from "humanize-duration";
 import { Descendant, Element, Node } from "slate";
 import createCache from "@emotion/cache";
 import { FormValues } from "@/types";
-import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
+import { AnyObject, Maybe, number, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
 import { ImageElement } from "@/types/slate";
 
@@ -101,9 +101,9 @@ export function isBlobURL(string: string) {
   return string.startsWith("blob:");
 }
 
-export function getStoryGist(children: Descendant[]) {
+export function getStoryGist(children: Descendant[], limit: number = 245) {
   const content = getContentString(children);
-  const trimmed = content.slice(0, 245) + "...";
+  const trimmed = content.slice(0, limit) + "...";
   return trimmed;
 }
 
