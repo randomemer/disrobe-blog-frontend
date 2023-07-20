@@ -10,7 +10,7 @@ import {
 } from "./styles";
 
 import type { PropsWithoutRef } from "react";
-import useAuth from "@/hooks/use-user";
+import AccountMenuButton from "@/components/profile-button";
 
 const links = [
   { href: "/", text: "Home" },
@@ -25,10 +25,6 @@ export default function AppHeader(props: AppHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const scrollContextRef = useRef<HTMLDivElement>(null);
 
-  const [auth] = useAuth();
-  console.log(auth);
-
-  // on Component Mount
   useEffect(() => {
     if (props.dynamicPosition) {
       const header = headerRef.current;
@@ -76,6 +72,7 @@ export default function AppHeader(props: AppHeaderProps) {
               </li>
             ))}
           </NavItems>
+          <AccountMenuButton />
         </HeaderNav>
       </Header>
     </>

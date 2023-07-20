@@ -5,12 +5,15 @@ import "@/styles/globals.scss";
 import { ThemeProvider } from "@mui/material/styles";
 import { DM_Sans } from "next/font/google";
 import Head from "next/head";
-
 import { EditorProvider } from "@/contexts/editor";
-import { RouteProps } from "@/types";
-import { createEmotionCache } from "@/modules/utils";
+import ModalProvider from "mui-modal-provider";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import { createEmotionCache } from "@/modules/utils";
+import { SnackbarProvider } from "material-ui-snackbar-provider";
+
+import { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
+import AppSnackbar from "@/components/snackbar";
 
 const clientEmotionCache = createEmotionCache();
 const DMSans = DM_Sans({
@@ -37,7 +40,7 @@ export default function App(props: DisrobeAppProps) {
 
       <Head>
         <meta charSet="utf-8" />
-        {/* <link rel="icon" href="/favicon.ico" /> */}
+        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta
@@ -48,10 +51,16 @@ export default function App(props: DisrobeAppProps) {
       </Head>
 
       <CacheProvider value={emotionCache}>
-        <AuthProvider author={pageProps.author}>
+        <AuthProvider>
           <ThemeProvider theme={theme}>
             <EditorProvider>
-              <Component {...pageProps} />
+              <ModalProvider>
+                <SnackbarProvider
+                  SnackbarComponent={(props) => <AppSnackbar {...props} />}
+                >
+                  <Component {...pageProps} />
+                </SnackbarProvider>
+              </ModalProvider>
             </EditorProvider>
           </ThemeProvider>
         </AuthProvider>

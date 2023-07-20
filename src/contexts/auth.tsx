@@ -1,14 +1,13 @@
+import { createContext, PropsWithChildren, useEffect } from "react";
+import { Updater, useImmer } from "use-immer";
 import { getAuth, User } from "firebase/auth";
-import { createContext, useEffect } from "react";
-import nookies from "nookies";
-import { useImmer } from "use-immer";
-
-import type { PropsWithChildren } from "react";
-import type { Updater } from "use-immer";
-import type { AuthorJSON } from "@/types/backend";
+import { AuthorJSON } from "@/types/backend";
+import { AsyncStatus } from "@/types";
+import axios from "axios";
 
 export interface AuthContextData {
-  user: User | null;
+  status: { user: AsyncStatus; author: AsyncStatus };
+  uid: string | null;
   author: AuthorJSON | null;
 }
 
@@ -19,56 +18,82 @@ export interface AuthProviderValue {
 
 export const AuthContext = createContext<AuthProviderValue>({
   auth: {
-    user: null,
+    status: { user: AsyncStatus.IDLE, author: AsyncStatus.IDLE },
+    uid: null,
     author: null,
   },
   setAuth: () => {},
 });
 
-type AuthProviderProps = PropsWithChildren<{
-  author?: AuthorJSON;
-}>;
+function getAuthUser() {
+  return new Promise<User | null>((resolve) => {
+    getAuth().onAuthStateChanged((user) => resolve(user));
+  });
+}
 
-export default function AuthProvider(props: AuthProviderProps) {
+export default function AuthTestProvider(props: PropsWithChildren) {
   const [auth, setAuth] = useImmer<AuthContextData>({
-    user: null,
-    author: props.author ?? null,
+    status: { user: AsyncStatus.PENDING, author: AsyncStatus.IDLE },
+    uid: null,
+    author: null,
   });
 
-  useEffect(() => {
+  const fetchUser = async () => {
     setAuth((auth) => {
-      auth.author = props.author || null;
+      auth.status.user = AsyncStatus.PENDING;
     });
-  }, [props.author, setAuth]);
 
-  // listen for token changes
-  // update state and set new token as a cookie
-  useEffect(() => {
-    return getAuth().onIdTokenChanged(async (user) => {
-      if (!user) {
-        setAuth((auth) => {
-          auth.user = user;
-        });
-        nookies.set(undefined, "token", "", { path: "/" });
-      } else {
-        const token = await user.getIdToken();
-        setAuth((auth) => {
-          auth.user = user;
-        });
-        nookies.set(undefined, "token", token, { path: "/" });
-      }
+    console.time("auth-user");
+    const user = await getAuthUser();
+    console.timeEnd("auth-user");
+
+    setAuth((auth) => {
+      auth.uid = user?.uid ?? null;
+      auth.status.user = AsyncStatus.FULFILLED;
+      if (user) auth.status.author = AsyncStatus.PENDING;
     });
-  }, [setAuth]);
+  };
 
-  // force refresh the token every 10 minutes
+  const fetchAuthor = async () => {
+    setAuth((auth) => {
+      auth.status.author = AsyncStatus.PENDING;
+    });
+    try {
+      const token = await getAuth().currentUser!.getIdToken();
+      const resp = await axios.get("/api/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setAuth((auth) => {
+        auth.status.author = AsyncStatus.FULFILLED;
+        auth.author = resp.data;
+      });
+    } catch (error) {
+      console.error(error);
+      setAuth((auth) => {
+        auth.status.author = AsyncStatus.REJECTED;
+      });
+    }
+  };
+
   useEffect(() => {
-    const handle = setInterval(async () => {
-      const user = getAuth().currentUser;
-      if (user) await user.getIdToken(true);
-    }, 10 * 60 * 1000);
-
-    return () => clearInterval(handle);
+    fetchUser();
+    if (auth.status.user === AsyncStatus.IDLE) {
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    console.log("auth user changed", auth.uid);
+    if (auth.uid) {
+      fetchAuthor();
+    } else {
+      setAuth((auth) => {
+        auth.status.author = AsyncStatus.IDLE;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.uid]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

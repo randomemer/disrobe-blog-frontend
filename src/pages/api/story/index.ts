@@ -1,9 +1,11 @@
 import { StoryModel } from "@/modules/backend";
-import { autoId } from "@/modules/utils";
+import { attemptJsonParse, autoId, extractBearerToken } from "@/modules/utils";
 import { v4 } from "uuid";
 import { array, object, string } from "yup";
+import { buildFilter } from "objection-filter";
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import admin from "@/modules/backend/admin";
 
 const createSchema = object({
   author_id: string().required(),
@@ -19,7 +21,20 @@ export default async function handler(
 ) {
   try {
     switch (req.method) {
+      case "GET": {
+        const filter = attemptJsonParse(req.query.filter);
+        const result = await buildFilter(StoryModel).build(filter);
+        return res.status(200).send(result);
+      }
+
       case "POST": {
+        const token = extractBearerToken(req.headers.authorization);
+        if (!token) {
+          res.status(401);
+          return res.send({ message: "Bearer token not provided or invalid" });
+        }
+        const decoded = await admin.auth().verifyIdToken(token);
+
         const validated = await createSchema.validate(req.body, {
           stripUnknown: true,
         });
@@ -40,8 +55,9 @@ export default async function handler(
         return res.status(200).send(story.toJSON());
       }
 
-      default:
+      default: {
         return res.setHeader("Allow", "GET, POST").status(405).send(undefined);
+      }
     }
   } catch (error) {
     if (!(error instanceof Error)) return;

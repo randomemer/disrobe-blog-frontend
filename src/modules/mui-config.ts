@@ -7,7 +7,7 @@ export const theme = createTheme({
     background: { default: "#121212" },
     error: { main: "#af1b3f" },
   },
-  typography: { fontFamily: "inherit" },
+  typography: { fontFamily: "inherit", htmlFontSize: 10 },
   components: {
     MuiTextField: {
       defaultProps: {

@@ -9,7 +9,7 @@ export const SplashSection = styled("section")`
   padding-top: 25vh;
 
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("/images/splash.png");
+    url("/images/splash.jpg");
   background-size: cover;
   transform: translateY(calc(var(--app-header-height) * -1));
 `;

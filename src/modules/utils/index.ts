@@ -3,9 +3,9 @@ import humanizeDuration from "humanize-duration";
 import { Descendant, Element, Node } from "slate";
 import createCache from "@emotion/cache";
 import { FormValues } from "@/types";
-import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
+import { AnyObject, Maybe, number, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
-import { ImageElement, SlateElement } from "@/types/slate";
+import { ImageElement } from "@/types/slate";
 
 /**
 |--------------------------------------------------
@@ -101,9 +101,9 @@ export function isBlobURL(string: string) {
   return string.startsWith("blob:");
 }
 
-export function getStoryGist(children: Descendant[]) {
+export function getStoryGist(children: Descendant[], limit: number = 245) {
   const content = getContentString(children);
-  const trimmed = content.slice(0, 245) + "...";
+  const trimmed = content.slice(0, limit) + "...";
   return trimmed;
 }
 
@@ -156,4 +156,24 @@ export function extractParagraphs(text: string) {
   const paragraphs = text.split(pattern);
 
   return paragraphs;
+}
+
+export function attemptJsonParse(str: any) {
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export function extractBearerToken(header: string | undefined) {
+  if (!header) return null;
+
+  const matches = header.match(/Bearer\s+([^\s]+)/i);
+
+  if (matches && matches.length > 1) {
+    return matches[1];
+  }
+
+  return null;
 }

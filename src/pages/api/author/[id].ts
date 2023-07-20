@@ -1,12 +1,5 @@
 import { AuthorModel } from "@/modules/backend";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { object, string } from "yup";
-
-const updateSchema = object({
-  name: string().trim(),
-  bio: string().trim(),
-  picture: string().trim(),
-});
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,15 +16,8 @@ export default async function handler(
         return res.status(200).send(author.toJSON());
       }
 
-      case "PUT": {
-        const data = await updateSchema.validate(req.body);
-        const author = await AuthorModel.query().patchAndFetchById(id, data);
-
-        return res.status(200).send(author.toJSON());
-      }
-
       default:
-        return res.setHeader("Allow", "GET, PUT").status(405).send(undefined);
+        return res.setHeader("Allow", "GET").status(405).send(undefined);
     }
   } catch (error) {
     if (!(error instanceof Error)) return;

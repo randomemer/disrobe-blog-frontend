@@ -2,8 +2,12 @@ import { StoryJoinedJSON, StorySnapshotJSON } from "@/types/backend";
 import { useRouter } from "next/router";
 import { RefObject, useCallback, useRef } from "react";
 import { Editor } from "slate";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import useEditorContext from "./use-editor-data";
-import useAuth from "./use-user";
+import useAuth from "./use-auth";
+import { AsyncStatus } from "@/types";
+import axios from "axios";
+import { getAuth } from "firebase/auth";
 
 const DELAY = 5000;
 
@@ -17,17 +21,19 @@ export function useAutoSave(props: AutoSaveHookProps) {
   const [data, setData] = useEditorContext();
   const [auth] = useAuth();
   const router = useRouter();
+  const snackbar = useSnackbar();
 
   const timer = useRef<NodeJS.Timeout | null>(null);
   const saved = useRef<number | null>(null);
 
   const uploadDraft = useCallback(async () => {
     setData((data) => {
-      data.status = "pending";
+      data.status = AsyncStatus.PENDING;
     });
     try {
       const title = titleRef.current?.value;
       const content = editorRef.current?.children;
+      const token = await getAuth().currentUser!.getIdToken();
 
       if (!title || !content) {
         console.log(
@@ -41,40 +47,43 @@ export function useAutoSave(props: AutoSaveHookProps) {
           author_id: auth.author!.id,
           draft: { title, content },
         };
-        const resp = await fetch(`/api/story`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(storyData),
-        });
-        const story: StoryJoinedJSON = await resp.json();
 
-        setData((draft) => {
-          draft.status = "fulfilled";
-          draft.story = story;
-        });
-        router.push(`/story/${story.id}/edit`, undefined, { shallow: true });
-      } else {
-        const draftData = { title, content };
-        const resp = await fetch(
-          `/api/story/${data.story.id}/snapshot/${data.story.draft_snap_id}`,
+        const resp = await axios.post<StoryJoinedJSON>(
+          "/api/story",
+          storyData,
           {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(draftData),
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const updatedDraft: StorySnapshotJSON = await resp.json();
+        const story = resp.data;
 
         setData((draft) => {
-          draft.status = "fulfilled";
+          draft.status = AsyncStatus.FULFILLED;
+          draft.story = story;
+        });
+        router.replace(`/story/${story.id}/edit`, undefined, { shallow: true });
+      } else {
+        const draftData = { title, content };
+        const resp = await axios.put<StorySnapshotJSON>(
+          `/api/story/${data.story.id}/snapshot/${data.story.draft_snap_id}`,
+          draftData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const updatedDraft = resp.data;
+
+        setData((draft) => {
+          draft.status = AsyncStatus.FULFILLED;
           draft.story!.draft = updatedDraft;
         });
       }
     } catch (error) {
-      console.error(error);
       setData((data) => {
-        data.status = "rejected";
+        data.status = AsyncStatus.REJECTED;
       });
+      snackbar.showMessage((error as Error).message, "OK", () => {}, {
+        severity: "error",
+      } as any);
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setData, data.story, auth.author, router]);

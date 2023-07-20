@@ -1,24 +1,25 @@
 import LoginForm from "@/components/auth/login-form";
 import SignupForm from "@/components/auth/signup-form";
 import TabPanel from "@/components/tab-panel";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import { FormContainer, FormTab, FormTabs } from "@/styles/auth.styles";
 import { FirebaseError } from "firebase/app";
 import {
   browserLocalPersistence,
   browserSessionPersistence,
-  createUserWithEmailAndPassword,
   getAuth,
   setPersistence,
   signInWithCustomToken,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import type { SyntheticEvent } from "react";
+import { useModal } from "mui-modal-provider";
+import AlertModal from "@/components/alert";
 
 export type LoginFormData = {
   email: string;
@@ -40,16 +41,15 @@ export type SignupHandler = (data: SignupFormData) => Promise<void>;
 
 export default function AuthRoute() {
   const router = useRouter();
+  const modal = useModal();
+  const snackbar = useSnackbar();
 
-  const routerQueryType = router.query.type as string;
+  const routerQueryType = (router.query.type as string) || "login";
 
-  const [redirect, setRedirect] = useState("/settings/account");
+  const [redirect, setRedirect] = useState("/settings/profile");
   const [isLoading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<string>(
-    routerQueryType || "login"
-  );
+  const [activeTab, setActiveTab] = useState<string>(routerQueryType);
 
-  // const formBoxRef = useRef();
   const observerBoxRef = useRef<HTMLDivElement>(null);
 
   const onTabChange = (event: SyntheticEvent<Element, Event>, tab: string) => {
@@ -63,8 +63,6 @@ export default function AuthRoute() {
       const url = decodeURIComponent(redirect as string);
       setRedirect(url);
     }
-
-    console.log(redirect);
   }, [router.query.redirect]);
 
   useEffect(() => {
@@ -96,18 +94,9 @@ export default function AuthRoute() {
       router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case "auth/too-many-requests":
-            console.log(
-              "You have exceeded the number of login attempts. Please reset your password or try again later."
-            );
-            break;
-          case "auth/wrong-password":
-            console.log("Your password is incorrect");
-            break;
-          default:
-            break;
-        }
+        snackbar.showMessage(error.message, "OK", () => {}, {
+          severity: "error",
+        } as any);
       }
       console.error(error);
     }
@@ -131,18 +120,20 @@ export default function AuthRoute() {
         }),
       });
       const body = await resp.json();
+      if (!resp.ok) {
+        throw { message: body.error };
+      }
 
-      console.log("body", body);
       await signInWithCustomToken(auth, body.token);
 
       // logEvent(analytics, "sign_up", {
       //   method: "email",
       // });
-      router.push("/settings/account");
+      router.push("/settings/profile");
     } catch (error) {
-      if (error instanceof FirebaseError) {
-        console.log(error.code, error.name, error.message);
-      }
+      snackbar.showMessage((error as Error).message, "OK", () => {}, {
+        severity: "error",
+      } as any);
       console.error(error);
     }
     setLoading(false);
