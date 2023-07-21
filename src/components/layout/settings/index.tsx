@@ -5,7 +5,7 @@ import { PostOutline } from "mdi-material-ui";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import {
   SettingsMain,
   SettingsNavTab,
@@ -20,6 +20,14 @@ const routes = [
 
 export default function SettingsLayout(props: PropsWithChildren) {
   const router = useRouter();
+
+  // useEffect(() => {
+  //   document.body.classList.add("sticky-header");
+
+  //   return () => {
+  //     document.body.classList.remove("sticky-header");
+  //   };
+  // }, []);
 
   return (
     <>

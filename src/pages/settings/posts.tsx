@@ -16,7 +16,7 @@ import { SettingsOutlined } from "@mui/icons-material";
 import { IconButton, Skeleton } from "@mui/material";
 import axios from "axios";
 import _ from "lodash";
-import { CogOutline, SquareEditOutline } from "mdi-material-ui";
+import { SquareEditOutline } from "mdi-material-ui";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -32,7 +32,6 @@ export function SettingsPostsRoute() {
 
       const resp = await axios.get<StoryJoinedJSON[]>(`/api/story?${query}`);
       setStories(resp.data);
-      console.log(resp);
       setStatus(AsyncStatus.FULFILLED);
     } catch (error) {
       console.error(error);

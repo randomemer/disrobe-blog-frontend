@@ -2,18 +2,11 @@ import Head from "next/head";
 import AppHeader from "@/components/header";
 import { AppMain } from "./styles";
 import { PropsWithChildren, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export type AppLayoutProps = PropsWithChildren<{}>;
 
 export default function AppLayout(props: AppLayoutProps) {
-  useEffect(() => {
-    document.body.classList.add("sticky-header");
-
-    return () => {
-      document.body.classList.remove("sticky-header");
-    };
-  }, []);
-
   return (
     <>
       <Head>
