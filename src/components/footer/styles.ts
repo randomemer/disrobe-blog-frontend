@@ -21,14 +21,30 @@ export const FooterGrid = styled("div")`
   padding: 0 4.8rem;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   column-gap: 12.8rem;
+
+  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
+    gap: 9.6rem;
+    padding: 0 6.4rem;
+  }
 `;
 
 export const FooterColumn = styled("div")`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  grid-column: span 2;
+
+  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
+    grid-column: span 3;
+  }
+`;
+
+export const FooterColumnLogo = styled(FooterColumn)`
+  ${({ theme: { breakpoints } }) => breakpoints.down("md")} {
+    grid-row: 2;
+  }
 `;
 
 export const DisrobeLogo = styled(Link)`

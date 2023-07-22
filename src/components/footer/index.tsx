@@ -8,7 +8,6 @@ import {
 } from "@mui/icons-material";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { Linkedin, PhoneOutline } from "mdi-material-ui";
-import Link from "next/link";
 import {
   ContactListItem,
   Contacts,
@@ -16,6 +15,7 @@ import {
   DisrobeLogo,
   FooterColTitle,
   FooterColumn,
+  FooterColumnLogo,
   FooterGrid,
   QuickLink,
   QuickLinks,
@@ -28,7 +28,7 @@ export default function Footer() {
   return (
     <StyledFooter>
       <FooterGrid>
-        <FooterColumn>
+        <FooterColumnLogo>
           <DisrobeLogo href={"/"}>Disrobe</DisrobeLogo>
 
           <Socials>
@@ -50,7 +50,7 @@ export default function Footer() {
             Copyright &copy; Disrobe {new Date().getFullYear()}, All rights
             reserved.
           </Copyright>
-        </FooterColumn>
+        </FooterColumnLogo>
 
         <FooterColumn>
           <FooterColTitle>Contact Us</FooterColTitle>

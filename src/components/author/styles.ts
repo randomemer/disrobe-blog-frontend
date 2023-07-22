@@ -6,6 +6,10 @@ export const Author = styled("div")`
   display: flex;
   align-items: center;
   gap: 1.8rem;
+
+  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
+    font-size: 1.4rem;
+  }
 `;
 
 export const AuthorImageWrapper = styled("div")`
@@ -13,6 +17,10 @@ export const AuthorImageWrapper = styled("div")`
   --diameter: 4.8rem;
   height: var(--diameter);
   width: var(--diameter);
+
+  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
+    --diameter: 3.6rem;
+  }
 `;
 
 export const AuthorImage = styled(Image)`
@@ -24,14 +32,18 @@ export const AuthorDetails = styled("div")`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+`;
 
-  .author-name {
-    font-size: 1.8rem;
-  }
+export const AuthorName = styled("span")`
+  font-size: 1.8rem;
 
-  .story-info {
-    color: rgba(255, 255, 255, 0.5);
-    display: flex;
-    gap: 0.8rem;
+  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
+    font-size: 1.6rem;
   }
+`;
+
+export const StoryInfo = styled("p")`
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  gap: 0.8rem;
 `;

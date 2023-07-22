@@ -35,6 +35,10 @@ export const Header = styled("header")`
 
     ${elevation(0.1)}
   }
+
+  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
+    padding: 0 10%;
+  }
 `;
 
 export const LogoWrapper = styled("div")`

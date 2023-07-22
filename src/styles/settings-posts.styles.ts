@@ -9,7 +9,7 @@ export const PostsList = styled(Box)`
 
 export const PostItem = styled(Card)`
   display: flex;
-  max-height: 13.2rem;
+  height: 13.2rem;
   padding: 1.8rem;
   gap: 3rem;
 `;
