@@ -2,7 +2,7 @@
   "name": "frontend",
   "packageManager": "yarn@3.4.1",
   "scripts": {
-    "dev": "open-cli msedge & next dev",
+    "dev": "open-cli msedge --profile-directory=\"Default\" & next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

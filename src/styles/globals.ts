@@ -5,6 +5,10 @@ const globalStyles = css`
   :root {
     --app-header-height: 7.2rem;
     --toolbar-width: 30rem;
+
+    ${theme.breakpoints.down("md")} {
+      --app-header-height: 6.4rem;
+    }
   }
 
   html {

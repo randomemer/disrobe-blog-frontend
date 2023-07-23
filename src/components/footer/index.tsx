@@ -55,11 +55,11 @@ export default function Footer() {
         <FooterColumn>
           <FooterColTitle>Contact Us</FooterColTitle>
 
-          <Contacts dense>
+          <Contacts dense disablePadding>
             <ContactListItem
               disableGutters
-              href={"phone:+919962606241"}
               component={PlainLink}
+              href={"phone:+919962606241"}
             >
               <ListItemIcon>
                 <PhoneOutline />
@@ -69,8 +69,8 @@ export default function Footer() {
 
             <ContactListItem
               disableGutters
-              href={"phone:+919962606241"}
               component={PlainLink}
+              href={"phone:+919962606241"}
             >
               <ListItemIcon>
                 <PhoneOutline />
@@ -80,8 +80,8 @@ export default function Footer() {
 
             <ContactListItem
               disableGutters
-              href={"mailto:disrobeblog@gmail.com"}
               component={PlainLink}
+              href={"mailto:disrobeblog@gmail.com"}
             >
               <ListItemIcon>
                 <MailOutline />

@@ -2,12 +2,7 @@ import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
 import $clamp from "clamp-js";
 import { StoryModel } from "@/modules/backend";
-import {
-  getContentString,
-  getStoryGist,
-  getStoryThumb,
-  jsonify,
-} from "@/modules/utils";
+import { getContentString, getStoryThumb, jsonify } from "@/modules/utils";
 import {
   Gist,
   SectionHeading,
@@ -17,9 +12,10 @@ import {
   SplashTitle,
   StoriesSection,
   StoryCardContent,
-  StoryCardDiv,
+  StoryCardItem,
   StoryCardRight,
   StoryCardTitle,
+  StoryLink,
   StoryThumbnail,
   StoryThumbnailLink,
 } from "@/styles/home.styles";
@@ -125,26 +121,31 @@ function StoryCard(props: StoryCardProps) {
 
   const path = `/story/${story.id}`;
 
+  const listener = () => {
+    if (gistRef.current) {
+      $clamp(gistRef.current, { clamp: "auto" });
+    }
+  };
+
   useEffect(() => {
-    $clamp(gistRef.current!, { clamp: "auto" });
-  });
+    listener();
+    visualViewport?.addEventListener("resize", listener);
+
+    return () => visualViewport?.removeEventListener("resize", listener);
+  }, []);
 
   return (
-    <StoryCardDiv>
+    <StoryCardItem>
       <StoryAuthor story={story} />
       <StoryCardContent>
         <StoryThumbnailLink href={path}>
           <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
         </StoryThumbnailLink>
         <StoryCardRight>
-          {/* <PlainLink href={path}> */}
           <StoryCardTitle>{title}</StoryCardTitle>
-          {/* </PlainLink> */}
-          {/* <PlainLink href={path}> */}
           <Gist ref={gistRef}>{getContentString(content)}</Gist>
-          {/* </PlainLink> */}
         </StoryCardRight>
       </StoryCardContent>
-    </StoryCardDiv>
+    </StoryCardItem>
   );
 }

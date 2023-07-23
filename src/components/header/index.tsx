@@ -1,16 +1,29 @@
-import { useEffect, useRef } from "react";
+import AccountMenuButton from "@/components/profile-button";
+import { theme } from "@/modules/mui-config";
+import { CloseSharp, MenuSharp } from "@mui/icons-material";
 import {
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  useMediaQuery,
+} from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import {
+  DrawerNavLink,
   Header,
   HeaderNav,
   Logo,
   LogoWrapper,
+  NavDrawerButton,
+  NavDrawerButtons,
+  NavDrawerContent,
   NavItems,
   NavLink,
   ScrollContext,
 } from "./styles";
 
 import type { PropsWithoutRef } from "react";
-import AccountMenuButton from "@/components/profile-button";
 
 const links = [
   { href: "/", text: "Home" },
@@ -24,6 +37,10 @@ export type AppHeaderProps = PropsWithoutRef<{
 export default function AppHeader(props: AppHeaderProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const scrollContextRef = useRef<HTMLDivElement>(null);
+  const isScreenMd = useMediaQuery(theme.breakpoints.down("md"));
+  const [isNavOpen, setNavOpen] = useState(false);
+
+  const onNavClose = () => setNavOpen(false);
 
   useEffect(() => {
     if (props.dynamicPosition) {
@@ -65,16 +82,41 @@ export default function AppHeader(props: AppHeaderProps) {
         </LogoWrapper>
 
         <HeaderNav>
-          <NavItems>
-            {links.map(({ text, href }) => (
-              <li key={href}>
-                <NavLink href={href}>{text}</NavLink>
-              </li>
-            ))}
-          </NavItems>
+          {!isScreenMd ? (
+            <NavItems>
+              {links.map(({ text, href }) => (
+                <li key={href}>
+                  <NavLink href={href}>{text}</NavLink>
+                </li>
+              ))}
+            </NavItems>
+          ) : (
+            <NavDrawerButton onClick={() => setNavOpen(!isNavOpen)}>
+              <MenuSharp />
+            </NavDrawerButton>
+          )}
           <AccountMenuButton />
         </HeaderNav>
       </Header>
+
+      <Drawer anchor="right" open={isNavOpen} onClose={onNavClose}>
+        <NavDrawerButtons>
+          <IconButton onClick={() => setNavOpen(!isNavOpen)}>
+            <CloseSharp />
+          </IconButton>
+        </NavDrawerButtons>
+        <NavDrawerContent>
+          <List>
+            {links.map(({ text, href }) => (
+              <ListItem key={href}>
+                <DrawerNavLink href={href} onClick={onNavClose}>
+                  {text}
+                </DrawerNavLink>
+              </ListItem>
+            ))}
+          </List>
+        </NavDrawerContent>
+      </Drawer>
     </>
   );
 }

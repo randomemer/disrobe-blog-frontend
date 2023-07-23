@@ -1,4 +1,5 @@
 import { elevation } from "@/styles/shared";
+import { Box, IconButton, ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 
@@ -39,17 +40,20 @@ export const Header = styled("header")`
   ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
     padding: 0 10%;
   }
+
+  ${({ theme: { breakpoints } }) => breakpoints.down("md")} {
+    padding: 0 3.6rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0 3rem;
+  }
 `;
 
 export const LogoWrapper = styled("div")`
   display: flex;
   align-items: center;
   gap: 10px;
-
-  ion-icon {
-    font-size: 2.4rem;
-    color: general.$primary-color;
-  }
 `;
 
 export const Logo = styled("span")`
@@ -57,11 +61,19 @@ export const Logo = styled("span")`
   font-weight: 600;
   letter-spacing: 2px;
   color: ${({ theme }) => theme.palette.primary.main};
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 2rem;
+  }
 `;
 
 export const HeaderNav = styled("nav")`
   display: flex;
   gap: 3rem;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    gap: 0.5rem;
+  }
 `;
 
 export const NavItems = styled("ul")`
@@ -102,5 +114,35 @@ export const NavLink = styled(Link)`
 
   &:hover::after {
     right: 0;
+  }
+`;
+
+export const NavDrawerButton = styled(IconButton)``;
+
+export const NavDrawerButtons = styled(Box)`
+  display: flex;
+  align-items: center;
+  height: var(--app-header-height);
+  padding: 0 0.9rem;
+`;
+
+export const NavDrawerContent = styled(Box)`
+  width: 27rem;
+  padding: 0 0.9rem;
+`;
+
+export const DrawerNavLink = styled(Link)`
+  font-size: 1.8rem;
+  line-height: 1.5;
+
+  &:active,
+  &:hover {
+    color: ${({ theme }) => theme.palette.primary.main};
+  }
+
+  &:visited,
+  &:link {
+    color: inherit;
+    text-decoration: none;
   }
 `;
