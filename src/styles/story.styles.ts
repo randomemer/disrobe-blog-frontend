@@ -1,12 +1,27 @@
 import { styled } from "@mui/material/styles";
 
 export const ArticleGrid = styled("div")`
-  margin: 4.8rem auto 12.8rem;
-  max-width: 120rem;
   display: grid;
+  margin: 4.8rem auto 12.8rem;
+  max-width: 130rem;
+  padding: 0 6.4rem;
 
-  grid-template-columns: 1fr 28rem;
+  grid-template-columns: 1fr 27rem;
   gap: 6.4rem;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    grid-template-columns: 1fr 24rem;
+    gap: 5.6rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    grid-template-columns: 1fr;
+    padding: 0 4.8rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0 3.6rem;
+  }
 `;
 
 export const Article = styled("article")``;
@@ -16,9 +31,17 @@ export const StoryHeadingBox = styled("div")`
 `;
 
 export const StoryHeading = styled("h1")`
-  font-size: 4.8rem;
+  font-size: 4.2rem;
   margin-bottom: 1.4rem;
-  line-height: 1.3;
+  line-height: 1.25;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    font-size: 3.6rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 3rem;
+  }
 `;
 
 export const StoryByLine = styled("div")`
@@ -32,9 +55,20 @@ export const StoryContent = styled("div")`
   flex-direction: column;
   gap: 4.8rem;
 
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    gap: 3.6rem;
+  }
+
   > * {
     font-size: 2rem;
-    font-weight: 400;
+
+    ${({ theme }) => theme.breakpoints.down("lg")} {
+      font-size: 1.8rem;
+    }
+
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      font-size: 1.6rem;
+    }
   }
 
   /* in-line elements */

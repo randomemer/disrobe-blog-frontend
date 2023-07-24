@@ -76,19 +76,19 @@ export default function StorySocials() {
 
   return (
     <StorySharing onMouseOver={onHover} onMouseOut={onHover}>
-      <ShareButton id="share-fb" onClick={shareFacebook}>
+      <ShareButton size="small" id="share-fb" onClick={shareFacebook}>
         <FacebookLogo colored={hoverState["share-fb"]} />
       </ShareButton>
 
-      <ShareButton id="share-lnkd" onClick={shareLinkedin}>
+      <ShareButton size="small" id="share-lnkd" onClick={shareLinkedin}>
         <LinkedinLogo colored={hoverState["share-lnkd"]} />
       </ShareButton>
 
-      <ShareButton id="share-twt" onClick={shareTwitter}>
+      <ShareButton size="small" id="share-twt" onClick={shareTwitter}>
         <TwitterLogo colored={hoverState["share-twt"]} />
       </ShareButton>
 
-      <ShareButton id="share-url" onClick={copyLink}>
+      <ShareButton size="small" id="share-url" onClick={copyLink}>
         <LinkOutlined />
       </ShareButton>
     </StorySharing>

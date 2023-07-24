@@ -5,6 +5,10 @@ export const Author = styled("div")`
   display: flex;
   align-items: center;
   gap: 1.8rem;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    gap: 1.4rem;
+  }
 `;
 
 export const AuthorImageWrapper = styled("div")`
