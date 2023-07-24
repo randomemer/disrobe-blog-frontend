@@ -101,7 +101,7 @@ export default function AppHeader(props: AppHeaderProps) {
 
       <Drawer anchor="right" open={isNavOpen} onClose={onNavClose}>
         <NavDrawerButtons>
-          <IconButton onClick={() => setNavOpen(!isNavOpen)}>
+          <IconButton size="small" onClick={() => setNavOpen(!isNavOpen)}>
             <CloseSharp />
           </IconButton>
         </NavDrawerButtons>
