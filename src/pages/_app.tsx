@@ -43,7 +43,7 @@ export default function App(props: DisrobeAppProps) {
 
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
+          <CssBaseline enableColorScheme />
           <AuthProvider>
             <EditorProvider>
               <ModalProvider>

@@ -1,5 +1,10 @@
-import { TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
+
+export const ContentRoot = styled(Box)`
+  flex: 1;
+  overflow: auto;
+`;
 
 export const ContentWrapper = styled("div")`
   max-width: 108rem;

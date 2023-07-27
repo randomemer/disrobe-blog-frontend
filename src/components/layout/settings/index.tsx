@@ -5,10 +5,12 @@ import { PostOutline } from "mdi-material-ui";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import {
+  SettingsContainer,
   SettingsMain,
   SettingsNavTab,
+  SettingsRoot,
   SettingsTabs,
   TabContent,
 } from "./styles";
@@ -21,14 +23,6 @@ const routes = [
 export default function SettingsLayout(props: PropsWithChildren) {
   const router = useRouter();
 
-  // useEffect(() => {
-  //   document.body.classList.add("sticky-header");
-
-  //   return () => {
-  //     document.body.classList.remove("sticky-header");
-  //   };
-  // }, []);
-
   return (
     <>
       <Head>
@@ -38,24 +32,28 @@ export default function SettingsLayout(props: PropsWithChildren) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppHeader />
-      <SettingsMain>
-        <SettingsTabs>
-          {routes.map((route) => (
-            <SettingsNavTab
-              dense
-              key={route.path}
-              component={Link}
-              selected={router.asPath.includes(`/settings/${route.path}`)}
-              href={`/settings/${route.path}`}
-            >
-              <ListItemIcon>{route.icon}</ListItemIcon>
-              <ListItemText>{route.label}</ListItemText>
-            </SettingsNavTab>
-          ))}
-        </SettingsTabs>
-        <TabContent>{props.children}</TabContent>
-      </SettingsMain>
+      <SettingsRoot>
+        <AppHeader position="relative" />
+        <SettingsContainer>
+          <SettingsMain>
+            <SettingsTabs>
+              {routes.map((route) => (
+                <SettingsNavTab
+                  dense
+                  key={route.path}
+                  component={Link}
+                  selected={router.asPath.includes(`/settings/${route.path}`)}
+                  href={`/settings/${route.path}`}
+                >
+                  <ListItemIcon>{route.icon}</ListItemIcon>
+                  <ListItemText>{route.label}</ListItemText>
+                </SettingsNavTab>
+              ))}
+            </SettingsTabs>
+            <TabContent>{props.children}</TabContent>
+          </SettingsMain>
+        </SettingsContainer>
+      </SettingsRoot>
     </>
   );
 }

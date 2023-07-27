@@ -37,6 +37,14 @@ export const Header = styled("header")`
     ${elevation(0.1)}
   }
 
+  .relative-header & {
+    position: relative;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    background-color: ${({ theme }) => theme.palette.background.default};
+
+    ${elevation(0.1)}
+  }
+
   ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
     padding: 0 10%;
   }

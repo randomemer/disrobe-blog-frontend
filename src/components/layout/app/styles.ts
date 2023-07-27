@@ -1,14 +1,15 @@
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+export const AppRoot = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
 export const AppMain = styled("main")`
+  display: flex;
   position: relative;
-
-  .sticky-header & {
-    padding-top: var(--app-header-height);
-  }
-
-  // layout for slate editor
-  body.editor & {
-    padding-right: var(--toolbar-width);
-  }
+  flex: 1;
+  overflow: auto;
 `;

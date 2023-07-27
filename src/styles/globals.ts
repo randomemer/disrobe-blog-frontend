@@ -4,7 +4,6 @@ import { css } from "@emotion/react";
 const globalStyles = css`
   :root {
     --app-header-height: 7.2rem;
-    --toolbar-width: 30rem;
 
     ${theme.breakpoints.down("md")} {
       --app-header-height: 6.4rem;
@@ -21,8 +20,11 @@ const globalStyles = css`
     }
   }
 
-  body {
+  html,
+  body,
+  #__next {
     width: 100%;
+    height: 100%;
   }
 
   *::placeholder {

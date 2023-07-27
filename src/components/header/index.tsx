@@ -31,7 +31,7 @@ const links = [
 ];
 
 export type AppHeaderProps = PropsWithoutRef<{
-  dynamicPosition?: boolean;
+  position: "dynamic" | "relative";
 }>;
 
 export default function AppHeader(props: AppHeaderProps) {
@@ -43,34 +43,41 @@ export default function AppHeader(props: AppHeaderProps) {
   const onNavClose = () => setNavOpen(false);
 
   useEffect(() => {
-    if (props.dynamicPosition) {
-      const header = headerRef.current;
-      const observerOptions = {
-        threshold: 0,
-        rootMargin: `${-header!.offsetHeight}px`,
-      };
+    switch (props.position) {
+      case "dynamic": {
+        const header = headerRef.current;
+        const observerOptions = {
+          threshold: 0,
+          rootMargin: `${-header!.offsetHeight}px`,
+        };
 
-      const observer = new IntersectionObserver((entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          document.body.classList.remove("sticky-header");
-        } else {
-          document.body.classList.add("sticky-header");
-        }
-      }, observerOptions);
+        const observer = new IntersectionObserver((entries) => {
+          const [entry] = entries;
+          if (entry.isIntersecting) {
+            document.body.classList.remove("sticky-header");
+          } else {
+            document.body.classList.add("sticky-header");
+          }
+        }, observerOptions);
 
-      observer.observe(scrollContextRef!.current as Element);
+        observer.observe(scrollContextRef!.current as Element);
 
-      return () => {
-        observer.disconnect();
-      };
-    } else {
-      document.body.classList.add("sticky-header");
-      return () => {
-        document.body.classList.remove("sticky-header");
-      };
+        return () => {
+          observer.disconnect();
+        };
+      }
+
+      case "relative": {
+        document.body.classList.add("relative-header");
+        return () => {
+          document.body.classList.remove("relative-header");
+        };
+      }
+
+      default:
+        break;
     }
-  }, [props.dynamicPosition]);
+  }, [props.position]);
 
   return (
     <>

@@ -14,7 +14,7 @@ import {
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
-import { ContentWrapper, StoryTitle } from "./styles";
+import { ContentRoot, ContentWrapper, StoryTitle } from "./styles";
 
 import type { RouteProps } from "@/types";
 import { useAutoSave } from "@/hooks/use-auto-save";
@@ -78,16 +78,18 @@ export default function StoryEditor(props: StoryEditorProps) {
 
   return (
     <Slate editor={editor} initialValue={content} onChange={onEditorChange}>
-      <ContentWrapper>
-        <StoryTitle
-          variant="standard"
-          placeholder="Title"
-          value={title}
-          onChange={onTitleChange}
-          InputProps={{ disableUnderline: true, inputRef: titleRef }}
-        />
-        <StoryEditable />
-      </ContentWrapper>
+      <ContentRoot>
+        <ContentWrapper>
+          <StoryTitle
+            variant="standard"
+            placeholder="Title"
+            value={title}
+            onChange={onTitleChange}
+            InputProps={{ disableUnderline: true, inputRef: titleRef }}
+          />
+          <StoryEditable />
+        </ContentWrapper>
+      </ContentRoot>
       <ArticleToolbar />
     </Slate>
   );
@@ -104,23 +106,25 @@ export function StoryEditorSkeleton() {
 
   return (
     <>
-      <ContentWrapper>
-        <Typography variant="h2" marginBottom="2.4rem">
-          <Skeleton variant="text" />
-        </Typography>
+      <ContentRoot>
+        <ContentWrapper>
+          <Typography variant="h2" marginBottom="2.4rem">
+            <Skeleton variant="text" />
+          </Typography>
 
-        <Skeleton
-          variant="rectangular"
-          height="30rem"
-          sx={{ marginBottom: "4.8rem" }}
-        />
+          <Skeleton
+            variant="rectangular"
+            height="30rem"
+            sx={{ marginBottom: "4.8rem" }}
+          />
 
-        {Array(4)
-          .fill(null)
-          .map((val, i) => (
-            <Skeleton key={i} variant="text" sx={{ lineHeight: 1.6 }} />
-          ))}
-      </ContentWrapper>
+          {Array(4)
+            .fill(null)
+            .map((val, i) => (
+              <Skeleton key={i} variant="text" sx={{ lineHeight: 1.6 }} />
+            ))}
+        </ContentWrapper>
+      </ContentRoot>
       <ToolbarSkeleton />
     </>
   );

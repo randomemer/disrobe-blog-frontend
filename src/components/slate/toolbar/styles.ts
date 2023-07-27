@@ -18,11 +18,7 @@ export const Aside = styled("aside")`
   justify-content: space-between;
   border-left: 2px rgba(255, 255, 255, 0.15) solid;
 
-  position: fixed;
-  top: var(--app-header-height);
-  bottom: 0;
-  right: 0;
-  width: var(--toolbar-width);
+  width: 30rem;
 
   ${elevation(0.05)}
 `;

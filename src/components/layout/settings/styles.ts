@@ -1,19 +1,24 @@
-import { List, ListItemButton } from "@mui/material";
+import { Box, List, ListItemButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { listItemIconClasses } from "@mui/material/ListItemIcon";
 import { listItemTextClasses } from "@mui/material/ListItemText";
 import Link from "next/link";
 
+export const SettingsRoot = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const SettingsContainer = styled(Box)`
+  flex: 1;
+  overflow: auto;
+`;
+
 export const SettingsMain = styled("main")`
-  position: relative;
+  display: flex;
   max-width: 120rem;
   margin: 4.8rem auto;
-
-  display: flex;
-
-  .sticky-header & {
-    padding-top: var(--app-header-height);
-  }
 `;
 
 export const SettingsTabs = styled(List)`

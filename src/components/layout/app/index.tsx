@@ -1,6 +1,6 @@
 import Head from "next/head";
 import AppHeader from "@/components/header";
-import { AppMain } from "./styles";
+import { AppMain, AppRoot } from "./styles";
 import { PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -16,8 +16,10 @@ export default function AppLayout(props: AppLayoutProps) {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <AppHeader />
-      <AppMain id="main">{props.children}</AppMain>
+      <AppRoot>
+        <AppHeader position="relative" />
+        <AppMain id="main">{props.children}</AppMain>
+      </AppRoot>
     </>
   );
 }
