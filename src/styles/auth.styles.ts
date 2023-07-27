@@ -2,6 +2,8 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Card, Tab, Tabs, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
+import { svgIconClasses } from "@mui/material/SvgIcon";
+import { inputClasses } from "@mui/material/Input";
 
 export const AuthPageContainer = styled(Box)`
   height: 100%;
@@ -62,16 +64,16 @@ export const FormFields = styled("div")`
 `;
 
 export const FormTextField = styled(TextField)`
-  .MuiInput-root {
+  .${inputClasses.root} {
     font-size: 1.6rem;
   }
 
-  .MuiSvgIcon-root {
+  .${svgIconClasses.root} {
     font-size: 2.4rem;
   }
 
   .Mui-focused {
-    .MuiSvgIcon-root {
+    .${svgIconClasses.root} {
       color: ${({ theme }) => theme.palette.primary.main};
     }
   }

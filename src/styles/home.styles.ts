@@ -3,6 +3,8 @@ import { Box, Card, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { PlainLink } from "./shared";
+import { svgIconClasses } from "@mui/material/SvgIcon";
+import { inputClasses } from "@mui/material/Input";
 
 export const SplashSection = styled("section")`
   height: 100vh;
@@ -205,16 +207,16 @@ export const Sidebar = styled("div")`
 `;
 
 export const EmailTextField = styled(TextField)`
-  .MuiInput-root {
+  .${inputClasses.root} {
     font-size: 1.6rem;
   }
 
   .Mui-focused {
-    .MuiSvgIcon-root {
+    .${svgIconClasses.root} {
       color: ${({ theme }) => theme.palette.primary.main};
     }
   }
-  .MuiSvgIcon-root {
+  .${svgIconClasses.root} {
     font-size: 2rem;
   }
 `;

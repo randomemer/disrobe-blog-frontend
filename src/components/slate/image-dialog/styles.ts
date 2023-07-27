@@ -8,6 +8,8 @@ import {
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { svgIconClasses } from "@mui/material/SvgIcon";
+import { inputClasses } from "@mui/material/Input";
 
 export const ImageModalTitle = styled(DialogTitle)`
   font-size: 2.4rem;
@@ -25,16 +27,16 @@ export const ImageModalContent = styled(DialogContent)`
 export const ImageModalActions = styled(DialogActions)``;
 
 export const ImageURLField = styled(TextField)`
-  .MuiInput-root {
+  .${inputClasses.root} {
     font-size: 1.6rem;
   }
 
-  .MuiSvgIcon-root {
+  .${svgIconClasses.root} {
     font-size: 2.4rem;
   }
 
   .Mui-focused {
-    .MuiSvgIcon-root {
+    .${svgIconClasses.root} {
       color: ${({ theme }) => theme.palette.primary.main};
     }
   }

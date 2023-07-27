@@ -1,5 +1,6 @@
 import { Box, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { inputBaseClasses } from "@mui/material/InputBase";
 
 export const ContentRoot = styled(Box)`
   flex: 1;
@@ -29,7 +30,7 @@ export const ContentWrapper = styled("div")`
 export const StoryTitle = styled(TextField)`
   margin-bottom: 2.4rem;
 
-  .MuiInputBase-root {
+  .${inputBaseClasses.root} {
     font-weight: 700;
     font-size: 4.8rem;
   }
