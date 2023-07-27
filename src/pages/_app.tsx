@@ -16,6 +16,7 @@ import type { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
 
 const clientEmotionCache = createEmotionCache();
+const globalStylesEl = <GlobalStyles styles={globalStyles} />;
 
 export interface DisrobeAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -27,7 +28,7 @@ export default function App(props: DisrobeAppProps) {
 
   return (
     <>
-      <GlobalStyles styles={globalStyles} />
+      {globalStylesEl}
 
       <Head>
         <meta charSet="utf-8" />

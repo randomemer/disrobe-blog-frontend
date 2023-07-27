@@ -11,6 +11,7 @@ import {
 } from "./styles";
 
 import type { RenderLeafProps, RenderElementProps } from "slate-react";
+import { Typography } from "@mui/material";
 
 export function SlateElement(props: RenderElementProps) {
   const { attributes, element, children } = props;
@@ -37,12 +38,14 @@ export function SlateElement(props: RenderElementProps) {
     */
 
     case "heading":
-      const Tag: keyof JSX.IntrinsicElements = `h${element.level}`;
-
       return (
-        <Tag className={classes} {...attributes}>
+        <Typography
+          variant={`h${element.level}`}
+          className={classes}
+          {...attributes}
+        >
           {children}
-        </Tag>
+        </Typography>
       );
 
     case "paragraph":

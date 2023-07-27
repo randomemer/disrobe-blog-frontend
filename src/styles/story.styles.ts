@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const ArticleGrid = styled("div")`
@@ -30,24 +31,20 @@ export const StoryHeadingBox = styled("div")`
   margin-bottom: 5.6rem;
 `;
 
-export const StoryHeading = styled("h1")`
-  font-size: 4.2rem;
-  margin-bottom: 1.4rem;
+export const StoryHeading = styled(Typography)`
+  margin-bottom: 1.6rem;
   line-height: 1.25;
-
-  ${({ theme }) => theme.breakpoints.down("lg")} {
-    font-size: 3.6rem;
-  }
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    font-size: 3rem;
-  }
 `;
 
 export const StoryByLine = styled("div")`
   display: flex;
   justify-content: space-between;
   margin-bottom: 2.4rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    gap: 1.8rem;
+  }
 `;
 
 export const StoryContent = styled("div")`
@@ -58,102 +55,68 @@ export const StoryContent = styled("div")`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     gap: 3.6rem;
   }
+`;
 
-  > * {
-    font-size: 2rem;
+export const BaseText = styled(Typography)`
+  font-size: 2rem;
 
-    ${({ theme }) => theme.breakpoints.down("lg")} {
-      font-size: 1.8rem;
-    }
-
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-      font-size: 1.6rem;
-    }
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    font-size: 1.8rem;
   }
+`;
 
-  /* in-line elements */
+export const Paragraph = styled(BaseText)`
+  white-space: pre-line;
+  line-height: 1.6;
+`;
 
+export const Code = styled(BaseText)`
   /* all code elements */
-  code {
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: inherit;
-  }
+  font-size: inherit;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* Code in text */
-  p > code,
-  li > code {
-    background: #333;
-    word-wrap: break-word;
-    box-decoration-break: clone;
-    padding: 0.1rem 0.3rem 0.2rem;
-    border-radius: 0.2rem;
+  background: #333;
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: 0.1rem 0.3rem 0.2rem;
+  border-radius: 0.2rem;
+`;
+
+export const Figure = styled("figure")`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  img {
+    max-width: 100%;
   }
 
-  a {
-    &:link,
-    &:visited {
-      color: ${({ theme }) => theme.palette.primary.main};
-    }
-
-    &:active,
-    &:hover {
-      text-decoration: underline;
-    }
+  figcaption {
+    align-self: center;
+    font-size: 1.6rem;
+    color: rgb(255, 255, 255, 0.75);
   }
+`;
 
-  /* block elements */
+export const BlockQuote = styled(BaseText)`
+  padding: 1.8rem;
+  line-height: 1.4;
+  background-color: #333;
+  font-style: italic;
+`;
 
-  h2 {
-    /* font-size: 3.9rem; */
-    font-weight: 700;
+export const ListItem = styled(BaseText)`
+  ul > & {
+    list-style-type: disc;
   }
+`;
 
-  h3 {
-    /* font-size: 3rem; */
-    font-weight: 600;
-  }
+export const List = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
 
-  p {
-    white-space: pre-line;
-    line-height: 1.6;
-  }
-
-  figure {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-
-    img {
-      max-width: 100%;
-    }
-
-    figcaption {
-      align-self: center;
-      font-size: 1.6rem;
-      color: rgb(255, 255, 255, 0.75);
-    }
-  }
-
-  blockquote {
-    padding: 1.8rem;
-    line-height: 1.4;
-    background-color: #333;
-    font-style: italic;
-  }
-
-  ul,
-  ol {
-    display: flex;
-    flex-direction: column;
-    gap: 2.4rem;
-
-    margin-left: 0;
-    padding-left: 3.6rem;
-  }
-
-  ul {
-    > li {
-      list-style-type: disc;
-    }
-  }
+  margin-left: 0;
+  padding-left: 3.6rem;
 `;

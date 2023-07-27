@@ -138,7 +138,7 @@ export default function SignupForm(props: SignupFormProps) {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  edge="end"
+                  size="small"
                   onClick={() => setPassHidden((val) => !val)}
                 >
                   {isPassHidden ? (

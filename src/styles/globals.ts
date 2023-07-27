@@ -1,6 +1,66 @@
 import { theme } from "@/modules/mui-config";
 import { css } from "@emotion/react";
 
+theme.typography.h1 = {
+  fontSize: "4.8rem",
+  [theme.breakpoints.down("lg")]: {
+    fontSize: "4.2rem",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "3.2rem",
+  },
+};
+
+theme.typography.h2 = {
+  fontSize: "4.2rem",
+  [theme.breakpoints.down("lg")]: {
+    fontSize: "3.8rem",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "3rem",
+  },
+};
+
+theme.typography.h3 = {
+  fontSize: "3.6rem",
+  [theme.breakpoints.down("lg")]: {
+    fontSize: "3.2rem",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "2.8rem",
+  },
+};
+
+theme.typography.h4 = {
+  fontSize: "3rem",
+  [theme.breakpoints.down("lg")]: {
+    fontSize: "2.7rem",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "2.4rem",
+  },
+};
+
+theme.typography.h5 = {
+  fontSize: "2.4rem",
+  [theme.breakpoints.down("lg")]: {
+    fontSize: "2.3rem",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "2.2rem",
+  },
+};
+
+theme.typography.h6 = {
+  fontSize: "2rem",
+  [theme.breakpoints.down("lg")]: {
+    fontSize: "1.95rem",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1.9rem",
+  },
+};
+
 const globalStyles = css`
   :root {
     --app-header-height: 7.2rem;

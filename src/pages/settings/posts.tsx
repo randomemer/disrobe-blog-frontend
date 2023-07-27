@@ -116,8 +116,8 @@ export function SettingsPostsSkeleton() {
                     .map((_, i) => (
                       <Skeleton
                         key={i}
-                        variant="text"
                         sx={{ fontSize: "1.7rem", lineHeight: "1.25" }}
+                        variant="text"
                       />
                     ))}
                 </PostContent>

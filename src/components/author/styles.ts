@@ -18,11 +18,11 @@ export const AuthorImageWrapper = styled("div")`
   width: var(--diameter);
 
   ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
-    --diameter: 4.2rem;
+    --diameter: 4.5rem;
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    --diameter: 3.6rem;
+    --diameter: 4.2rem;
   }
 `;
 
@@ -40,12 +40,8 @@ export const AuthorDetails = styled("div")`
 export const AuthorName = styled("span")`
   font-size: 1.8rem;
 
-  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
-    font-size: 1.6rem;
-  }
-
   ${({ theme: { breakpoints } }) => breakpoints.down("md")} {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 `;
 
@@ -55,11 +51,7 @@ export const StoryInfo = styled("p")`
   gap: 0.8rem;
   font-size: 1.6rem;
 
-  ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
-    font-size: 1.4rem;
-  }
-
   ${({ theme: { breakpoints } }) => breakpoints.down("md")} {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 `;

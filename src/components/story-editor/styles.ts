@@ -14,20 +14,27 @@ export const ContentWrapper = styled("div")`
   font-size: 1.8rem;
   line-height: normal;
 
+  .article-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 4.8rem;
+  }
+
   .editor-block {
     padding: 0.8rem 1.6rem;
     border-left: solid 3px #aaa;
-    margin-bottom: 4.8rem;
 
     /* when the cursor is in that block */
     &:focus,
     &--selected {
-      border-color: general.$primary-color;
+      border-color: ${({ theme }) => theme.palette.primary.main};
     }
   }
 `;
 
 export const StoryTitle = styled(TextField)`
+  padding: 0rem 1.6rem;
+  border-left: solid 3px #aaa;
   margin-bottom: 2.4rem;
 
   .${inputBaseClasses.root} {

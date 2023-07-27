@@ -2,7 +2,16 @@ import { Element, Text } from "slate";
 
 import type { Descendant } from "slate";
 import ImageWithFallback from "@/components/image";
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
+import NextLink from "next/link";
+import {
+  BlockQuote,
+  Code,
+  Figure,
+  List,
+  ListItem,
+  Paragraph,
+} from "@/styles/story.styles";
 
 export function serializeToHTML(content: Descendant[]) {
   return (
@@ -29,7 +38,8 @@ function TextNodeToHTML({ node }: { node: Text }) {
     leaf = <u>{leaf}</u>;
   }
   if (node.code) {
-    leaf = <code>{leaf}</code>;
+    // @ts-ignore
+    leaf = <Code component="code">{leaf}</Code>;
   }
   return leaf;
 }
@@ -47,34 +57,42 @@ function HTMLElement({ node }: { node: Element | Text }): JSX.Element {
         return <Typography variant={`h${node.level}`}>{children}</Typography>;
 
       case "paragraph":
-        return <p>{children}</p>;
+        // @ts-ignore
+        return <Paragraph component="p">{children}</Paragraph>;
 
       case "image":
         return (
-          <figure>
+          <Figure>
             <ImageWithFallback ImageProps={{ src: node.url, alt: node.alt }} />
             <figcaption>{node.caption}</figcaption>
-          </figure>
+          </Figure>
         );
 
       case "blockquote":
-        return <blockquote>{children}</blockquote>;
+        return <BlockQuote>{children}</BlockQuote>;
 
       case "link":
         return (
-          <a href={node.url} target="_blank" rel="noreferrer">
+          <Link
+            underline="hover"
+            href={node.url}
+            target="_blank"
+            rel="noreferrer"
+            component={NextLink}
+          >
             {children}
-          </a>
+          </Link>
         );
 
       case "numbered-list":
-        return <ol>{children}</ol>;
+        return <List component="ol">{children}</List>;
 
       case "bulleted-list":
-        return <ul>{children}</ul>;
+        return <List component="ul">{children}</List>;
 
       case "list-item":
-        return <li>{children}</li>;
+        // @ts-ignore
+        return <ListItem component="li">{children}</ListItem>;
 
       default:
         return <>{children}</>;
