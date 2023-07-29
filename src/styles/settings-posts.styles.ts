@@ -1,4 +1,4 @@
-import { Box, Card, Skeleton, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const PostsList = styled(Box)`
@@ -16,12 +16,15 @@ export const PostItem = styled(Card)`
 
 export const PostContent = styled(Box)`
   flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 `;
 
 export const PostItemTitle = styled(Typography)`
   font-size: 2.4rem;
   font-weight: 600;
-  margin-bottom: 1.2rem;
 `;
 
 export const PostItemGist = styled(Typography)`

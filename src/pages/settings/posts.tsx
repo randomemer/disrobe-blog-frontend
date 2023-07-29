@@ -1,6 +1,7 @@
 import withAuth from "@/components/auth/hoc";
 import SettingsLayout from "@/components/layout/settings";
-import { getStoryGist } from "@/modules/utils";
+import useAuth from "@/hooks/use-auth";
+import { getContentString } from "@/modules/utils";
 import {
   PostContent,
   PostItem,
@@ -10,24 +11,30 @@ import {
   PostsList,
 } from "@/styles/settings-posts.styles";
 import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
+import { PlainLink } from "@/styles/shared";
 import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON } from "@/types/backend";
 import { SettingsOutlined } from "@mui/icons-material";
 import { IconButton, Skeleton } from "@mui/material";
 import axios from "axios";
+import $clamp from "clamp-js";
 import _ from "lodash";
 import { SquareEditOutline } from "mdi-material-ui";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export function SettingsPostsRoute() {
   const [stories, setStories] = useState<StoryJoinedJSON[] | null>(null);
   const [status, setStatus] = useState(AsyncStatus.PENDING);
+  const [auth] = useAuth();
 
   const fetchStories = async () => {
     setStatus(AsyncStatus.PENDING);
     try {
-      const filter = { eager: { draft: {} }, limit: 50 };
+      const filter = {
+        eager: { draft: {}, $where: { author_id: auth.uid } },
+        limit: 50,
+      };
       const query = `filter=${encodeURIComponent(JSON.stringify(filter))}`;
 
       const resp = await axios.get<StoryJoinedJSON[]>(`/api/story?${query}`);
@@ -56,29 +63,7 @@ export function SettingsPostsRoute() {
             <SectionHeading>Posts</SectionHeading>
             <PostsList>
               {stories?.map((item) => (
-                <PostItem key={item.id}>
-                  <PostContent>
-                    <PostItemTitle>{item.draft.title}</PostItemTitle>
-                    <PostItemGist>
-                      {getStoryGist(item.draft.content, 127)}
-                    </PostItemGist>
-                  </PostContent>
-                  <PostItemActions>
-                    <IconButton
-                      color="primary"
-                      component={Link}
-                      href={`/story/${item.id}/edit`}
-                    >
-                      <SquareEditOutline />
-                    </IconButton>
-                    <IconButton
-                      component={Link}
-                      href={`/story/${item.id}/settings`}
-                    >
-                      <SettingsOutlined />
-                    </IconButton>
-                  </PostItemActions>
-                </PostItem>
+                <PostItemCard key={item.id} post={item} />
               ))}
             </PostsList>
           </SettingsSection>
@@ -92,7 +77,62 @@ export function SettingsPostsRoute() {
   }
 }
 
-export function SettingsPostsSkeleton() {
+interface PostItemCardProps {
+  post: StoryJoinedJSON;
+}
+
+function PostItemCard(props: PostItemCardProps) {
+  const { post } = props;
+  const gistRef = useRef<HTMLDivElement>(null);
+
+  const href = `/story/${post.id}`;
+
+  const listener = () => {
+    if (gistRef.current) {
+      $clamp(gistRef.current, { clamp: "auto" });
+    }
+  };
+
+  useEffect(() => {
+    listener();
+    visualViewport?.addEventListener("resize", listener);
+
+    return () => {
+      visualViewport?.removeEventListener("resize", listener);
+    };
+  }, []);
+
+  return (
+    <PostItem key={post.id}>
+      <PostContent>
+        <PlainLink href={href}>
+          <PostItemTitle>{post.draft.title}</PostItemTitle>
+        </PlainLink>
+        {/* <PlainLink href={href} style={{ flex: 1, overflow: "hidden" }}> */}
+        <PostItemGist ref={gistRef}>
+          {getContentString(post.draft.content)}
+        </PostItemGist>
+        {/* </PlainLink> */}
+      </PostContent>
+      <PostItemActions>
+        <IconButton
+          color="primary"
+          component={Link}
+          href={`/story/${post.id}/edit`}
+        >
+          <SquareEditOutline />
+        </IconButton>
+        <IconButton component={Link} href={`/story/${post.id}/settings`}>
+          <SettingsOutlined />
+        </IconButton>
+      </PostItemActions>
+    </PostItem>
+  );
+}
+
+function SettingsPostsSkeleton() {
+  const titleWidth = useMemo(() => _.random(30, 70), []);
+
   return (
     <SettingsLayout>
       <SettingsSection>
@@ -107,19 +147,20 @@ export function SettingsPostsSkeleton() {
                     variant="text"
                     sx={{
                       fontSize: "2.4rem",
-                      marginBottom: "1.2rem",
-                      width: `${_.random(30, 70)}%`,
+                      width: `${titleWidth}%`,
                     }}
                   />
-                  {Array(3)
-                    .fill(null)
-                    .map((_, i) => (
-                      <Skeleton
-                        key={i}
-                        sx={{ fontSize: "1.7rem", lineHeight: "1.25" }}
-                        variant="text"
-                      />
-                    ))}
+                  <div>
+                    {Array(3)
+                      .fill(null)
+                      .map((_, i) => (
+                        <Skeleton
+                          key={i}
+                          sx={{ fontSize: "1.7rem", lineHeight: "1.25" }}
+                          variant="text"
+                        />
+                      ))}
+                  </div>
                 </PostContent>
               </PostItem>
             ))}

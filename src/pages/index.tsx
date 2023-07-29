@@ -15,14 +15,13 @@ import {
   StoryCardItem,
   StoryCardRight,
   StoryCardTitle,
-  StoryLink,
   StoryThumbnail,
   StoryThumbnailLink,
 } from "@/styles/home.styles";
-import { PlainLink } from "@/styles/shared";
 import { StoryJoinedJSON } from "@/types/backend";
 import { GetServerSidePropsContext } from "next";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { PlainLink } from "@/styles/shared";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -142,8 +141,12 @@ function StoryCard(props: StoryCardProps) {
           <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
         </StoryThumbnailLink>
         <StoryCardRight>
-          <StoryCardTitle>{title}</StoryCardTitle>
+          <PlainLink href={path}>
+            <StoryCardTitle>{title}</StoryCardTitle>
+          </PlainLink>
+          {/* <PlainLink href={path} style={{ overflow: "hidden" }}> */}
           <Gist ref={gistRef}>{getContentString(content)}</Gist>
+          {/* </PlainLink> */}
         </StoryCardRight>
       </StoryCardContent>
     </StoryCardItem>

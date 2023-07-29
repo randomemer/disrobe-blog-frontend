@@ -12,10 +12,4 @@ export const ShareButton = styled(IconButton)`
   .${svgIconClasses.root} {
     font-size: 2.4rem;
   }
-
-  ${({ theme }) => theme.breakpoints.down("md")} {
-    .${svgIconClasses.root} {
-      font-size: 2rem;
-    }
-  }
 `;

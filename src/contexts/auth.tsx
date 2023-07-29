@@ -27,7 +27,10 @@ export const AuthContext = createContext<AuthProviderValue>({
 
 function getAuthUser() {
   return new Promise<User | null>((resolve) => {
-    getAuth().onAuthStateChanged((user) => resolve(user));
+    const unsubsribe = getAuth().onAuthStateChanged((user) => {
+      unsubsribe();
+      resolve(user);
+    });
   });
 }
 
@@ -78,8 +81,13 @@ export default function AuthTestProvider(props: PropsWithChildren) {
 
   useEffect(() => {
     fetchUser();
-    if (auth.status.user === AsyncStatus.IDLE) {
-    }
+
+    return getAuth().onAuthStateChanged((user) => {
+      setAuth((auth) => {
+        auth.uid = user?.uid ?? null;
+      });
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -187,6 +187,7 @@ export const Gist = styled("p")`
   font-size: 1.7rem;
   font-weight: 400;
   line-height: 1.4;
+  overflow: hidden;
   color: rgba(255, 255, 255, 0.75);
 
   ${({ theme: { breakpoints } }) => breakpoints.down("lg")} {
@@ -195,7 +196,6 @@ export const Gist = styled("p")`
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     display: none !important;
-    /* visibility: hidden; */
   }
 `;
 

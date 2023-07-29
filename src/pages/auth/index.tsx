@@ -94,8 +94,7 @@ export default function AuthRoute() {
       //   method: "email",
       // });
 
-      console.log("Redirecting...", decodeURIComponent(redirect));
-      router.push(decodeURIComponent(redirect));
+      router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
         snackbar.showMessage(error.message, "OK", () => {}, {
