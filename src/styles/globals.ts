@@ -120,6 +120,33 @@ const globalStyles = css`
     overflow: hidden;
     font-size: 0;
   }
+
+  #nprogress .bar {
+    background: ${theme.palette.primary.main} !important;
+
+    position: fixed;
+    z-index: 1031;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2px;
+  }
+
+  /* Fancy blur effect */
+  #nprogress .peg {
+    display: block;
+    position: absolute;
+    right: 0px;
+    width: 100px;
+    height: 100%;
+    box-shadow: 0 0 10px ${theme.palette.primary.main},
+      0 0 5px ${theme.palette.primary.main} !important;
+  }
+
+  #nprogress .spinner-icon {
+    border-color: ${theme.palette.primary.main} !important;
+  }
 `;
 
 export default globalStyles;

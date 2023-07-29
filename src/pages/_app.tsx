@@ -10,6 +10,7 @@ import { CssBaseline, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 import ModalProvider from "mui-modal-provider";
+import NextNProgress from "nextjs-progressbar";
 import Head from "next/head";
 
 import type { RouteProps } from "@/types";
@@ -51,10 +52,16 @@ export default function App(props: DisrobeAppProps) {
                 <SnackbarProvider
                   SnackbarComponent={(props) => <AppSnackbar {...props} />}
                 >
+                  <NextNProgress
+                    color={theme.palette.primary.main}
+                    options={{ showSpinner: false }}
+                  />
                   <Component {...pageProps} />
                 </SnackbarProvider>
               </ModalProvider>
             </EditorProvider>
+
+            {/* <NProgre */}
           </AuthProvider>
         </ThemeProvider>
       </CacheProvider>

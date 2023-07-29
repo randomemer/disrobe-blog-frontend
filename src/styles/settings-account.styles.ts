@@ -7,6 +7,10 @@ export const ProfileContent = styled("div")`
   display: flex;
   align-items: flex-start;
   gap: 7.2rem;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    gap: 6.4rem;
+  }
 `;
 
 export const ProfileForm = styled("div")`

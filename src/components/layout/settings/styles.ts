@@ -13,6 +13,7 @@ export const SettingsRoot = styled(Box)`
 export const SettingsContainer = styled(Box)`
   flex: 1;
   overflow: auto;
+  padding: 0 6.4rem;
 `;
 
 export const SettingsMain = styled("main")`
@@ -23,6 +24,10 @@ export const SettingsMain = styled("main")`
 
 export const SettingsTabs = styled(List)`
   width: 25.6rem;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    width: 20rem;
+  }
 `;
 
 export const SettingsNavTab = styled(ListItemButton<typeof Link>)`
@@ -45,6 +50,10 @@ export const SettingsNavTab = styled(ListItemButton<typeof Link>)`
 `;
 
 export const TabContent = styled("div")`
-  padding: 0 9.6rem;
+  padding: 0 7.2rem;
   flex: 1;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    padding: 0 5.6rem;
+  }
 `;
