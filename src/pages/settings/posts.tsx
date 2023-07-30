@@ -108,7 +108,9 @@ function PostItemCard(props: PostItemCardProps) {
     <PostItem key={post.id}>
       <PostContent>
         <PlainLink href={href}>
-          <PostItemTitle>{post.draft.title}</PostItemTitle>
+          <PostItemTitle variant="h5" component="h2">
+            {post.draft.title}
+          </PostItemTitle>
         </PlainLink>
         {/* <PlainLink href={href} style={{ flex: 1, overflow: "hidden" }}> */}
         <PostItemGist ref={gistRef}>
@@ -138,7 +140,9 @@ function SettingsPostsSkeleton() {
   return (
     <SettingsLayout>
       <SettingsSection>
-        <SectionHeading>Posts</SectionHeading>
+        <SectionHeading variant="h4" component="h1">
+          Posts
+        </SectionHeading>
         <PostsList>
           {Array(3)
             .fill(null)

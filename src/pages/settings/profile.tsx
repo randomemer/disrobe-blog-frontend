@@ -8,7 +8,7 @@ import {
   ProfileForm,
   ProfileFormButton,
   UserAvatar,
-} from "@/styles/settings-account.styles";
+} from "@/styles/settings-profile.styles";
 import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
 import { InputField } from "@/styles/shared";
 import { AsyncStatus, FormErrors } from "@/types";
@@ -275,7 +275,9 @@ function SettingsProfileSkeleton() {
   return (
     <SettingsLayout>
       <SettingsSection>
-        <SectionHeading>Profile</SectionHeading>
+        <SectionHeading variant="h4" component="h1">
+          Profile
+        </SectionHeading>
         <ProfileContent>
           <Skeleton variant="circular" width="15rem" height="15rem" />
           <ProfileForm>

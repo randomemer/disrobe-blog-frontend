@@ -12,6 +12,10 @@ export const PostItem = styled(Card)`
   height: 13.2rem;
   padding: 1.8rem;
   gap: 3rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    gap: 1.8rem;
+  }
 `;
 
 export const PostContent = styled(Box)`
@@ -23,9 +27,8 @@ export const PostContent = styled(Box)`
 `;
 
 export const PostItemTitle = styled(Typography)`
-  font-size: 2.4rem;
   font-weight: 600;
-`;
+` as typeof Typography;
 
 export const PostItemGist = styled(Typography)`
   font-size: 1.7rem;
