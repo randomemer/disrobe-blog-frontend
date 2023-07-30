@@ -189,7 +189,9 @@ function SettingsProfileRoute() {
       return (
         <SettingsLayout>
           <SettingsSection>
-            <SectionHeading>Profile</SectionHeading>
+            <SectionHeading variant="h4" component="h1">
+              Profile
+            </SectionHeading>
             <ProfileContent>
               <Badge
                 overlap="circular"

@@ -38,7 +38,6 @@ function TextNodeToHTML({ node }: { node: Text }) {
     leaf = <u>{leaf}</u>;
   }
   if (node.code) {
-    // @ts-ignore
     leaf = <Code component="code">{leaf}</Code>;
   }
   return leaf;
@@ -57,7 +56,6 @@ function HTMLElement({ node }: { node: Element | Text }): JSX.Element {
         return <Typography variant={`h${node.level}`}>{children}</Typography>;
 
       case "paragraph":
-        // @ts-ignore
         return <Paragraph component="p">{children}</Paragraph>;
 
       case "image":
@@ -91,7 +89,6 @@ function HTMLElement({ node }: { node: Element | Text }): JSX.Element {
         return <List component="ul">{children}</List>;
 
       case "list-item":
-        // @ts-ignore
         return <ListItem component="li">{children}</ListItem>;
 
       default:

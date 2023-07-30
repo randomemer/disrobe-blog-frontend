@@ -54,6 +54,7 @@ export default function App(props: DisrobeAppProps) {
                 >
                   <NextNProgress
                     color={theme.palette.primary.main}
+                    height={1.5}
                     options={{ showSpinner: false }}
                   />
                   <Component {...pageProps} />

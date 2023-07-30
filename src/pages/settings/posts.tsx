@@ -60,7 +60,9 @@ export function SettingsPostsRoute() {
       return (
         <SettingsLayout>
           <SettingsSection>
-            <SectionHeading>Posts</SectionHeading>
+            <SectionHeading variant="h4" component="h1">
+              Posts
+            </SectionHeading>
             <PostsList>
               {stories?.map((item) => (
                 <PostItemCard key={item.id} post={item} />

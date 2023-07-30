@@ -68,7 +68,7 @@ export const BaseText = styled(Typography)`
 export const Paragraph = styled(BaseText)`
   white-space: pre-line;
   line-height: 1.6;
-`;
+` as typeof Typography;
 
 export const Code = styled(BaseText)`
   /* all code elements */
@@ -81,7 +81,7 @@ export const Code = styled(BaseText)`
   box-decoration-break: clone;
   padding: 0.1rem 0.3rem 0.2rem;
   border-radius: 0.2rem;
-`;
+` as typeof Typography;
 
 export const Figure = styled("figure")`
   display: flex;
@@ -110,7 +110,7 @@ export const ListItem = styled(BaseText)`
   ul > & {
     list-style-type: disc;
   }
-`;
+` as typeof Typography;
 
 export const List = styled(Box)`
   display: flex;
