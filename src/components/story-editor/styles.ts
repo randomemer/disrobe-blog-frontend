@@ -1,6 +1,7 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Fab, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { inputBaseClasses } from "@mui/material/InputBase";
+import { Editable } from "slate-react";
 
 export const ContentRoot = styled(Box)`
   flex: 1;
@@ -14,12 +15,6 @@ export const ContentWrapper = styled("div")`
   font-size: 1.8rem;
   line-height: normal;
 
-  .article-editor {
-    display: flex;
-    flex-direction: column;
-    gap: 4.8rem;
-  }
-
   .editor-block {
     padding: 0.8rem 1.6rem;
     border-left: solid 3px #aaa;
@@ -30,6 +25,20 @@ export const ContentWrapper = styled("div")`
       border-color: ${({ theme }) => theme.palette.primary.main};
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 4.8rem 3rem;
+  }
+`;
+
+export const StyledEditable = styled(Editable)`
+  display: flex;
+  flex-direction: column;
+  gap: 4.8rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    gap: 3.6rem;
+  }
 `;
 
 export const StoryTitle = styled(TextField)`
@@ -37,8 +46,26 @@ export const StoryTitle = styled(TextField)`
   border-left: solid 3px #aaa;
   margin-bottom: 2.4rem;
 
+  &.focused {
+    border-color: ${({ theme }) => theme.palette.primary.main};
+  }
+
   .${inputBaseClasses.root} {
     font-weight: 700;
     font-size: 4.8rem;
+
+    ${({ theme }) => theme.breakpoints.down("lg")} {
+      font-size: 4.2rem;
+    }
+
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      font-size: 3.2rem;+
+    }
   }
+`;
+
+export const ToolbarFab = styled(Fab)`
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
 `;

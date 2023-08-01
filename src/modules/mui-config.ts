@@ -1,7 +1,5 @@
 import { createTheme } from "@mui/material/styles";
 import { DM_Sans } from "next/font/google";
-import type { TypographyOptions } from "@mui/material/styles/createTypography";
-import createTypography from "@mui/material/styles/createTypography";
 
 const DMSans = DM_Sans({
   subsets: ["latin"],

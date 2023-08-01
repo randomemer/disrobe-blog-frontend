@@ -2,7 +2,6 @@ import Head from "next/head";
 import AppHeader from "@/components/header";
 import { AppMain, AppRoot } from "./styles";
 import { PropsWithChildren, useEffect } from "react";
-import { useRouter } from "next/router";
 
 export type AppLayoutProps = PropsWithChildren<{}>;
 

@@ -21,8 +21,8 @@ export const EImage = styled(ImageWithFallback)`
   position: relative;
 
   &.broken {
-    height: 48rem;
     width: 100%;
+    aspect-ratio: 16 / 9;
   }
 
   img {

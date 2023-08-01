@@ -1,25 +1,30 @@
 import StoryEditable from "@/components/slate/editable";
 import ArticleToolbar from "@/components/slate/toolbar";
+import ToolbarSkeleton from "@/components/slate/toolbar/skeleton";
+import { useAutoSave } from "@/hooks/use-auto-save";
 import useEditorContext from "@/hooks/use-editor-data";
+import { theme } from "@/modules/mui-config";
 import withInlines from "@/modules/slate/inlines";
 import withVoids from "@/modules/slate/voids";
 import { withPlugins } from "@/modules/utils/editor-utils";
+import { Skeleton, Typography, useMediaQuery } from "@mui/material";
+import { typographyClasses } from "@mui/material/Typography";
 import {
   ChangeEventHandler,
   useCallback,
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
-import { ContentRoot, ContentWrapper, StoryTitle } from "./styles";
+import { ContentRoot, ContentWrapper, StoryTitle, ToolbarFab } from "./styles";
 
 import type { RouteProps } from "@/types";
-import { useAutoSave } from "@/hooks/use-auto-save";
-import { Skeleton, Typography } from "@mui/material";
-import ToolbarSkeleton from "@/components/slate/toolbar/skeleton";
+import { MenuOpenSharp } from "@mui/icons-material";
+import classNames from "classnames";
 
 export interface StoryEditorProps extends RouteProps {
   edit?: boolean;
@@ -30,6 +35,9 @@ export default function StoryEditor(props: StoryEditorProps) {
 
   const { title, content } = editorData;
   const titleRef = useRef<HTMLInputElement>(null);
+
+  const [isToolbarOpen, setToolbarOpen] = useState(false);
+  const [isTitleFocused, setTitleFocused] = useState(false);
 
   const editor = useMemo(
     () =>
@@ -83,14 +91,32 @@ export default function StoryEditor(props: StoryEditorProps) {
           <StoryTitle
             variant="standard"
             placeholder="Title"
+            className={classNames({ focused: isTitleFocused })}
             value={title}
             onChange={onTitleChange}
-            InputProps={{ disableUnderline: true, inputRef: titleRef }}
+            onFocus={() => setTitleFocused(true)}
+            onBlur={() => setTitleFocused(false)}
+            InputProps={{
+              disableUnderline: true,
+              inputRef: titleRef,
+            }}
           />
           <StoryEditable />
         </ContentWrapper>
       </ContentRoot>
-      <ArticleToolbar />
+      <ArticleToolbar
+        DrawerProps={{
+          open: isToolbarOpen,
+          onClose: () => setToolbarOpen(false),
+        }}
+      />
+      <ToolbarFab
+        color="primary"
+        size="medium"
+        onClick={() => setToolbarOpen(true)}
+      >
+        <MenuOpenSharp />
+      </ToolbarFab>
     </Slate>
   );
 }
