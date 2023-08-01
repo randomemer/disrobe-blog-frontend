@@ -1,7 +1,7 @@
 import Head from "next/head";
 import AppHeader from "@/components/header";
 import { AppMain, AppRoot } from "./styles";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 
 export type AppLayoutProps = PropsWithChildren<{}>;
 

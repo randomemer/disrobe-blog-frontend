@@ -106,18 +106,16 @@ function PostItemCard(props: PostItemCardProps) {
 
   return (
     <PostItem key={post.id}>
-      <PostContent>
-        <PlainLink href={href}>
+      <PlainLink href={href} sx={{ display: "flex" }}>
+        <PostContent>
           <PostItemTitle variant="h5" component="h2">
             {post.draft.title}
           </PostItemTitle>
-        </PlainLink>
-        {/* <PlainLink href={href} style={{ flex: 1, overflow: "hidden" }}> */}
-        <PostItemGist ref={gistRef}>
-          {getContentString(post.draft.content)}
-        </PostItemGist>
-        {/* </PlainLink> */}
-      </PostContent>
+          <PostItemGist ref={gistRef}>
+            {getContentString(post.draft.content)}
+          </PostItemGist>
+        </PostContent>
+      </PlainLink>
       <PostItemActions>
         <IconButton
           color="primary"

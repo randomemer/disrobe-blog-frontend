@@ -140,14 +140,12 @@ function StoryCard(props: StoryCardProps) {
         <StoryThumbnailLink href={path}>
           <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
         </StoryThumbnailLink>
-        <StoryCardRight>
-          <PlainLink href={path}>
+        <PlainLink href={path} sx={{ display: "flex", flex: 2 }} >
+          <StoryCardRight>
             <StoryCardTitle>{title}</StoryCardTitle>
-          </PlainLink>
-          {/* <PlainLink href={path} style={{ overflow: "hidden" }}> */}
-          <Gist ref={gistRef}>{getContentString(content)}</Gist>
-          {/* </PlainLink> */}
-        </StoryCardRight>
+            <Gist ref={gistRef}>{getContentString(content)}</Gist>
+          </StoryCardRight>
+        </PlainLink>
       </StoryCardContent>
     </StoryCardItem>
   );

@@ -248,31 +248,36 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
 function SavingIndicator() {
   const [{ status }] = useEditorContext();
   let icon: ReactNode, message: string;
+  let color: string;
 
   switch (status) {
     case AsyncStatus.PENDING:
       icon = <CloudUploadOutlined />;
       message = "Saving";
+      color = theme.palette.primary.main;
       break;
 
     case AsyncStatus.FULFILLED:
       icon = <CloudDoneOutlined />;
       message = "Saved";
+      color = theme.palette.success.main;
       break;
 
     case AsyncStatus.REJECTED:
       icon = <ErrorOutlined />;
       message = "Saving Failed";
+      color = theme.palette.error.main;
       break;
 
     default:
       icon = <CloudOffOutlined />;
       message = "Not Saved";
+      color = theme.palette.text.primary;
       break;
   }
 
   return (
-    <SavingIndicatorDiv>
+    <SavingIndicatorDiv sx={{ color }}>
       {icon}
       <Typography>{message}</Typography>
     </SavingIndicatorDiv>

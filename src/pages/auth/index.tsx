@@ -50,7 +50,7 @@ export default function AuthRoute() {
 
   const routerQueryType = (router.query.type as string) || "login";
 
-  const [redirect, setRedirect] = useState("/settings/profile");
+  const [redirect, setRedirect] = useState("/me/profile");
   const [isLoading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(routerQueryType);
 
@@ -132,7 +132,7 @@ export default function AuthRoute() {
       // logEvent(analytics, "sign_up", {
       //   method: "email",
       // });
-      router.push("/settings/profile");
+      router.push("/me/profile");
     } catch (error) {
       snackbar.showMessage((error as Error).message, "OK", () => {}, {
         severity: "error",

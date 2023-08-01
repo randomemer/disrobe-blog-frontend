@@ -18,13 +18,8 @@ export function elevation(value: number) {
 }
 
 export const PlainLink = styled(Link)`
-  &:link,
-  &:visited,
-  &:active,
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
+  color: inherit;
+  text-decoration: none;
 `;
 
 export const InputField = styled(TextField)`

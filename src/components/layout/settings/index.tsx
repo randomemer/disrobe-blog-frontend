@@ -48,8 +48,8 @@ export default function SettingsLayout(props: PropsWithChildren) {
           dense
           key={route.path}
           component={Link}
-          selected={router.asPath.includes(`/settings/${route.path}`)}
-          href={`/settings/${route.path}`}
+          selected={router.asPath.includes(`/me/${route.path}`)}
+          href={`/me/${route.path}`}
         >
           <ListItemIcon>{route.icon}</ListItemIcon>
           <ListItemText>{route.label}</ListItemText>

@@ -1,6 +1,5 @@
 import { Box, Fab, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { inputBaseClasses } from "@mui/material/InputBase";
 import { Editable } from "slate-react";
 
 export const ContentRoot = styled(Box)`
@@ -48,19 +47,6 @@ export const StoryTitle = styled(TextField)`
 
   &.focused {
     border-color: ${({ theme }) => theme.palette.primary.main};
-  }
-
-  .${inputBaseClasses.root} {
-    font-weight: 700;
-    font-size: 4.8rem;
-
-    ${({ theme }) => theme.breakpoints.down("lg")} {
-      font-size: 4.2rem;
-    }
-
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-      font-size: 3.2rem;+
-    }
   }
 `;
 

@@ -1,5 +1,6 @@
 import { elevation } from "@/styles/shared";
 import {
+  Box,
   Button,
   Drawer,
   IconButton,
@@ -99,8 +100,8 @@ export const ContentInfo = styled("div")`
   font-size: 1.4rem;
 `;
 
-export const SavingIndicatorDiv = styled("div")`
-  align-self: flex-end;
+export const SavingIndicatorDiv = styled(Box)`
+  align-self: flex-start;
   display: flex;
   align-items: center;
   gap: 5px;

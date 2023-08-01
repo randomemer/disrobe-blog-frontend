@@ -97,8 +97,9 @@ export default function StoryEditor(props: StoryEditorProps) {
             onFocus={() => setTitleFocused(true)}
             onBlur={() => setTitleFocused(false)}
             InputProps={{
-              disableUnderline: true,
               inputRef: titleRef,
+              disableUnderline: true,
+              sx: { typography: "h1", fontWeight: 700 },
             }}
           />
           <StoryEditable />
