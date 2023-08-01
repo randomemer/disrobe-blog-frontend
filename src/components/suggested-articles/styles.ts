@@ -14,15 +14,24 @@ export const SidebarHeading = styled("p")`
 `;
 
 export const StoriesFlex = styled("div")`
-  display: flex;
+  display: grid;
   flex-direction: column;
   gap: 3.6rem;
+  grid-template-columns: 1fr;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const StoryItem = styled("div")`
   position: relative;
-  height: 19.6rem;
-  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  width: 100%;
 `;
 
 export const StoryItemImage = styled(ImageWithFallback)`

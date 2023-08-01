@@ -1,23 +1,27 @@
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
+import $clamp from "clamp-js";
 import { StoryModel } from "@/modules/backend";
-import { getStoryGist, getStoryThumb, jsonify } from "@/modules/utils";
+import { getContentString, getStoryThumb, jsonify } from "@/modules/utils";
 import {
   Gist,
   SectionHeading,
   SplashContainer,
   SplashContent,
   SplashSection,
+  SplashTitle,
   StoriesSection,
   StoryCardContent,
-  StoryCardDiv,
+  StoryCardItem,
   StoryCardRight,
   StoryCardTitle,
   StoryThumbnail,
+  StoryThumbnailLink,
 } from "@/styles/home.styles";
-import { PlainLink } from "@/styles/shared";
 import { StoryJoinedJSON } from "@/types/backend";
 import { GetServerSidePropsContext } from "next";
+import { useEffect, useRef, useState } from "react";
+import { PlainLink } from "@/styles/shared";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -55,11 +59,11 @@ export default function Home(props: HomeRouteProps) {
       <SplashSection>
         <SplashContainer>
           <SplashContent>
-            <h1>
+            <SplashTitle>
               Stories on <span className="highlight">art</span>,{" "}
               <span className="highlight">people</span> and the{" "}
               <span className="highlight">world</span>.
-            </h1>
+            </SplashTitle>
           </SplashContent>
         </SplashContainer>
       </SplashSection>
@@ -108,6 +112,7 @@ export interface StoryCardProps {
 
 function StoryCard(props: StoryCardProps) {
   const { story } = props;
+  const gistRef = useRef<HTMLDivElement>(null);
 
   // TODO : change to live in production
   const { title, content } = story.draft;
@@ -115,22 +120,35 @@ function StoryCard(props: StoryCardProps) {
 
   const path = `/story/${story.id}`;
 
+  const listener = () => {
+    if (gistRef.current) {
+      $clamp(gistRef.current, { clamp: "auto" });
+    }
+  };
+
+  useEffect(() => {
+    listener();
+    visualViewport?.addEventListener("resize", listener);
+
+    return () => visualViewport?.removeEventListener("resize", listener);
+  }, []);
+
   return (
-    <StoryCardDiv>
+    <StoryCardItem>
       <StoryAuthor story={story} />
       <StoryCardContent>
-        <PlainLink href={path}>
+        <StoryThumbnailLink href={path}>
           <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
-        </PlainLink>
+        </StoryThumbnailLink>
         <StoryCardRight>
           <PlainLink href={path}>
             <StoryCardTitle>{title}</StoryCardTitle>
           </PlainLink>
-          <PlainLink href={path}>
-            <Gist>{getStoryGist(content)}</Gist>
-          </PlainLink>
+          {/* <PlainLink href={path} style={{ overflow: "hidden" }}> */}
+          <Gist ref={gistRef}>{getContentString(content)}</Gist>
+          {/* </PlainLink> */}
         </StoryCardRight>
       </StoryCardContent>
-    </StoryCardDiv>
+    </StoryCardItem>
   );
 }

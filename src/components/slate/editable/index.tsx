@@ -1,9 +1,9 @@
 import LinkEditor from "@/components/slate/link-editor";
 import { SlateElement, SlateLeaf } from "@/components/slate/rendering";
+import { StyledEditable } from "@/components/story-editor/styles";
 import useEditorConfig from "@/hooks/use-editor-config";
 import { useLinkNode } from "@/hooks/use-link-node";
 import { Fragment, useCallback } from "react";
-import { Editable } from "slate-react";
 
 import type { RenderElementProps, RenderLeafProps } from "slate-react";
 
@@ -22,7 +22,7 @@ export default function StoryEditable() {
 
   return (
     <Fragment>
-      <Editable
+      <StyledEditable
         autoFocus
         spellCheck
         className="article-editor"

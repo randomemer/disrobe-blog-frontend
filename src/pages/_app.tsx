@@ -1,26 +1,23 @@
+import AppSnackbar from "@/components/snackbar";
 import AuthProvider from "@/contexts/auth";
+import { EditorProvider } from "@/contexts/editor";
 import "@/modules/backend/client";
 import { theme } from "@/modules/mui-config";
-import "@/styles/globals.scss";
-import { ThemeProvider } from "@mui/material/styles";
-import { DM_Sans } from "next/font/google";
-import Head from "next/head";
-import { EditorProvider } from "@/contexts/editor";
-import ModalProvider from "mui-modal-provider";
-import { CacheProvider, EmotionCache } from "@emotion/react";
 import { createEmotionCache } from "@/modules/utils";
+import globalStyles from "@/styles/globals";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import { CssBaseline, GlobalStyles } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
+import ModalProvider from "mui-modal-provider";
+import NextNProgress from "nextjs-progressbar";
+import Head from "next/head";
 
-import { RouteProps } from "@/types";
+import type { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
-import AppSnackbar from "@/components/snackbar";
 
 const clientEmotionCache = createEmotionCache();
-const DMSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  style: ["normal", "italic"],
-});
+const globalStylesEl = <GlobalStyles styles={globalStyles} />;
 
 export interface DisrobeAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -32,11 +29,7 @@ export default function App(props: DisrobeAppProps) {
 
   return (
     <>
-      <style jsx global>{`
-        body {
-          font-family: ${DMSans.style.fontFamily}, sans-serif;
-        }
-      `}</style>
+      {globalStylesEl}
 
       <Head>
         <meta charSet="utf-8" />
@@ -51,19 +44,27 @@ export default function App(props: DisrobeAppProps) {
       </Head>
 
       <CacheProvider value={emotionCache}>
-        <AuthProvider>
-          <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline enableColorScheme />
+          <AuthProvider>
             <EditorProvider>
               <ModalProvider>
                 <SnackbarProvider
                   SnackbarComponent={(props) => <AppSnackbar {...props} />}
                 >
+                  <NextNProgress
+                    color={theme.palette.primary.main}
+                    height={1.5}
+                    options={{ showSpinner: false }}
+                  />
                   <Component {...pageProps} />
                 </SnackbarProvider>
               </ModalProvider>
             </EditorProvider>
-          </ThemeProvider>
-        </AuthProvider>
+
+            {/* <NProgre */}
+          </AuthProvider>
+        </ThemeProvider>
       </CacheProvider>
     </>
   );

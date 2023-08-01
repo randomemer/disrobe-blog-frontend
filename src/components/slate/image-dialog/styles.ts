@@ -4,10 +4,12 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   LinearProgress,
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { svgIconClasses } from "@mui/material/SvgIcon";
 
 export const ImageModalTitle = styled(DialogTitle)`
   font-size: 2.4rem;
@@ -25,16 +27,8 @@ export const ImageModalContent = styled(DialogContent)`
 export const ImageModalActions = styled(DialogActions)``;
 
 export const ImageURLField = styled(TextField)`
-  .MuiInput-root {
-    font-size: 1.6rem;
-  }
-
-  .MuiSvgIcon-root {
-    font-size: 2.4rem;
-  }
-
   .Mui-focused {
-    .MuiSvgIcon-root {
+    .${svgIconClasses.root} {
       color: ${({ theme }) => theme.palette.primary.main};
     }
   }
@@ -45,7 +39,7 @@ export const ORDivider = styled(Divider)`
   font-size: 1.4rem;
 `;
 
-export const AddButton = styled(Button)`
+export const AddButton = styled(IconButton)`
   min-width: unset;
 `;
 

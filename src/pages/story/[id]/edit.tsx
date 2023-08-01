@@ -51,8 +51,10 @@ function StoryEditRoute() {
 
     case AsyncStatus.FULFILLED: {
       if (editorData.story?.author_id !== getAuth().currentUser!.uid) {
-        router.push("/");
+        router.push("/404");
+        return <WriteRouteSkeleton />;
       }
+
       return (
         <AppLayout>
           <StoryEditor edit={true} />

@@ -2,7 +2,12 @@ import LoginForm from "@/components/auth/login-form";
 import SignupForm from "@/components/auth/signup-form";
 import TabPanel from "@/components/tab-panel";
 import { useSnackbar } from "material-ui-snackbar-provider";
-import { FormContainer, FormTab, FormTabs } from "@/styles/auth.styles";
+import {
+  AuthPageContainer,
+  FormContainer,
+  FormTab,
+  FormTabs,
+} from "@/styles/auth.styles";
 import { FirebaseError } from "firebase/app";
 import {
   browserLocalPersistence,
@@ -16,10 +21,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { useModal } from "mui-modal-provider";
 
 import type { SyntheticEvent } from "react";
-import { useModal } from "mui-modal-provider";
-import AlertModal from "@/components/alert";
 
 export type LoginFormData = {
   email: string;
@@ -90,7 +94,6 @@ export default function AuthRoute() {
       //   method: "email",
       // });
 
-      console.log("Redirecting...");
       router.push(redirect);
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -145,35 +148,41 @@ export default function AuthRoute() {
         <title>Auth</title>
       </Head>
 
-      <FormContainer>
-        <FormTabs variant="fullWidth" value={activeTab} onChange={onTabChange}>
-          <FormTab
-            value="login"
-            href="/auth?type=login"
-            label="Login"
-            component={Link}
-            {...tabProps("login")}
-          />
+      <AuthPageContainer>
+        <FormContainer>
+          <FormTabs
+            variant="fullWidth"
+            value={activeTab}
+            onChange={onTabChange}
+          >
+            <FormTab
+              value="login"
+              href="/auth?type=login"
+              label="Login"
+              component={Link}
+              {...tabProps("login")}
+            />
 
-          <FormTab
-            value="signup"
-            href="/auth?type=signup"
-            label="Sign Up"
-            component={Link}
-            {...tabProps("register")}
-          />
-        </FormTabs>
+            <FormTab
+              value="signup"
+              href="/auth?type=signup"
+              label="Sign Up"
+              component={Link}
+              {...tabProps("register")}
+            />
+          </FormTabs>
 
-        <div ref={observerBoxRef}>
-          <TabPanel index="login" value={activeTab} label="auth">
-            <LoginForm loading={isLoading} loginUser={loginUser} />
-          </TabPanel>
+          <div ref={observerBoxRef}>
+            <TabPanel index="login" value={activeTab} label="auth">
+              <LoginForm loading={isLoading} loginUser={loginUser} />
+            </TabPanel>
 
-          <TabPanel index="signup" value={activeTab} label="auth">
-            <SignupForm loading={isLoading} signupUser={signupUser} />
-          </TabPanel>
-        </div>
-      </FormContainer>
+            <TabPanel index="signup" value={activeTab} label="auth">
+              <SignupForm loading={isLoading} signupUser={signupUser} />
+            </TabPanel>
+          </div>
+        </FormContainer>
+      </AuthPageContainer>
     </>
   );
 }

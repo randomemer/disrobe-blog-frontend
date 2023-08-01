@@ -8,6 +8,7 @@ export const AboutBackground = styled(Box)`
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url(${splashImg.src});
   background-size: cover;
+  background-position: center;
   filter: blur(5px);
   top: 0;
   left: 0;
@@ -21,10 +22,22 @@ export const AboutContent = styled(Box)`
   display: flex;
   flex-direction: column;
   gap: 4.8rem;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    padding: 0 6.4rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 0 3.6rem;
+  }
 `;
 
 export const Paragraph = styled("p")`
   font-weight: 400;
   font-size: 2rem;
   line-height: 1.6;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    font-size: 1.8rem;
+  }
 `;

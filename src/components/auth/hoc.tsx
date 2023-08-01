@@ -20,7 +20,12 @@ export default function withAuth(config: AuthHOCConfig) {
 
       case AsyncStatus.FULFILLED: {
         if (!auth.uid) {
-          router.push("/auth?type=login");
+          const urlParams = new URLSearchParams({
+            type: "login",
+            redirect: router.asPath,
+          });
+          router.push(`/auth?${urlParams.toString()}`);
+
           return <config.beforeAuth />;
         } else return <config.whenAuthed />;
       }

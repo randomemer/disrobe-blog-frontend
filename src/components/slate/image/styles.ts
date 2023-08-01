@@ -2,6 +2,8 @@ import ImageWithFallback from "@/components/image";
 import { elevation } from "@/styles/shared";
 import { Button, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { svgIconClasses } from "@mui/material/SvgIcon";
+import { inputClasses } from "@mui/material/Input";
 
 export const EimageContainer = styled("div")`
   margin: 0 auto;
@@ -19,8 +21,8 @@ export const EImage = styled(ImageWithFallback)`
   position: relative;
 
   &.broken {
-    height: 48rem;
     width: 100%;
+    aspect-ratio: 16 / 9;
   }
 
   img {
@@ -46,7 +48,7 @@ export const ImageCaption = styled("figcaption")`
 `;
 
 export const CaptionField = styled(TextField)`
-  .MuiInput-root {
+  .${inputClasses.root} {
     font-size: 1.6rem;
   }
 `;
@@ -70,7 +72,7 @@ export const ButtonWrapper = styled("div")`
 export const DeleteButton = styled(Button)`
   min-width: unset;
 
-  .MuiSvgIcon-root {
+  .${svgIconClasses.root} {
     font-size: 2.4rem;
   }
 `;

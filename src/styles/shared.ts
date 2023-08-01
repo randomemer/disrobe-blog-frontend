@@ -19,7 +19,9 @@ export function elevation(value: number) {
 
 export const PlainLink = styled(Link)`
   &:link,
-  &:visited {
+  &:visited,
+  &:active,
+  &:hover {
     color: inherit;
     text-decoration: none;
   }
@@ -35,6 +37,7 @@ export const InputField = styled(TextField)`
       color: ${({ theme }) => theme.palette.primary.main};
     }
   }
+
   .${svgIconClasses.root} {
     font-size: 2rem;
   }

@@ -69,7 +69,7 @@ export default function StoryRoute(props: StoryRouteProps) {
       <ArticleGrid>
         <Article>
           <StoryHeadingBox>
-            <StoryHeading>{title}</StoryHeading>
+            <StoryHeading variant="h1">{title}</StoryHeading>
             <StoryByLine>
               <StoryAuthor story={story} />
               <StorySocials />

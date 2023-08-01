@@ -9,6 +9,7 @@ import {
   toggleMark,
 } from "@/modules/utils/editor-utils";
 import {
+  ChevronRightSharp,
   CloudDoneOutlined,
   CloudOffOutlined,
   CloudUploadOutlined,
@@ -25,7 +26,13 @@ import {
   LinkOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
-import { Dialog, ListItem, Typography } from "@mui/material";
+import {
+  Dialog,
+  DrawerProps,
+  ListItem,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import {
   FormatHeader2,
   FormatHeader3,
@@ -37,6 +44,7 @@ import { useState } from "react";
 import { useSlate } from "slate-react";
 import {
   Aside,
+  CloseButton,
   ContentInfo,
   PublishButton,
   SavingIndicatorDiv,
@@ -55,6 +63,7 @@ import type { MouseEventHandler, ReactNode } from "react";
 import type { Element } from "slate";
 import useEditorContext from "@/hooks/use-editor-data";
 import { AsyncStatus } from "@/types";
+import { theme } from "@/modules/mui-config";
 
 // ============================================================
 
@@ -91,11 +100,18 @@ export const HEADING_STYLES: HeadingStylesConfig = [
 
 // ============================================================
 
-export default function ArticleToolbar() {
+interface ArticleToolbarProps {
+  DrawerProps?: DrawerProps;
+}
+
+export default function ArticleToolbar(props: ArticleToolbarProps) {
+  const { DrawerProps } = props;
+
   const editor = useSlate();
   const storyInfo = useWordCount();
 
   const [isImageModalOpen, setImageModalOpen] = useState(false);
+  const isDownMd = useMediaQuery(theme.breakpoints.down("md"));
 
   const onModalClose = () => {
     setImageModalOpen(false);
@@ -103,7 +119,16 @@ export default function ArticleToolbar() {
 
   return (
     <>
-      <Aside>
+      <Aside
+        {...DrawerProps}
+        anchor="right"
+        variant={!isDownMd ? "permanent" : "temporary"}
+      >
+        {isDownMd && (
+          <CloseButton onClick={DrawerProps?.onClose as MouseEventHandler}>
+            <ChevronRightSharp />
+          </CloseButton>
+        )}
         <ToolbarSections>
           {/* HEADING STYLES */}
           <ListItem>

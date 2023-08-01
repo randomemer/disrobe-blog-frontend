@@ -7,6 +7,16 @@ export const ProfileContent = styled("div")`
   display: flex;
   align-items: flex-start;
   gap: 7.2rem;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    gap: 6.4rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    align-items: center;
+    gap: 4.8rem;
+  }
 `;
 
 export const ProfileForm = styled("div")`
@@ -14,6 +24,7 @@ export const ProfileForm = styled("div")`
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  align-self: stretch;
 `;
 
 export const UserAvatar = styled(Avatar)`

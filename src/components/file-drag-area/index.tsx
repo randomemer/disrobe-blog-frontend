@@ -15,6 +15,8 @@ export default function FileDragArea(props: FileDragAreaProps) {
   const { icon, inputRef } = props;
   const [isDragging, setDragging] = useState(false);
 
+  console.log(inputRef.current);
+
   const onDrag: DragEventHandler<HTMLDivElement> = (event) => {
     event.stopPropagation();
     event.preventDefault();

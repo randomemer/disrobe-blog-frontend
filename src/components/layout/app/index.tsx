@@ -1,19 +1,11 @@
 import Head from "next/head";
 import AppHeader from "@/components/header";
-import { AppMain } from "./styles";
+import { AppMain, AppRoot } from "./styles";
 import { PropsWithChildren, useEffect } from "react";
 
 export type AppLayoutProps = PropsWithChildren<{}>;
 
 export default function AppLayout(props: AppLayoutProps) {
-  useEffect(() => {
-    document.body.classList.add("sticky-header");
-
-    return () => {
-      document.body.classList.remove("sticky-header");
-    };
-  }, []);
-
   return (
     <>
       <Head>
@@ -23,8 +15,10 @@ export default function AppLayout(props: AppLayoutProps) {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <AppHeader />
-      <AppMain id="main">{props.children}</AppMain>
+      <AppRoot>
+        <AppHeader position="relative" />
+        <AppMain id="main">{props.children}</AppMain>
+      </AppRoot>
     </>
   );
 }

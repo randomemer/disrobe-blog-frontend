@@ -1,5 +1,6 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 
 export const LoginOptions = styled("div")`
   /* margin-top: 2.8rem; */
@@ -8,7 +9,7 @@ export const LoginOptions = styled("div")`
 `;
 
 export const CheckboxLabel = styled(FormControlLabel)`
-  .MuiFormControlLabel-label {
+  .${formControlLabelClasses.label} {
     font-size: 1.4rem;
   }
 `;

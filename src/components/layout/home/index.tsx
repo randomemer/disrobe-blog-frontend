@@ -16,7 +16,7 @@ export default function BlogLayout(props: BlogLayoutProps) {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <AppHeader dynamicPosition />
+      <AppHeader position="dynamic" />
       <Main id="main">{props.children}</Main>
       <Footer />
     </>

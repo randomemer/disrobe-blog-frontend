@@ -6,6 +6,8 @@ import {
   AuthorDetails,
   AuthorImage,
   AuthorImageWrapper,
+  AuthorName,
+  StoryInfo,
 } from "./styles";
 import { StoryJoinedJSON } from "@/types/backend";
 
@@ -42,12 +44,12 @@ export default function StoryAuthor(props: StoryAuthorProps) {
       </AuthorImageWrapper>
 
       <AuthorDetails>
-        <span className="author-name">{author.name}</span>
-        <div className="story-info">
+        <AuthorName>{author.name}</AuthorName>
+        <StoryInfo>
           <span>{publish_date}</span>
           <span>●</span>
           <span>{readTime} read</span>
-        </div>
+        </StoryInfo>
       </AuthorDetails>
     </Author>
   );

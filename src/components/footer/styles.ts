@@ -13,6 +13,10 @@ export const StyledFooter = styled("footer")`
   background-color: ${({ theme }) => theme.palette.background.default};
 
   ${elevation(0.1)}
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 6.4rem 0;
+  }
 `;
 
 export const FooterGrid = styled("div")`
@@ -21,14 +25,44 @@ export const FooterGrid = styled("div")`
   padding: 0 4.8rem;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 12.8rem;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12.8rem;
+
+  ${({ theme }) => theme.breakpoints.down("lg")} {
+    gap: 9.6rem;
+    padding: 0 6.4rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    padding: 0 3.6rem;
+    gap: 4.8rem;
+  }
 `;
 
 export const FooterColumn = styled("div")`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  grid-column: span 2;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    grid-column: span 3;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    grid-column: span 6;
+  }
+`;
+
+export const FooterColumnLogo = styled(FooterColumn)`
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    grid-row: 2;
+    grid-column: span 6;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    grid-row: 3;
+  }
 `;
 
 export const DisrobeLogo = styled(Link)`
@@ -38,6 +72,10 @@ export const DisrobeLogo = styled(Link)`
   text-transform: uppercase;
   color: ${({ theme }) => theme.palette.primary.main};
   margin-bottom: 3rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 2.4rem;
+  }
 `;
 
 export const Socials = styled("div")`
@@ -51,6 +89,12 @@ export const SocialLink = styled(Link)`
   .${svgIconClasses.root} {
     font-size: 2.7rem;
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    .${svgIconClasses.root} {
+      /* font-size: 1.8rem; */
+    }
+  }
 `;
 
 export const Copyright = styled(Typography)`
@@ -62,6 +106,11 @@ export const FooterColTitle = styled(Typography)`
   font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 3.6rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 1.8rem;
+    margin-bottom: 2.4rem;
+  }
 `;
 
 export const Contacts = styled(List)``;
@@ -82,6 +131,23 @@ export const ContactListItem = styled(ListItem<typeof PlainLink>)`
       font-size: 1.6rem;
     }
   }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    .${listItemIconClasses.root} {
+      margin-right: 0.9rem;
+    }
+
+    .${svgIconClasses.root} {
+      font-size: 1.8rem;
+    }
+
+    .${listItemTextClasses.root} {
+      &,
+      * {
+        font-size: 1.4rem;
+      }
+    }
+  }
 `;
 
 export const QuickLinks = styled(List)`
@@ -92,4 +158,8 @@ export const QuickLinks = styled(List)`
 
 export const QuickLink = styled(ListItem<typeof PlainLink>)`
   font-size: 1.8rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 1.4rem;
+  }
 `;

@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { svgIconClasses } from "@mui/material/SvgIcon";
 
 export const DragArea = styled(Box)`
   position: relative;
@@ -29,7 +30,7 @@ export const DragArea = styled(Box)`
       background-color: rgba(0, 0, 0, 0.3);
     }
 
-    .MuiSvgIcon-root {
+    .${svgIconClasses.root} {
       font-size: 4.8rem;
     }
   }

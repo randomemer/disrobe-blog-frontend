@@ -1,4 +1,4 @@
-import { Box, Card, Skeleton, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const PostsList = styled(Box)`
@@ -9,20 +9,26 @@ export const PostsList = styled(Box)`
 
 export const PostItem = styled(Card)`
   display: flex;
-  max-height: 13.2rem;
+  height: 13.2rem;
   padding: 1.8rem;
   gap: 3rem;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    gap: 1.8rem;
+  }
 `;
 
 export const PostContent = styled(Box)`
   flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 `;
 
 export const PostItemTitle = styled(Typography)`
-  font-size: 2.4rem;
   font-weight: 600;
-  margin-bottom: 1.2rem;
-`;
+` as typeof Typography;
 
 export const PostItemGist = styled(Typography)`
   font-size: 1.7rem;

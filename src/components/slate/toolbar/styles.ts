@@ -1,6 +1,7 @@
 import { elevation } from "@/styles/shared";
 import {
   Button,
+  Drawer,
   IconButton,
   List,
   ListItem,
@@ -11,20 +12,21 @@ import { styled } from "@mui/material/styles";
 
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { typographyClasses } from "@mui/material/Typography";
+import { paperClasses } from "@mui/material/Paper";
 
-export const Aside = styled("aside")`
+export const Aside = styled(Drawer)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border-left: 2px rgba(255, 255, 255, 0.15) solid;
 
-  position: fixed;
-  top: var(--app-header-height);
-  bottom: 0;
-  right: 0;
-  width: var(--toolbar-width);
-
-  ${elevation(0.05)}
+  ${({ theme }) => theme.breakpoints.up("md")} {
+    .${paperClasses.root} {
+      width: 30rem;
+      position: relative;
+      ${elevation(0.05)}
+    }
+  }
 `;
 
 export const ToolbarSections = styled(List)`
@@ -110,4 +112,10 @@ export const SavingIndicatorDiv = styled("div")`
   .${typographyClasses.root} {
     font-size: 1.4rem;
   }
+`;
+
+export const CloseButton = styled(IconButton)`
+  align-self: flex-start;
+  margin-left: 1.8rem;
+  margin-top: 1.2rem;
 `;
