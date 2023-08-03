@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { typographyClasses } from "@mui/material/Typography";
 import { paperClasses } from "@mui/material/Paper";
+import { LoadingButton } from "@mui/lab";
 
 export const Aside = styled(Drawer)`
   display: flex;
@@ -82,7 +83,7 @@ export const StoryActions = styled("div")`
   gap: 1rem;
 `;
 
-export const PublishButton = styled(Button)`
+export const PublishButton = styled(LoadingButton)`
   flex: 1;
   font-size: 1.4rem;
 `;

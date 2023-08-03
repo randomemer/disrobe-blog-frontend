@@ -51,6 +51,14 @@ export default class StoryModel extends Model {
         to: "StorySnapshot.id",
       },
     },
+    live: {
+      relation: Model.HasOneRelation,
+      modelClass: StorySnapshotModel,
+      join: {
+        from: "Story.live_snap_id",
+        to: "StorySnapshot.id",
+      },
+    },
   };
 
   $beforeInsert() {

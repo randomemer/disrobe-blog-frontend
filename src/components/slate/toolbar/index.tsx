@@ -64,6 +64,9 @@ import type { Element } from "slate";
 import useEditorContext from "@/hooks/use-editor-data";
 import { AsyncStatus } from "@/types";
 import { theme } from "@/modules/mui-config";
+import { getAuth } from "firebase/auth";
+import axios, { AxiosError } from "axios";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 // ============================================================
 
@@ -108,14 +111,56 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
   const { DrawerProps } = props;
 
   const editor = useSlate();
+  const snackbar = useSnackbar();
+  const [data, setData] = useEditorContext();
   const storyInfo = useWordCount();
 
+  const [isPublishing, setPublishing] = useState(false);
   const [isImageModalOpen, setImageModalOpen] = useState(false);
   const isDownMd = useMediaQuery(theme.breakpoints.down("md"));
 
   const onModalClose = () => {
     setImageModalOpen(false);
   };
+
+  async function publishStory() {
+    setPublishing(true);
+    try {
+      const token = await getAuth().currentUser!.getIdToken();
+
+      if (data.story) {
+        const resp = await axios.post(
+          `/api/story/${data.story.id}/?publish=true`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        console.log(resp.data);
+        snackbar.showMessage("Story published successfully!", "OK", () => {}, {
+          severity: "success",
+        } as any);
+      } else {
+        snackbar.showMessage(
+          "Write something to get started!",
+          "OK",
+          () => {},
+          {
+            severity: "info",
+          } as any
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      let message = (error as Error).message;
+      if (error instanceof AxiosError) {
+        message = error.response?.data.message;
+      }
+      snackbar.showMessage(message, "OK", () => {}, {
+        severity: "error",
+      } as any);
+    }
+    setPublishing(false);
+  }
 
   return (
     <>
@@ -208,10 +253,9 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
             <PublishButton
               type="button"
               variant="outlined"
-              onClick={async () => {
-                // @TODO
-                // await publishStory(editor, storyID);
-              }}
+              loadingPosition="start"
+              loading={isPublishing}
+              onClick={publishStory}
             >
               Publish
             </PublishButton>

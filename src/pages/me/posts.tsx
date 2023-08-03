@@ -106,7 +106,7 @@ function PostItemCard(props: PostItemCardProps) {
 
   return (
     <PostItem key={post.id}>
-      <PlainLink href={href} sx={{ display: "flex" }}>
+      <PlainLink href={href} sx={{ display: "flex", flex: 1 }}>
         <PostContent>
           <PostItemTitle variant="h5" component="h2">
             {post.draft.title}
