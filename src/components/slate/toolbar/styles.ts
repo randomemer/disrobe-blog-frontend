@@ -15,6 +15,7 @@ import { svgIconClasses } from "@mui/material/SvgIcon";
 import { typographyClasses } from "@mui/material/Typography";
 import { paperClasses } from "@mui/material/Paper";
 import { LoadingButton } from "@mui/lab";
+import Link from "next/link";
 
 export const Aside = styled(Drawer)`
   display: flex;
@@ -88,7 +89,7 @@ export const PublishButton = styled(LoadingButton)`
   font-size: 1.4rem;
 `;
 
-export const SettingsButton = styled(IconButton)`
+export const SettingsButton = styled(IconButton<typeof Link>)`
   .${svgIconClasses.root} {
     font-size: 2.4rem;
   }

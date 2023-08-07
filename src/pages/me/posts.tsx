@@ -9,8 +9,8 @@ import {
   PostItemGist,
   PostItemTitle,
   PostsList,
-} from "@/styles/settings-posts.styles";
-import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
+} from "@/styles/me-posts.styles";
+import { SectionHeading, SettingsSection } from "@/styles/me.styles";
 import { PlainLink } from "@/styles/shared";
 import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON } from "@/types/backend";

@@ -8,8 +8,8 @@ import {
   ProfileForm,
   ProfileFormButton,
   UserAvatar,
-} from "@/styles/settings-profile.styles";
-import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
+} from "@/styles/me-profile.styles";
+import { SectionHeading, SettingsSection } from "@/styles/me.styles";
 import { InputField } from "@/styles/shared";
 import { AsyncStatus, FormErrors } from "@/types";
 import {

@@ -67,6 +67,7 @@ import { theme } from "@/modules/mui-config";
 import { getAuth } from "firebase/auth";
 import axios, { AxiosError } from "axios";
 import { useSnackbar } from "material-ui-snackbar-provider";
+import Link from "next/link";
 
 // ============================================================
 
@@ -112,7 +113,7 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
 
   const editor = useSlate();
   const snackbar = useSnackbar();
-  const [data, setData] = useEditorContext();
+  const [data] = useEditorContext();
   const storyInfo = useWordCount();
 
   const [isPublishing, setPublishing] = useState(false);
@@ -259,7 +260,10 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
             >
               Publish
             </PublishButton>
-            <SettingsButton>
+            <SettingsButton
+              component={Link}
+              href={`/story/${data.story?.id}/settings`}
+            >
               <SettingsOutlined />
             </SettingsButton>
           </StoryActions>
