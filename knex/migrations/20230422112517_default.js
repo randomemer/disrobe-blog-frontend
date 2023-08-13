@@ -13,6 +13,7 @@ exports.up = function (knex) {
       table.datetime("created_at").defaultTo(knex.raw("CURRENT_TIMESTAMP()"));
       table.datetime("updated_at").defaultTo(knex.raw("CURRENT_TIMESTAMP()"));
     })
+
     .createTable("Author", function (table) {
       table.string("id").primary();
       table.string("name").notNullable();
@@ -21,6 +22,7 @@ exports.up = function (knex) {
       table.datetime("created_at").defaultTo(knex.raw("CURRENT_TIMESTAMP()"));
       table.datetime("updated_at").defaultTo(knex.raw("CURRENT_TIMESTAMP()"));
     })
+
     .createTable("StorySnapshot", function (table) {
       table.string("id");
       table.string("story_id");
