@@ -10,13 +10,17 @@ const LIST_ITEMS = [
 ];
 
 export default function StorySettingsSidebar() {
-  const [hash, setHash] = useState(location.hash);
   const router = useRouter();
+  const [hash, setHash] = useState("");
 
   const onHashChange = (path: string) => {
     const url = new URL(location.origin + path);
     setHash(url.hash);
   };
+
+  useEffect(() => {
+    if (typeof window) setHash(window.location.hash);
+  }, []);
 
   useEffect(() => {
     router.events.on("hashChangeStart", onHashChange);
