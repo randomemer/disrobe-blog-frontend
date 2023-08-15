@@ -1,4 +1,4 @@
-import { StoryModel } from "@/modules/backend";
+import { StoryModel, StorySnapshotModel } from "@/modules/backend";
 import { attemptJsonParse, autoId, extractBearerToken } from "@/modules/utils";
 import { v4 } from "uuid";
 import { array, object, string } from "yup";
@@ -6,6 +6,7 @@ import { buildFilter } from "objection-filter";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import admin from "@/modules/backend/admin";
+import { ModelObject } from "objection";
 
 const createSchema = object({
   author_id: string().required(),
@@ -33,7 +34,7 @@ export default async function handler(
           res.status(401);
           return res.send({ message: "Bearer token not provided or invalid" });
         }
-        const decoded = await admin.auth().verifyIdToken(token);
+        await admin.auth().verifyIdToken(token);
 
         const validated = await createSchema.validate(req.body, {
           stripUnknown: true,
@@ -50,8 +51,9 @@ export default async function handler(
             id: draftSnapId,
             story_id: storyId,
             ...validated.draft,
-          },
-        } as any);
+          } as ModelObject<StorySnapshotModel>,
+        });
+
         return res.status(200).send(story.toJSON());
       }
 

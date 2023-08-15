@@ -11,13 +11,13 @@ export default async function handler(
     switch (req.method) {
       case "GET": {
         const author = await AuthorModel.query().findById(id);
-        if (!author) return res.status(404).send(undefined);
+        if (!author) return res.status(404).end();
 
         return res.status(200).send(author.toJSON());
       }
 
       default:
-        return res.setHeader("Allow", "GET").status(405).send(undefined);
+        return res.setHeader("Allow", "GET").status(405).end();
     }
   } catch (error) {
     if (!(error instanceof Error)) return;

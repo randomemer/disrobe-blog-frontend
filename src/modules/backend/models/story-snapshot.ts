@@ -1,15 +1,17 @@
 import { JSONSchema, Model } from "objection";
 import { Descendant } from "slate";
 
-export default class StorySnapshotModel extends Model {
+interface StorySnapshotModel {
+  id: string;
+  story_id: string;
+  title: string;
+  content: Descendant[];
+  timestamp: string;
+}
+
+class StorySnapshotModel extends Model {
   static tableName = "StorySnapshot";
   static idColumn = ["id", "story_id"];
-
-  id!: string;
-  story_id!: string;
-  title!: string;
-  content!: Descendant[];
-  timestamp!: string;
 
   static jsonSchema: JSONSchema = {
     type: "object",
@@ -24,3 +26,5 @@ export default class StorySnapshotModel extends Model {
     additionalProperties: false,
   };
 }
+
+export default StorySnapshotModel;

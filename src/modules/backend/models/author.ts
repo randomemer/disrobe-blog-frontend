@@ -1,15 +1,17 @@
 import { JSONSchema, Model } from "objection";
 
-export default class AuthorModel extends Model {
+interface AuthorModel {
+  id: string;
+  name: string;
+  bio: string | null;
+  picture: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+class AuthorModel extends Model {
   static tableName = "Author";
   static idColumn = "id";
-
-  id!: string;
-  name!: string;
-  bio!: string | null;
-  picture!: string | null;
-  created_at!: Date;
-  updated_at!: Date;
 
   static jsonSchema: JSONSchema = {
     type: "object",
@@ -33,3 +35,5 @@ export default class AuthorModel extends Model {
     this.updated_at = new Date();
   }
 }
+
+export default AuthorModel;

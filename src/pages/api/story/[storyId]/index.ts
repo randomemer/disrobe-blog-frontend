@@ -1,7 +1,8 @@
-import { StoryModel } from "@/modules/backend";
+import { StoryModel, StorySnapshotModel } from "@/modules/backend";
 import admin from "@/modules/backend/admin";
 import { extractBearerToken } from "@/modules/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { ModelObject } from "objection";
 import { v4 } from "uuid";
 
 export default async function handler(
@@ -15,11 +16,16 @@ export default async function handler(
       case "GET": {
         const story = await StoryModel.query()
           .findById(storyId)
-          .withGraphJoined({ draft: true, author: true });
-        if (!story) return res.status(404).send(undefined);
+          .withGraphJoined({
+            draft: true,
+            author: true,
+            live: true,
+            settings: true,
+          });
+        if (!story) return res.status(404).end();
 
         res.setHeader("Content-Type", "application/json");
-        return res.status(200).send(JSON.stringify(story.toJSON()));
+        return res.status(200).send(story.toJSON());
       }
 
       case "POST": {
@@ -37,7 +43,12 @@ export default async function handler(
         if (publish === "true") {
           const story = await StoryModel.query()
             .findById(storyId)
-            .withGraphJoined({ draft: true, author: true, live: true });
+            .withGraphJoined({
+              draft: true,
+              author: true,
+              live: true,
+              settings: true,
+            });
 
           if (!story) return res.status(404).send(undefined);
           if (story.author_id !== decoded.uid) {
@@ -47,7 +58,6 @@ export default async function handler(
             });
           }
 
-          // @ts-ignore
           const { draft, live } = story;
 
           if (live) {
@@ -59,10 +69,9 @@ export default async function handler(
                 story_id: storyId,
                 title: draft.title,
                 content: draft.content,
-              },
-            } as any);
+              } as ModelObject<StorySnapshotModel>,
+            });
 
-            // @ts-ignore
             return res.status(200).send(updated.toJSON());
           } else {
             const snapId = v4();
@@ -76,12 +85,11 @@ export default async function handler(
                   story_id: storyId,
                   title: draft.title,
                   content: draft.content,
-                },
-              } as any,
+                } as ModelObject<StorySnapshotModel>,
+              },
               { insertMissing: true }
             );
 
-            // @ts-ignore
             return res.status(200).send(published.toJSON());
           }
         } else if (publish === "false") {

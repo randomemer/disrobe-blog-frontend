@@ -1,23 +1,36 @@
 import {
   JSONSchema,
   Model,
+  ModelObject,
   RelationMappings,
   RelationMappingsThunk,
 } from "objection";
 import AuthorModel from "./author";
+import StorySettingsModel from "./story-settings";
 import StorySnapshotModel from "./story-snapshot";
 
-export default class StoryModel extends Model {
+interface StoryModel {
+  id: string;
+  is_published: boolean;
+
+  author_id: string;
+  author: ModelObject<AuthorModel>;
+
+  draft_snap_id: string;
+  draft: ModelObject<StorySnapshotModel>;
+
+  live_snap_id: string | null;
+  live: ModelObject<StorySnapshotModel> | null;
+
+  settings: ModelObject<StorySettingsModel>;
+
+  created_at: Date;
+  updated_at: Date;
+}
+
+class StoryModel extends Model {
   static tableName = "Story";
   static idColumn = "id";
-
-  id!: string;
-  author_id!: string;
-  is_published!: number;
-  draft_snap_id!: string;
-  live_snap_id?: string;
-  created_at!: Date;
-  updated_at!: Date;
 
   static jsonSchema: JSONSchema = {
     type: "object",
@@ -59,6 +72,14 @@ export default class StoryModel extends Model {
         to: "StorySnapshot.id",
       },
     },
+    settings: {
+      relation: Model.HasOneRelation,
+      modelClass: StorySettingsModel,
+      join: {
+        from: "Story.id",
+        to: "StorySettings.story_id",
+      },
+    },
   };
 
   $beforeInsert() {
@@ -69,3 +90,5 @@ export default class StoryModel extends Model {
     this.updated_at = new Date();
   }
 }
+
+export default StoryModel;

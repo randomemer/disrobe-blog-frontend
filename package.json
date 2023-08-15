@@ -23,7 +23,6 @@
     "firebase": "^9.17.2",
     "firebase-admin": "^11.5.0",
     "formidable": "^2.1.1",
-    "globby": "^13.2.2",
     "humanize-duration": "^3.28.0",
     "immer": "^9.0.19",
     "is-hotkey": "^0.2.0",
