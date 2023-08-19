@@ -15,7 +15,7 @@ function StoryEditRoute() {
   const router = useRouter();
   const [status, setStatus] = useState(AsyncStatus.PENDING);
 
-  const fetchArticle = async () => {
+  const fetchStory = async () => {
     setStatus(AsyncStatus.PENDING);
     try {
       const id = router.query.id as string;
@@ -40,7 +40,7 @@ function StoryEditRoute() {
   };
 
   useEffect(() => {
-    fetchArticle();
+    fetchStory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

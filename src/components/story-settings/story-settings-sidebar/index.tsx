@@ -30,7 +30,7 @@ export default function StorySettingsSidebar() {
 
   return (
     <Sidebar>
-      <SidebarTitle component="h2" variant="h5">
+      <SidebarTitle component="h2" variant="h4">
         Story Settings
       </SidebarTitle>
       <List>

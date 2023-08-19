@@ -1,14 +1,8 @@
 import { EditorContext } from "@/contexts/editor";
 import { useContext } from "react";
 
-import type { EditorContextData } from "@/contexts/editor";
-import type { Updater } from "use-immer";
-
-export default function useEditorContext(): [
-  EditorContextData,
-  Updater<EditorContextData>
-] {
+export default function useEditorContext() {
   const { data, setData } = useContext(EditorContext);
 
-  return [data, setData];
+  return [data, setData] as const;
 }

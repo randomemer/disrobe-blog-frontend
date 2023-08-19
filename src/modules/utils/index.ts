@@ -6,6 +6,7 @@ import { FormValues } from "@/types";
 import { AnyObject, Maybe, number, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
 import { ImageElement } from "@/types/slate";
+import { META_DESC_LENGTH, META_TITLE_LENGTH } from "./config";
 
 /**
 |--------------------------------------------------
@@ -176,4 +177,20 @@ export function extractBearerToken(header: string | undefined) {
   }
 
   return null;
+}
+
+export function truncateMetaTitle(title: string) {
+  const titleEnd = " | Disrobe";
+  const realTitle = title.replace(titleEnd, "");
+
+  return realTitle.length + titleEnd.length > META_TITLE_LENGTH
+    ? `${realTitle.slice(0, META_TITLE_LENGTH - titleEnd.length - 3)}...` +
+        titleEnd
+    : realTitle + titleEnd;
+}
+
+export function truncateMetaDesc(desc: string) {
+  return desc.length > META_DESC_LENGTH
+    ? desc.slice(0, META_DESC_LENGTH - 3) + "..."
+    : desc;
 }

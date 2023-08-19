@@ -110,7 +110,7 @@ export interface StoryCardProps {
   story: StoryJoinedJSON;
 }
 
-function StoryCard(props: StoryCardProps) {
+export function StoryCard(props: StoryCardProps) {
   const { story } = props;
   const gistRef = useRef<HTMLDivElement>(null);
 
@@ -140,7 +140,7 @@ function StoryCard(props: StoryCardProps) {
         <StoryThumbnailLink href={path}>
           <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
         </StoryThumbnailLink>
-        <PlainLink href={path} sx={{ display: "flex", flex: 2 }} >
+        <PlainLink href={path} sx={{ display: "flex", flex: 2 }}>
           <StoryCardRight>
             <StoryCardTitle>{title}</StoryCardTitle>
             <Gist ref={gistRef}>{getContentString(content)}</Gist>

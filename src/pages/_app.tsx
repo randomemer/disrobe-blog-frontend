@@ -15,6 +15,7 @@ import Head from "next/head";
 
 import type { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
+import StorySettingsProvider from "@/contexts/story-settings";
 
 const clientEmotionCache = createEmotionCache();
 const globalStylesEl = <GlobalStyles styles={globalStyles} />;
@@ -48,18 +49,20 @@ export default function App(props: DisrobeAppProps) {
           <CssBaseline enableColorScheme />
           <AuthProvider>
             <EditorProvider>
-              <ModalProvider>
-                <SnackbarProvider
-                  SnackbarComponent={(props) => <AppSnackbar {...props} />}
-                >
-                  <NextNProgress
-                    color={theme.palette.primary.main}
-                    height={1.5}
-                    options={{ showSpinner: false }}
-                  />
-                  <Component {...pageProps} />
-                </SnackbarProvider>
-              </ModalProvider>
+              <StorySettingsProvider>
+                <ModalProvider>
+                  <SnackbarProvider
+                    SnackbarComponent={(props) => <AppSnackbar {...props} />}
+                  >
+                    <NextNProgress
+                      color={theme.palette.primary.main}
+                      height={1.5}
+                      options={{ showSpinner: false }}
+                    />
+                    <Component {...pageProps} />
+                  </SnackbarProvider>
+                </ModalProvider>
+              </StorySettingsProvider>
             </EditorProvider>
 
             {/* <NProgre */}
