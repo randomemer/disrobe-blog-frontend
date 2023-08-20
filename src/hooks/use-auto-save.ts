@@ -64,7 +64,7 @@ export function useAutoSave(props: AutoSaveHookProps) {
         router.replace(`/story/${story.id}/edit`, undefined, { shallow: true });
       } else {
         const draftData = { title, content };
-        const resp = await axios.put<StorySnapshotJSON>(
+        const resp = await axios.patch<StorySnapshotJSON>(
           `/api/story/${data.story.id}/snapshot/${data.story.draft_snap_id}`,
           draftData,
           { headers: { Authorization: `Bearer ${token}` } }

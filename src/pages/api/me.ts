@@ -26,7 +26,7 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).send(author!.toJSON());
       }
 
-      case "PUT": {
+      case "PATCH": {
         const data = await updateSchema.validate(req.body);
         const author = await AuthorModel.query().patchAndFetchById(
           decoded.uid,
@@ -37,7 +37,7 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
       }
 
       default:
-        return res.setHeader("Allow", "GET, PUT").status(405).send(undefined);
+        return res.setHeader("Allow", "GET, PATCH").status(405).end();
     }
   } catch (error) {
     console.error(error);

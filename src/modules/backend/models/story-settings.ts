@@ -10,11 +10,11 @@ interface StorySettingsModel {
 
 class StorySettingsModel extends Model {
   static tableName: string = "StorySettings";
-  static idColumn: string | string[] = ["id", "story_id"];
+  static idColumn: string | string[] = "id";
 
   static jsonSchema: JSONSchema = {
     type: "object",
-    required: ["id", "story_id"],
+    required: ["id"],
     properties: {
       id: { type: "string" },
       story_id: { type: "string" },

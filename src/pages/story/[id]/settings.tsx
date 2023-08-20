@@ -1,35 +1,28 @@
 import withAuth from "@/components/auth/hoc";
 import AppLayout from "@/components/layout/app";
-import StorySettingsSidebar from "@/components/story-settings/story-settings-sidebar";
+import MetaDescSection from "@/components/story-settings/meta-desc-section";
+import MetaImgSection from "@/components/story-settings/meta-img-section";
 import MetaTitleSection from "@/components/story-settings/meta-title-section";
+import StorySettingsSidebar from "@/components/story-settings/story-settings-sidebar";
 import useStorySettings from "@/hooks/use-story-settings";
-import { truncateMetaDesc } from "@/modules/utils";
 import { StoryCard } from "@/pages";
 import { MainWrapper } from "@/styles/shared";
 import {
   Content,
-  MetaFieldRow,
-  MetaImgPreview,
   Section,
   SectionHeading,
-  SectionItem,
   StorySettingsContainer,
 } from "@/styles/story-settings.styles";
 import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON } from "@/types/backend";
-import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import MetaDescSection from "@/components/story-settings/meta-desc-section";
-import MetaImgSection from "@/components/story-settings/meta-img-section";
 
 function StorySettingsRoute() {
   const router = useRouter();
   const [{ status, story }, setStoryData] = useStorySettings();
-
-  const [desc, setDesc] = useState<string | null>(null);
 
   const fetchStory = async () => {
     setStoryData((data) => {
@@ -43,8 +36,6 @@ function StorySettingsRoute() {
       });
 
       const story = resp.data;
-      console.log(story);
-      setDesc(story.settings.meta_desc);
       setStoryData(() => ({ story: resp.data, status: AsyncStatus.FULFILLED }));
     } catch (error) {
       console.error(error);

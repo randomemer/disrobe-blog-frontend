@@ -28,7 +28,7 @@ export default async function handler(
         return res.status(200).send(snapshot.toJSON());
       }
 
-      case "PUT": {
+      case "PATCH": {
         // 1. validate auth
         const authorization = req.headers.authorization;
         const token = extractBearerToken(authorization);
@@ -42,7 +42,7 @@ export default async function handler(
         // 2. Check ownership of snapshot
         const check = await StoryModel.query()
           .select("id")
-          .where("author_id", "=", decoded.uid);
+          .where("author_id", decoded.uid);
 
         if (check.length === 0) {
           res.status(401);
@@ -62,7 +62,7 @@ export default async function handler(
       }
 
       default: {
-        return res.status(405).setHeader("Allow", "GET, PUT").send(undefined);
+        return res.status(405).setHeader("Allow", "GET, PATCH").send(undefined);
       }
     }
   } catch (error) {

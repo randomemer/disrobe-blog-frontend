@@ -163,7 +163,7 @@ function SettingsProfileRoute() {
       }
 
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.put("/api/me", diff, {
+      const resp = await axios.patch("/api/me", diff, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
