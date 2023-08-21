@@ -18,7 +18,7 @@ import { StoryJoinedJSON } from "@/types/backend";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function StorySettingsRoute() {
   const router = useRouter();
@@ -35,7 +35,6 @@ function StorySettingsRoute() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const story = resp.data;
       setStoryData(() => ({ story: resp.data, status: AsyncStatus.FULFILLED }));
     } catch (error) {
       console.error(error);

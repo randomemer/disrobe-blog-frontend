@@ -138,7 +138,12 @@ export function StoryCard(props: StoryCardProps) {
       <StoryAuthor story={story} />
       <StoryCardContent>
         <StoryThumbnailLink href={path}>
-          <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
+          <StoryThumbnail
+            ImageProps={{
+              src: story.settings.meta_img ?? undefined,
+              alt: undefined,
+            }}
+          />
         </StoryThumbnailLink>
         <PlainLink href={path} sx={{ display: "flex", flex: 2 }}>
           <StoryCardRight>

@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   const id = context?.params?.id as string;
 
   const story = await StoryModel.query()
-    .withGraphJoined({ author: true, draft: true })
+    .withGraphJoined({ author: true, draft: true, settings: true })
     .findById(id);
 
   if (!story) throw new Error("Story Not Found");
@@ -33,6 +33,7 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
     .withGraphJoined({
       author: true,
       draft: true,
+      settings: true,
     })
     .where(`${StoryModel.tableName}.id`, "!=", id)
     .orderBy("created_at", "DESC")
@@ -59,11 +60,23 @@ export interface StoryRouteProps {
 export default function StoryRoute(props: StoryRouteProps) {
   const story = props.story;
   const { title, content } = story.draft;
+  const { settings } = story;
 
   return (
     <BlogLayout>
       <Head>
-        <title>{`${title} | Disrobe`}</title>
+        {/* Basic Config */}
+        <title>{settings.meta_title}</title>
+        <meta name="description" content={settings.meta_desc ?? undefined} />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph Config */}
+        <meta name="og:title" content={settings.meta_title ?? "Disrobe"} />
+        <meta
+          property="og:description"
+          content={settings.meta_desc ?? undefined}
+        />
+        <meta property="og:image" content={settings.meta_img ?? undefined} />
       </Head>
 
       <ArticleGrid>
