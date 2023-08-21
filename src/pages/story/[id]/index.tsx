@@ -69,11 +69,6 @@ export default function StoryRoute(props: StoryRouteProps) {
         <title>{settings.meta_title}</title>
         <meta name="title" content={settings.meta_title ?? undefined} />
         <meta name="description" content={settings.meta_desc ?? undefined} />
-        <meta name="robots" content="index, follow, max-image-preview:large" />
-
-        {/* Open Graph - Global */}
-        <meta property="og:site_name" content="Disrobe" />
-        <meta name="twitter:card" content="summary_large_image" />
 
         {/* Open Graph - Main */}
         <meta property="og:title" content={settings.meta_title ?? "Disrobe"} />
@@ -88,7 +83,6 @@ export default function StoryRoute(props: StoryRouteProps) {
 
         {/* Open Graph - Article */}
         <meta name="article:author" content={story.author.name} />
-        <meta name="article:published_time" content={story.live?.timestamp} />
         <meta name="article:modified_time" content={story.live?.timestamp} />
       </Head>
 

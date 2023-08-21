@@ -32,18 +32,6 @@ export default function App(props: DisrobeAppProps) {
     <>
       {globalStylesEl}
 
-      <Head>
-        <meta charSet="utf-8" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta
-          name="description"
-          content="Stories on art, people and the world."
-        />
-        {/* <link rel="apple-touch-icon" href="/logo192.png" /> */}
-      </Head>
-
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
           <CssBaseline enableColorScheme />
@@ -64,8 +52,6 @@ export default function App(props: DisrobeAppProps) {
                 </ModalProvider>
               </StorySettingsProvider>
             </EditorProvider>
-
-            {/* <NProgre */}
           </AuthProvider>
         </ThemeProvider>
       </CacheProvider>

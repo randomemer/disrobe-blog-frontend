@@ -6,6 +6,7 @@ import createEmotionServer from "@emotion/server/create-instance";
 import type { AppType } from "next/app";
 import type { DocumentProps, DocumentContext } from "next/document";
 import type { DisrobeAppProps } from "./_app";
+import { theme } from "@/modules/mui-config";
 
 export interface DisrobeDocumentProps extends DocumentProps {
   emotionStyleTags: JSX.Element[];
@@ -14,7 +15,23 @@ export interface DisrobeDocumentProps extends DocumentProps {
 export default function DisrobeDocument(props: DisrobeDocumentProps) {
   return (
     <Html lang="en">
-      <Head>{props.emotionStyleTags}</Head>
+      <Head>
+        {props.emotionStyleTags}
+        <meta charSet="utf-8" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* <link rel="apple-touch-icon" href="/logo192.png" /> */}
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+
+        <meta property="og:site_name" content="Disrobe" />
+        <meta name="twitter:card" content="summary_large_image" />
+
+        <meta name="theme-color" content={theme.palette.primary.main} />
+        <meta
+          name="msapplication-TileColor"
+          content={theme.palette.primary.main}
+        />
+      </Head>
 
       <body>
         {getInitColorSchemeScript()}

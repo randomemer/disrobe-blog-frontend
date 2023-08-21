@@ -20,8 +20,10 @@ import {
 } from "@/styles/home.styles";
 import { StoryJoinedJSON } from "@/types/backend";
 import { GetServerSidePropsContext } from "next";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { PlainLink } from "@/styles/shared";
+import Head from "next/head";
+import DefaultHeadContent from "@/components/head";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -33,7 +35,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     console.time("home_feed");
 
     const results = await StoryModel.query()
-      .withGraphJoined({ author: true, draft: true })
+      .withGraphJoined({ author: true, draft: true, settings: true })
       .limit(25);
 
     console.timeEnd("home_feed");
@@ -55,54 +57,60 @@ export default function Home(props: HomeRouteProps) {
   const { stories } = props;
 
   return (
-    <BlogLayout>
-      <SplashSection>
-        <SplashContainer>
-          <SplashContent>
-            <SplashTitle>
-              Stories on <span className="highlight">art</span>,{" "}
-              <span className="highlight">people</span> and the{" "}
-              <span className="highlight">world</span>.
-            </SplashTitle>
-          </SplashContent>
-        </SplashContainer>
-      </SplashSection>
+    <>
+      <Head>
+        <DefaultHeadContent />
+      </Head>
 
-      <StoriesSection>
-        {/* TODO : Add ads to the site */}
-        {/* <div className="ads"></div> */}
+      <BlogLayout>
+        <SplashSection>
+          <SplashContainer>
+            <SplashContent>
+              <SplashTitle>
+                Stories on <span className="highlight">art</span>,{" "}
+                <span className="highlight">people</span> and the{" "}
+                <span className="highlight">world</span>.
+              </SplashTitle>
+            </SplashContent>
+          </SplashContainer>
+        </SplashSection>
 
-        <div>
-          <SectionHeading>Recently Published</SectionHeading>
+        <StoriesSection>
+          {/* TODO : Add ads to the site */}
+          {/* <div className="ads"></div> */}
+
           <div>
-            {stories.map((story) => (
-              <StoryCard key={story.id} story={story} />
-            ))}
+            <SectionHeading>Recently Published</SectionHeading>
+            <div>
+              {stories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* TODO : Add a mail subscription */}
-        {/* <Sidebar>
+          {/* TODO : Add a mail subscription */}
+          {/* <Sidebar>
           <div className="cta-element">
-            <p className="tagline">Don&apos;t miss anything from us</p>
+          <p className="tagline">Don&apos;t miss anything from us</p>
 
-            <EmailTextField
-              fullWidth
-              hiddenLabel
-              variant="standard"
-              placeholder="Your Email"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <MailRounded className="mail-icon" />
-                  </InputAdornment>
-                ),
-              }}
+          <EmailTextField
+          fullWidth
+          hiddenLabel
+          variant="standard"
+          placeholder="Your Email"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+              <MailRounded className="mail-icon" />
+              </InputAdornment>
+              ),
+            }}
             />
-          </div>
-        </Sidebar> */}
-      </StoriesSection>
-    </BlogLayout>
+            </div>
+          </Sidebar> */}
+        </StoriesSection>
+      </BlogLayout>
+    </>
   );
 }
 
