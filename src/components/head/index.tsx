@@ -1,4 +1,15 @@
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+
 export default function DefaultHeadContent() {
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    if (typeof window) {
+      setOrigin(location.origin);
+    }
+  }, []);
+
   return (
     <>
       <title>Disrobe</title>
@@ -15,7 +26,7 @@ export default function DefaultHeadContent() {
         content="Stories on art, people and the world."
       />
 
-      <meta property="og:image" content="/images/splash.jpg" />
+      <meta property="og:image" content={`${origin}/images/splash.jpg`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
     </>
