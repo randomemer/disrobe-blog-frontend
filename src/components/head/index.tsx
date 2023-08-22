@@ -1,6 +1,13 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 export default function DefaultHeadContent() {
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(location.origin);
+  }, []);
+
   return (
     <Head>
       <title>Disrobe</title>
