@@ -1,12 +1,7 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
 
 export default function DefaultHeadContent() {
-  const [origin, setOrigin] = useState("");
-
-  useEffect(() => {
-    setOrigin(location.origin);
-  }, []);
+  const origin = process.env.ORIGIN;
 
   return (
     <Head>

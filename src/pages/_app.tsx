@@ -10,12 +10,12 @@ import { CssBaseline, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 import ModalProvider from "mui-modal-provider";
-import NextNProgress from "nextjs-progressbar";
 import Head from "next/head";
+import NextNProgress from "nextjs-progressbar";
 
+import StorySettingsProvider from "@/contexts/story-settings";
 import type { RouteProps } from "@/types";
 import type { AppProps } from "next/app";
-import StorySettingsProvider from "@/contexts/story-settings";
 
 const clientEmotionCache = createEmotionCache();
 const globalStylesEl = <GlobalStyles styles={globalStyles} />;
