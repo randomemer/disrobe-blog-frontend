@@ -1,9 +1,7 @@
-import Head from "next/head";
-import AppHeader from "@/components/header";
-import { Main } from "./styles";
-import { PropsWithChildren } from "react";
 import Footer from "@/components/footer";
-import DefaultHeadContent from "@/components/head";
+import AppHeader from "@/components/header";
+import { PropsWithChildren } from "react";
+import { Main } from "./styles";
 
 export type BlogLayoutProps = PropsWithChildren<{}>;
 

@@ -58,9 +58,7 @@ export default function Home(props: HomeRouteProps) {
 
   return (
     <>
-      <Head>
-        <DefaultHeadContent />
-      </Head>
+      <DefaultHeadContent />
 
       <BlogLayout>
         <SplashSection>

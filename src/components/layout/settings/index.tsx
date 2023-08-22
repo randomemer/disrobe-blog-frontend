@@ -61,9 +61,7 @@ export default function SettingsLayout(props: PropsWithChildren) {
 
   return (
     <>
-      <Head>
-        <DefaultHeadContent />
-      </Head>
+      <DefaultHeadContent />
 
       <SettingsRoot>
         <AppHeader position="relative" />

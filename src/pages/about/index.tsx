@@ -13,9 +13,7 @@ export default function AboutRoute() {
 
   return (
     <BlogLayout>
-      <Head>
-        <DefaultHeadContent />
-      </Head>
+      <DefaultHeadContent />
 
       <AboutBackground />
 

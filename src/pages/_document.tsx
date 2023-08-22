@@ -18,9 +18,19 @@ export default function DisrobeDocument(props: DisrobeDocumentProps) {
       <Head>
         {props.emotionStyleTags}
         <meta charSet="utf-8" />
-        <link rel="icon" href="/favicon.ico" />
-        {/* <link rel="apple-touch-icon" href="/logo192.png" /> */}
         <meta name="robots" content="index, follow, max-image-preview:large" />
+
+        {/* Icons */}
+        <link rel="icon" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" sizes="32x32" href="/favicon-32x32.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link rel="icon" sizes="192x192" href="/android-chrome-192x192.png" />
+        <link rel="icon" sizes="512x512" href="/android-chrome-512x512.png" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
         <meta property="og:site_name" content="Disrobe" />
         <meta name="twitter:card" content="summary_large_image" />
