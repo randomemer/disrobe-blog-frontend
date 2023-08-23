@@ -9,8 +9,10 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "material-ui-snackbar-provider";
+import { useRouter } from "next/router";
 
 export default function StoryActions() {
+  const router = useRouter();
   const [{ story }, setStory] = useStorySettings();
   const snackbar = useSnackbar();
 
@@ -54,14 +56,29 @@ export default function StoryActions() {
       resp.data = setStory((data) => {
         data.story = resp.data;
       });
-      snackbar.showMessage(
-        "Story has been unpublished.",
-        undefined,
-        undefined,
-        {
-          severity: "success",
-        } as any
-      );
+      snackbar.showMessage("Story has been unpublished", undefined, undefined, {
+        severity: "success",
+      } as any);
+    } catch (error) {
+      if (!(error instanceof Error)) return;
+      console.error(error);
+      snackbar.showMessage(error.message, undefined, undefined, {
+        severity: "error",
+      } as any);
+    }
+  };
+
+  const deleteStory = async () => {
+    try {
+      const token = await getAuth().currentUser!.getIdToken();
+      await axios.delete(`/api/story/${story?.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      snackbar.showMessage("Story has been deleted", undefined, undefined, {
+        severity: "success",
+      } as any);
+      router.push("/me/posts");
     } catch (error) {
       if (!(error instanceof Error)) return;
       console.error(error);

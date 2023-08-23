@@ -1,4 +1,8 @@
-import { StoryModel, StorySnapshotModel } from "@/modules/backend";
+import {
+  StoryModel,
+  StorySettingsModel,
+  StorySnapshotModel,
+} from "@/modules/backend";
 import admin from "@/modules/backend/admin";
 import { extractBearerToken } from "@/modules/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -69,6 +73,38 @@ export default async function handler(
         }
       }
 
+      case "DELETE": {
+        const authorization = req.headers.authorization;
+        const token = extractBearerToken(authorization);
+        if (!token) {
+          res.status(401);
+          return res.send({ message: "Bearer token not present or invalid" });
+        }
+
+        const decoded = await admin.auth().verifyIdToken(token);
+
+        const story = await StoryModel.query()
+          .findById(storyId)
+          .withGraphJoined({
+            draft: true,
+            author: true,
+            live: true,
+            settings: true,
+          });
+
+        if (!story) return res.status(404).send(undefined);
+
+        if (story.author_id !== decoded.uid) {
+          res.status(401);
+          return res.send({
+            message: "Failed to verify ownership of content",
+          });
+        }
+
+        await deleteStory(story);
+        return res.status(201).end();
+      }
+
       default:
         return res.setHeader("Allow", "GET, POST").status(405).end();
     }
@@ -131,5 +167,13 @@ async function unpublishStory(story: StoryModel) {
       live: true,
       settings: true,
     })) as StoryModel;
+  });
+}
+
+async function deleteStory(story: StoryModel) {
+  await StoryModel.transaction(async (trx) => {
+    await StorySnapshotModel.query(trx).delete().where("story_id", story.id);
+    await StorySettingsModel.query(trx).deleteById(story.settings.id);
+    await StoryModel.query(trx).deleteById(story.id);
   });
 }

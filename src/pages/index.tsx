@@ -35,7 +35,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     console.time("home_feed");
 
     const results = await StoryModel.query()
-      .withGraphJoined({ author: true, draft: true, settings: true })
+      .withGraphJoined({
+        author: true,
+        draft: true,
+        live: true,
+        settings: true,
+      })
       .limit(25);
 
     console.timeEnd("home_feed");
@@ -120,9 +125,9 @@ export function StoryCard(props: StoryCardProps) {
   const { story } = props;
   const gistRef = useRef<HTMLDivElement>(null);
 
-  // TODO : change to live in production
-  const { title, content } = story.draft;
-  const thumb = getStoryThumb(content);
+  const { title, content } =
+    process.env.NODE_ENV === "production" ? story.draft : story.live!;
+  // const thumb = getStoryThumb(content);
 
   const path = `/story/${story.id}`;
 
