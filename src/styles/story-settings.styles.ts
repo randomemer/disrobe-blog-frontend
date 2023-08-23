@@ -17,7 +17,9 @@ export const Content = styled(Box)`
   max-width: 75rem;
 `;
 
-export const Section = styled(Box)``;
+export const Section = styled("section")`
+  scroll-margin-top: 4.8rem;
+`;
 
 export const SectionItem = styled(Box)`
   margin-bottom: 4.8rem;

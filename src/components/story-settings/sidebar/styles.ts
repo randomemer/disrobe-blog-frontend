@@ -1,10 +1,13 @@
-import { Box, List, ListItemButton, Typography } from "@mui/material";
+import { Box, ListItemButton, Typography } from "@mui/material";
+import { listItemTextClasses } from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { listItemTextClasses } from "@mui/material/ListItemText";
 
 export const Sidebar = styled(Box)`
   width: 25.6rem;
+  align-self: flex-start;
+  position: sticky;
+  top: 4.8rem;
 
   ${({ theme }) => theme.breakpoints.down("lg")} {
     width: 20rem;

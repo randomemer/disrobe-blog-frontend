@@ -1,32 +1,24 @@
 import { List, ListItemText } from "@mui/material";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { MouseEvent } from "react";
 import { Sidebar, SidebarItem, SidebarTitle } from "./styles";
 
-const LIST_ITEMS = [
+export const LIST_ITEMS = [
   { hash: "#preview", label: "Preview" },
   { hash: "#story-metadata", label: "Story Metadata" },
 ];
 
-export default function StorySettingsSidebar() {
-  const router = useRouter();
-  const [hash, setHash] = useState("");
+interface StorySettingsSidebarProps {
+  activeSection: string;
+}
 
-  const onHashChange = (path: string) => {
-    const url = new URL(location.origin + path);
-    setHash(url.hash);
+export default function StorySettingsSidebar(props: StorySettingsSidebarProps) {
+  const onItemClick = (event: MouseEvent<HTMLAnchorElement>, hash: string) => {
+    event.preventDefault();
+
+    const section = document.querySelector(hash);
+    section?.scrollIntoView({ behavior: "smooth" });
   };
-
-  useEffect(() => {
-    if (typeof window) setHash(window.location.hash);
-  }, []);
-
-  useEffect(() => {
-    router.events.on("hashChangeStart", onHashChange);
-
-    return () => router.events.off("hashChangeStart", onHashChange);
-  }, [router.events]);
 
   return (
     <Sidebar>
@@ -40,7 +32,8 @@ export default function StorySettingsSidebar() {
             key={item.hash}
             component={Link}
             href={item.hash}
-            selected={hash === item.hash}
+            selected={item.hash === props.activeSection}
+            onClick={(event) => onItemClick(event, item.hash)}
           >
             <ListItemText>{item.label}</ListItemText>
           </SidebarItem>

@@ -19,7 +19,6 @@ export default function MetaDescSection() {
 
   useEffect(() => {
     setDesc(story?.settings.meta_desc || "");
-    console.log(story?.settings.meta_desc);
   }, [story]);
 
   const saveMetaDesc = async () => {

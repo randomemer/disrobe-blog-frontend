@@ -3,7 +3,9 @@ import AppLayout from "@/components/layout/app";
 import MetaDescSection from "@/components/story-settings/meta-desc-section";
 import MetaImgSection from "@/components/story-settings/meta-img-section";
 import MetaTitleSection from "@/components/story-settings/meta-title-section";
-import StorySettingsSidebar from "@/components/story-settings/story-settings-sidebar";
+import StorySettingsSidebar, {
+  LIST_ITEMS,
+} from "@/components/story-settings/sidebar";
 import useStorySettings from "@/hooks/use-story-settings";
 import { StoryCard } from "@/pages";
 import { MainWrapper } from "@/styles/shared";
@@ -18,11 +20,39 @@ import { StoryJoinedJSON } from "@/types/backend";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function StorySettingsRoute() {
   const router = useRouter();
   const [{ status, story }, setStoryData] = useStorySettings();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [activeHash, setActiveHash] = useState("");
+
+  const handleIntersect: IntersectionObserverCallback = (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setActiveHash("#" + entry.target.id);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleIntersect, {
+      threshold: 0.5,
+      rootMargin: "0px",
+    });
+
+    LIST_ITEMS.forEach((item) => {
+      const el = document.querySelector(item.hash);
+      if (el) observer.observe(el!);
+    });
+
+    return () => observer.disconnect();
+  }, [status]);
+
+  useEffect(() => {
+    window.location.hash = activeHash;
+  }, [activeHash]);
 
   const fetchStory = async () => {
     setStoryData((data) => {
@@ -61,16 +91,16 @@ function StorySettingsRoute() {
         <AppLayout>
           <MainWrapper>
             <StorySettingsContainer>
-              <StorySettingsSidebar />
-              <Content>
-                <Section>
+              <StorySettingsSidebar activeSection={activeHash} />
+              <Content ref={contentRef}>
+                <Section id="preview">
                   <SectionHeading component="h2" variant="h4">
                     Preview
                   </SectionHeading>
                   <StoryCard story={story!} />
                 </Section>
 
-                <Section>
+                <Section id="story-metadata">
                   <SectionHeading component="h2" variant="h4">
                     Story Metadata
                   </SectionHeading>
@@ -95,7 +125,7 @@ function StorySettingsSkeleton() {
     <AppLayout>
       <MainWrapper>
         <StorySettingsContainer>
-          <StorySettingsSidebar />
+          <StorySettingsSidebar activeSection="" />
         </StorySettingsContainer>
       </MainWrapper>
     </AppLayout>
