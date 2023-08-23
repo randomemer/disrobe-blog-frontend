@@ -40,37 +40,41 @@ export default async function handler(
 
         const publish = req.query.publish as string | undefined;
 
+        const story = await StoryModel.query()
+          .findById(storyId)
+          .withGraphJoined({
+            draft: true,
+            author: true,
+            live: true,
+            settings: true,
+          });
+
+        if (!story) return res.status(404).send(undefined);
+
+        if (story.author_id !== decoded.uid) {
+          res.status(401);
+          return res.send({
+            message: "Failed to verify ownership of content",
+          });
+        }
+
         if (publish === "true") {
-          const story = await StoryModel.query()
-            .findById(storyId)
-            .withGraphJoined({
-              draft: true,
-              author: true,
-              live: true,
-              settings: true,
-            });
-
-          if (!story) return res.status(404).send(undefined);
-          if (story.author_id !== decoded.uid) {
-            res.status(401);
-            return res.send({
-              message: "Failed to verify ownership of content",
-            });
-          }
-
           const { draft, live } = story;
 
           if (live) {
-            const updated = await StoryModel.query().upsertGraphAndFetch({
-              id: storyId,
-              is_published: true,
-              live: {
-                id: live.id,
-                story_id: storyId,
-                title: draft.title,
-                content: draft.content,
-              } as ModelObject<StorySnapshotModel>,
-            });
+            const updated = await StoryModel.query().upsertGraphAndFetch(
+              {
+                id: storyId,
+                is_published: true,
+                live: {
+                  id: live.id,
+                  story_id: storyId,
+                  title: draft.title,
+                  content: draft.content,
+                } as ModelObject<StorySnapshotModel>,
+              },
+              { noDelete: true }
+            );
 
             return res.status(200).send(updated.toJSON());
           } else {
@@ -87,26 +91,48 @@ export default async function handler(
                   content: draft.content,
                 } as ModelObject<StorySnapshotModel>,
               },
-              { insertMissing: true }
+              { insertMissing: true, noDelete: true }
             );
 
             return res.status(200).send(published.toJSON());
           }
         } else if (publish === "false") {
-          //@TODO : unpublish story
+          const unpublished = await StoryModel.transaction(async (trx) => {
+            if (story.live_snap_id) {
+              await StorySnapshotModel.query(trx).deleteById(
+                story.live_snap_id
+              );
+            }
+            await StoryModel.query(trx).findById(story.id).patch({
+              is_published: false,
+              live_snap_id: null,
+            });
+
+            return await StoryModel.query(trx)
+              .findById(story.id)
+              .withGraphJoined({
+                draft: true,
+                author: true,
+                live: true,
+                settings: true,
+              });
+          });
+
+          return res.status(200).send(unpublished!.toJSON());
         } else {
-          return res.status(201).send(undefined);
+          return res.status(201).end();
         }
       }
 
       default:
-        return res.setHeader("Allow", "GET, POST").status(405).send(undefined);
+        return res.setHeader("Allow", "GET, POST").status(405).end();
     }
   } catch (error) {
+    if (!(error instanceof Error)) return;
     console.error(error);
     res.status(500).send({
-      error: (error as Error).name,
-      message: (error as Error).message,
+      error: error.name,
+      message: error.message,
     });
   }
 }

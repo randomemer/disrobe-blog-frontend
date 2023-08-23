@@ -11,7 +11,7 @@ interface StorySnapshotModel {
 
 class StorySnapshotModel extends Model {
   static tableName = "StorySnapshot";
-  static idColumn = ["id", "story_id"];
+  static idColumn = "id";
 
   static jsonSchema: JSONSchema = {
     type: "object",

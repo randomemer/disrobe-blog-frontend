@@ -1,8 +1,9 @@
 import withAuth from "@/components/auth/hoc";
 import AppLayout from "@/components/layout/app";
-import MetaDescSection from "@/components/story-settings/meta-desc-section";
-import MetaImgSection from "@/components/story-settings/meta-img-section";
-import MetaTitleSection from "@/components/story-settings/meta-title-section";
+import StoryActions from "@/components/story-settings/actions";
+import MetaDescSection from "@/components/story-settings/meta-desc";
+import MetaImgSection from "@/components/story-settings/meta-img";
+import MetaTitleSection from "@/components/story-settings/meta-title";
 import StorySettingsSidebar, {
   LIST_ITEMS,
 } from "@/components/story-settings/sidebar";
@@ -108,6 +109,14 @@ function StorySettingsRoute() {
                   <MetaTitleSection />
                   <MetaDescSection />
                   <MetaImgSection />
+                </Section>
+
+                <Section id="actions">
+                  <SectionHeading component="h2" variant="h4">
+                    Actions
+                  </SectionHeading>
+
+                  <StoryActions />
                 </Section>
               </Content>
             </StorySettingsContainer>

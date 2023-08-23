@@ -10,7 +10,7 @@ exports.up = function (knex) {
     table.string("meta_desc");
     table.string("meta_img");
 
-    table.primary(["id", "story_id"]);
+    table.primary("id");
   });
 };
 

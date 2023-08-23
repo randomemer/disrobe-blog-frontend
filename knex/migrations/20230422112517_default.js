@@ -30,7 +30,7 @@ exports.up = function (knex) {
       table.json("content").notNullable();
       table.datetime("timestamp").defaultTo(knex.raw("CURRENT_TIMESTAMP()"));
 
-      table.primary(["id", "story_id"]);
+      table.primary("id");
     });
 };
 

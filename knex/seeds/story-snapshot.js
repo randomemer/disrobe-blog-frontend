@@ -7,5 +7,11 @@ const data = require("./data/story-snapshot.json");
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
   await knex("StorySnapshot").del();
+
+  for (const item of data) {
+    item.content = JSON.stringify(item.content);
+    item.timestamp = new Date(item.timestamp);
+  }
+
   await knex("StorySnapshot").insert(data);
 };

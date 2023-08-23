@@ -15,6 +15,7 @@ export const Content = styled(Box)`
   gap: 8.4rem;
   flex: 1;
   max-width: 75rem;
+  margin-bottom: 15rem;
 `;
 
 export const Section = styled("section")`
@@ -22,10 +23,13 @@ export const Section = styled("section")`
 `;
 
 export const SectionItem = styled(Box)`
-  margin-bottom: 4.8rem;
   display: flex;
   flex-direction: column;
   gap: 1.8rem;
+
+  &:not(:last-child) {
+    margin-bottom: 4.8rem;
+  }
 `;
 
 export const SectionHeading = styled(Typography)`
@@ -42,4 +46,9 @@ export const MetaImgPreview = styled(ImageWithFallback)`
   img {
     max-width: 100%;
   }
+`;
+
+export const ActionsBox = styled(Box)`
+  display: flex;
+  gap: 1.8rem;
 `;

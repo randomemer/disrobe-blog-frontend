@@ -6,6 +6,7 @@ import { Sidebar, SidebarItem, SidebarTitle } from "./styles";
 export const LIST_ITEMS = [
   { hash: "#preview", label: "Preview" },
   { hash: "#story-metadata", label: "Story Metadata" },
+  { hash: "#actions", label: "Actions" },
 ];
 
 interface StorySettingsSidebarProps {
