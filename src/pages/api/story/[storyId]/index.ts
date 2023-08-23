@@ -59,66 +59,11 @@ export default async function handler(
         }
 
         if (publish === "true") {
-          const { draft, live } = story;
-
-          if (live) {
-            const updated = await StoryModel.query().upsertGraphAndFetch(
-              {
-                id: storyId,
-                is_published: true,
-                live: {
-                  id: live.id,
-                  story_id: storyId,
-                  title: draft.title,
-                  content: draft.content,
-                } as ModelObject<StorySnapshotModel>,
-              },
-              { noDelete: true }
-            );
-
-            return res.status(200).send(updated.toJSON());
-          } else {
-            const snapId = v4();
-            const published = await StoryModel.query().upsertGraphAndFetch(
-              {
-                id: storyId,
-                is_published: true,
-                live_snap_id: snapId,
-                live: {
-                  id: snapId,
-                  story_id: storyId,
-                  title: draft.title,
-                  content: draft.content,
-                } as ModelObject<StorySnapshotModel>,
-              },
-              { insertMissing: true, noDelete: true }
-            );
-
-            return res.status(200).send(published.toJSON());
-          }
+          const published = await publishStory(story);
+          return res.status(200).send(published.toJSON());
         } else if (publish === "false") {
-          const unpublished = await StoryModel.transaction(async (trx) => {
-            if (story.live_snap_id) {
-              await StorySnapshotModel.query(trx).deleteById(
-                story.live_snap_id
-              );
-            }
-            await StoryModel.query(trx).findById(story.id).patch({
-              is_published: false,
-              live_snap_id: null,
-            });
-
-            return await StoryModel.query(trx)
-              .findById(story.id)
-              .withGraphJoined({
-                draft: true,
-                author: true,
-                live: true,
-                settings: true,
-              });
-          });
-
-          return res.status(200).send(unpublished!.toJSON());
+          const unpublished = await unpublishStory(story);
+          return res.status(200).send(unpublished.toJSON());
         } else {
           return res.status(201).end();
         }
@@ -135,4 +80,56 @@ export default async function handler(
       message: error.message,
     });
   }
+}
+
+async function publishStory(story: StoryModel) {
+  const { draft, live } = story;
+
+  if (live) {
+    await StorySnapshotModel.query()
+      .findById(live.id)
+      .patch({ title: draft.title, content: draft.content });
+  } else {
+    await StoryModel.transaction(async (trx) => {
+      const snapId = v4();
+      await StorySnapshotModel.query(trx).insert({
+        id: snapId,
+        story_id: story.id,
+        title: draft.title,
+        content: draft.content,
+      });
+
+      await StoryModel.query(trx)
+        .findById(story.id)
+        .patch({ is_published: true, live_snap_id: snapId });
+    });
+  }
+
+  return (await StoryModel.query().findById(story.id).withGraphJoined({
+    draft: true,
+    author: true,
+    live: true,
+    settings: true,
+  })) as StoryModel;
+}
+
+async function unpublishStory(story: StoryModel) {
+  return StoryModel.transaction(async (trx) => {
+    if (story.live_snap_id) {
+      await StoryModel.relatedQuery<StorySnapshotModel>("live", trx).deleteById(
+        story.live_snap_id
+      );
+    }
+    await StoryModel.query(trx).findById(story.id).patch({
+      is_published: false,
+      live_snap_id: null,
+    });
+
+    return (await StoryModel.query(trx).findById(story.id).withGraphJoined({
+      draft: true,
+      author: true,
+      live: true,
+      settings: true,
+    })) as StoryModel;
+  });
 }

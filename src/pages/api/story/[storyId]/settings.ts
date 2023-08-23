@@ -32,11 +32,11 @@ export default async function handler(
           return res.send({ message: "Failed to verify ownership of content" });
         }
 
-        story.$relatedQuery<any>("settings");
-
         // 3. verify data and update settings
         let model = StorySettingsModel.fromJson(req.body, { patch: true });
-        const result = await StoryModel.relatedQuery<any>("settings")
+        const result = await StoryModel.relatedQuery<StorySettingsModel>(
+          "settings"
+        )
           .for(storyId)
           .patch(model);
 
