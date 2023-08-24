@@ -126,7 +126,7 @@ export function StoryCard(props: StoryCardProps) {
   const gistRef = useRef<HTMLDivElement>(null);
 
   const { title, content } =
-    process.env.NODE_ENV === "production" ? story.draft : story.live!;
+    process.env.NODE_ENV === "production" ? story.live! : story.draft;
   // const thumb = getStoryThumb(content);
 
   const path = `/story/${story.id}`;

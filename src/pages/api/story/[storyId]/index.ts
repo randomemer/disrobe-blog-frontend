@@ -6,7 +6,6 @@ import {
 import admin from "@/modules/backend/admin";
 import { extractBearerToken } from "@/modules/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ModelObject } from "objection";
 import { v4 } from "uuid";
 
 export default async function handler(
