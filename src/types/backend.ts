@@ -1,22 +1,49 @@
-import type {
-  AuthorModel,
-  StoryModel,
-  StorySnapshotModel,
-} from "@/modules/backend";
-import { ModelObject } from "objection";
+import type { Descendant } from "slate";
 
-export type JSONMappings = {
-  Date: string;
-};
+export interface AuthorJSON {
+  id: string;
+  name: string;
+  bio: string | null;
+  picture: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
-export type JSONEncodable<T> = {
-  [K in keyof T]: K extends keyof JSONMappings ? JSONMappings[K] : T[K];
-};
+export interface StoryJoinedJSON {
+  id: string;
+  is_published: boolean;
 
-export interface AuthorJSON extends JSONEncodable<ModelObject<AuthorModel>> {}
+  author_id: string;
+  author: AuthorJSON;
 
-export interface StorySnapshotJSON
-  extends JSONEncodable<ModelObject<StorySnapshotModel>> {}
+  draft_snap_id: string;
+  draft: StorySnapshotJSON;
 
-export interface StoryJoinedJSON
-  extends JSONEncodable<ModelObject<StoryModel>> {}
+  live_snap_id: string | null;
+  live: StorySnapshotJSON | null;
+
+  settings: StorySettings;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StorySnapshotJSON {
+  id: string;
+  story_id: string;
+  title: string;
+  content: Descendant[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StorySettings {
+  id: string;
+  story_id: string;
+  meta_title: string | null;
+  meta_desc: string | null;
+  meta_img: string | null;
+  author_modified: boolean;
+  created_at: string;
+  updated_at: string;
+}

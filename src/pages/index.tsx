@@ -1,8 +1,7 @@
 import StoryAuthor from "@/components/author";
+import DefaultHeadContent from "@/components/head";
 import BlogLayout from "@/components/layout/home";
-import $clamp from "clamp-js";
-import { StoryModel } from "@/modules/backend";
-import { getContentString, getStoryThumb, jsonify } from "@/modules/utils";
+import { api, getContentString } from "@/modules/utils";
 import {
   Gist,
   SectionHeading,
@@ -18,12 +17,11 @@ import {
   StoryThumbnail,
   StoryThumbnailLink,
 } from "@/styles/home.styles";
+import { PlainLink } from "@/styles/shared";
 import { StoryJoinedJSON } from "@/types/backend";
+import $clamp from "clamp-js";
 import { GetServerSidePropsContext } from "next";
 import { useEffect, useRef } from "react";
-import { PlainLink } from "@/styles/shared";
-import Head from "next/head";
-import DefaultHeadContent from "@/components/head";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
@@ -34,20 +32,20 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     console.time("home_feed");
 
-    const results = await StoryModel.query()
-      .withGraphJoined({
-        author: true,
-        draft: true,
-        live: true,
-        settings: true,
-      })
-      .limit(25);
+    const filter = {
+      limit: 25,
+      relations: ["author", "draft", "live", "settings"],
+    };
+    const query = new URLSearchParams({ filter: JSON.stringify(filter) });
+
+    const resp = await api.get<StoryJoinedJSON[]>(
+      `/v1/story?${query.toString()}`
+    );
+
+    console.log(`/v1/story?${query.toString()}`);
 
     console.timeEnd("home_feed");
-
-    const serialized = results.map((r) => jsonify(r.toJSON()));
-
-    return { props: { stories: serialized } };
+    return { props: { stories: resp.data } };
   } catch (error) {
     console.error("Error occured while fetching feed", error);
     return { props: { stories: [] } };

@@ -1,6 +1,9 @@
 import StoryAuthor from "@/components/author";
 import BlogLayout from "@/components/layout/home";
+import StorySocials from "@/components/socials";
+import SuggestedArticles from "@/components/suggested-articles";
 import { serializeToHTML } from "@/modules/slate/serialize";
+import { api, jsonify } from "@/modules/utils";
 import {
   Article,
   ArticleGrid,
@@ -9,12 +12,8 @@ import {
   StoryHeading,
   StoryHeadingBox,
 } from "@/styles/story.styles";
-import Head from "next/head";
-import { StoryModel } from "@/modules/backend";
 import { StoryJoinedJSON } from "@/types/backend";
-import { jsonify } from "@/modules/utils";
-import StorySocials from "@/components/socials";
-import SuggestedArticles from "@/components/suggested-articles";
+import Head from "next/head";
 
 import type { GetServerSideProps } from "next";
 
@@ -23,21 +22,22 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
 ) => {
   const id = context?.params?.id as string;
 
-  const story = await StoryModel.query()
-    .withGraphJoined({ author: true, draft: true, settings: true })
-    .findById(id);
+  const storyResp = await api.get<StoryJoinedJSON>(`/v1/story/${id}`);
+  const story = storyResp.data;
 
   if (!story) throw new Error("Story Not Found");
 
-  const suggestedStories = await StoryModel.query()
-    .withGraphJoined({
-      author: true,
-      draft: true,
-      settings: true,
-    })
-    .where(`${StoryModel.tableName}.id`, "!=", id)
-    .orderBy("created_at", "DESC")
-    .limit(5);
+  // const suggestedStories = await StoryModel.query()
+  //   .withGraphJoined({
+  //     author: true,
+  //     draft: true,
+  //     settings: true,
+  //   })
+  //   .where(`${StoryModel.tableName}.id`, "!=", id)
+  //   .orderBy("created_at", "DESC")
+  //   .limit(5);
+
+  console.log(story);
 
   context.res.setHeader(
     "Cache-Control",
@@ -46,8 +46,8 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
 
   return {
     props: {
-      story: jsonify(story),
-      suggested: jsonify(suggestedStories),
+      story,
+      suggested: [],
     },
   };
 };
@@ -83,7 +83,7 @@ export default function StoryRoute(props: StoryRouteProps) {
 
         {/* Open Graph - Article */}
         <meta name="article:author" content={story.author.name} />
-        <meta name="article:modified_time" content={story.live?.timestamp} />
+        <meta name="article:modified_time" content={story.live?.updated_at} />
       </Head>
 
       <ArticleGrid>

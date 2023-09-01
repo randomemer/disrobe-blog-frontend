@@ -1,11 +1,12 @@
+import { FormValues } from "@/types";
+import { ImageElement } from "@/types/slate";
+import createCache from "@emotion/cache";
+import { Axios } from "axios";
 import { randomBytes } from "crypto";
 import humanizeDuration from "humanize-duration";
-import { Descendant, Element, Node } from "slate";
-import createCache from "@emotion/cache";
-import { FormValues } from "@/types";
-import { AnyObject, Maybe, number, Schema, string, ValidationError } from "yup";
 import _ from "lodash";
-import { ImageElement } from "@/types/slate";
+import { Descendant, Element, Node } from "slate";
+import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
 import { META_DESC_LENGTH, META_TITLE_LENGTH } from "./config";
 
 /**
@@ -13,6 +14,8 @@ import { META_DESC_LENGTH, META_TITLE_LENGTH } from "./config";
 |                 VALUES / OBJECTS
 |--------------------------------------------------
 */
+
+export const api = new Axios({ baseURL: process.env.API_ENDPOINT });
 
 export const WORD_REGEX = /\b\w+\b/gm;
 
