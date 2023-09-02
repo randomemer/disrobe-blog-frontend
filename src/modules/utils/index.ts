@@ -1,7 +1,7 @@
 import { FormValues } from "@/types";
 import { ImageElement } from "@/types/slate";
 import createCache from "@emotion/cache";
-import { Axios } from "axios";
+import axios from "axios";
 import { randomBytes } from "crypto";
 import humanizeDuration from "humanize-duration";
 import _ from "lodash";
@@ -15,7 +15,7 @@ import { META_DESC_LENGTH, META_TITLE_LENGTH } from "./config";
 |--------------------------------------------------
 */
 
-export const api = new Axios({ baseURL: process.env.API_ENDPOINT });
+export const api = axios.create({ baseURL: process.env.API_ENDPOINT });
 
 export const WORD_REGEX = /\b\w+\b/gm;
 

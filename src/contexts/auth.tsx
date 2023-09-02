@@ -1,9 +1,9 @@
+import { api } from "@/modules/utils";
+import { AsyncStatus } from "@/types";
+import { AuthorJSON } from "@/types/backend";
+import { getAuth, User } from "firebase/auth";
 import { createContext, PropsWithChildren, useEffect } from "react";
 import { Updater, useImmer } from "use-immer";
-import { getAuth, User } from "firebase/auth";
-import { AuthorJSON } from "@/types/backend";
-import { AsyncStatus } from "@/types";
-import axios from "axios";
 
 export interface AuthContextData {
   status: { user: AsyncStatus; author: AsyncStatus };
@@ -63,7 +63,7 @@ export default function AuthTestProvider(props: PropsWithChildren) {
     });
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.get("/api/me", {
+      const resp = await api.get("/v1/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

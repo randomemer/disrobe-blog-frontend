@@ -1,14 +1,15 @@
 import useStorySettings from "@/hooks/use-story-settings";
-import { truncateMetaTitle } from "@/modules/utils";
+import { api, truncateMetaTitle } from "@/modules/utils";
 import { MetaFieldRow, SectionItem } from "@/styles/story-settings.styles";
-import { Button, TextField, Typography } from "@mui/material";
+import { StoryJoinedJSON } from "@/types/backend";
+import { SaveSharp } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import axios, { AxiosError } from "axios";
+import { TextField, Typography } from "@mui/material";
+import { AxiosError } from "axios";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { SaveSharp } from "@mui/icons-material";
 
 export default function MetaTitleSection() {
   const router = useRouter();
@@ -25,14 +26,16 @@ export default function MetaTitleSection() {
     setLoading(true);
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.patch(
-        `/api/story/${router.query.id}/settings`,
-        { meta_title: title },
+      const resp = await api.patch<StoryJoinedJSON>(
+        `/v1/story/${router.query.id}/`,
+        {
+          settings: { meta_title: title },
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setStoryData(({ story }) => {
-        story!.settings.meta_title = resp.data.data.meta_title;
+        story!.settings.meta_title = resp.data.settings.meta_title;
       });
     } catch (error) {
       console.error(error);

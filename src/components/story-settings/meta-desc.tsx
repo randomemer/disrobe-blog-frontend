@@ -1,10 +1,11 @@
 import useStorySettings from "@/hooks/use-story-settings";
-import { truncateMetaDesc } from "@/modules/utils";
+import { api, truncateMetaDesc } from "@/modules/utils";
 import { MetaFieldRow, SectionItem } from "@/styles/story-settings.styles";
+import { StoryJoinedJSON } from "@/types/backend";
 import { SaveSharp } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Button, TextField, Typography } from "@mui/material";
-import axios, { AxiosError } from "axios";
+import { TextField, Typography } from "@mui/material";
+import { AxiosError } from "axios";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { useRouter } from "next/router";
@@ -25,16 +26,18 @@ export default function MetaDescSection() {
     setLoading(true);
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.patch(
-        `/api/story/${router.query.id}/settings`,
+      const resp = await api.patch<StoryJoinedJSON>(
+        `/v1/story/${router.query.id}/`,
         {
-          meta_desc: desc,
+          settings: {
+            meta_desc: desc,
+          },
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setStoryData(({ story }) => {
-        story!.settings.meta_desc = resp.data.data.meta_desc;
+        story!.settings.meta_desc = resp.data.settings.meta_desc;
       });
     } catch (error) {
       console.error(error);

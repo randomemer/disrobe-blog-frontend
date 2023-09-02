@@ -68,6 +68,7 @@ import { getAuth } from "firebase/auth";
 import axios, { AxiosError } from "axios";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import Link from "next/link";
+import { api } from "@/modules/utils";
 
 // ============================================================
 
@@ -130,10 +131,12 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
       const token = await getAuth().currentUser!.getIdToken();
 
       if (data.story) {
-        const resp = await axios.post(
-          `/api/story/${data.story.id}/?publish=true`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
+        const resp = await api.patch(
+          `/v1/story/${data.story.id}/publish`,
+          undefined,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
 
         console.log(resp.data);

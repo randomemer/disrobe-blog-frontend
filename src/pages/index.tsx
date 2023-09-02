@@ -39,10 +39,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const query = new URLSearchParams({ filter: JSON.stringify(filter) });
 
     const resp = await api.get<StoryJoinedJSON[]>(
-      `/v1/story?${query.toString()}`
+      `/v1/story/?${query.toString()}`
     );
-
-    console.log(`/v1/story?${query.toString()}`);
 
     console.timeEnd("home_feed");
     return { props: { stories: resp.data } };

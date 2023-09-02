@@ -2,10 +2,10 @@ import withAuth from "@/components/auth/hoc";
 import AppLayout from "@/components/layout/app";
 import StoryEditor from "@/components/story-editor";
 import useEditorContext from "@/hooks/use-editor-data";
+import { api } from "@/modules/utils";
 import { WriteRouteSkeleton } from "@/pages/write";
 import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON } from "@/types/backend";
-import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ function StoryEditRoute() {
     try {
       const id = router.query.id as string;
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.get<StoryJoinedJSON>(`/api/story/${id}`, {
+      const resp = await api.get<StoryJoinedJSON>(`/v1/story/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

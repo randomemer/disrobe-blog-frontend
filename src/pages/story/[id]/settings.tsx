@@ -8,6 +8,7 @@ import StorySettingsSidebar, {
   LIST_ITEMS,
 } from "@/components/story-settings/sidebar";
 import useStorySettings from "@/hooks/use-story-settings";
+import { api } from "@/modules/utils";
 import { StoryCard } from "@/pages";
 import { MainWrapper } from "@/styles/shared";
 import {
@@ -18,7 +19,6 @@ import {
 } from "@/styles/story-settings.styles";
 import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON } from "@/types/backend";
-import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -62,7 +62,7 @@ function StorySettingsRoute() {
     try {
       const id = router.query.id as string;
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.get<StoryJoinedJSON>(`/api/story/${id}`, {
+      const resp = await api.get<StoryJoinedJSON>(`/v1/story/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

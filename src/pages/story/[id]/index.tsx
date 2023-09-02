@@ -27,17 +27,14 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
 
   if (!story) throw new Error("Story Not Found");
 
-  // const suggestedStories = await StoryModel.query()
-  //   .withGraphJoined({
-  //     author: true,
-  //     draft: true,
-  //     settings: true,
-  //   })
-  //   .where(`${StoryModel.tableName}.id`, "!=", id)
-  //   .orderBy("created_at", "DESC")
-  //   .limit(5);
-
-  console.log(story);
+  const filter = {
+    where: { id: { neq: id } },
+    relations: ["author", "draft", "live", "settings"],
+    limit: 5,
+    sort: { created_at: "desc" },
+  };
+  const query = new URLSearchParams({ filter: JSON.stringify(filter) });
+  const otherResp = await api.get<StoryJoinedJSON[]>(`/v1/story/?${query}`);
 
   context.res.setHeader(
     "Cache-Control",
@@ -47,7 +44,7 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   return {
     props: {
       story,
-      suggested: [],
+      suggested: otherResp.data,
     },
   };
 };

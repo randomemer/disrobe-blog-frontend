@@ -1,8 +1,10 @@
 import useStorySettings from "@/hooks/use-story-settings";
+import { api } from "@/modules/utils";
 import { SectionItem } from "@/styles/story-settings.styles";
+import { StoryJoinedJSON } from "@/types/backend";
 import { ImageElement } from "@/types/slate";
 import { Fade, ImageList, Typography } from "@mui/material";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import Image from "next/image";
@@ -34,10 +36,12 @@ export default function MetaImgSection() {
   const saveMetaImage = async (imageNode: ImageElement) => {
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.patch(
-        `/api/story/${router.query.id}/settings`,
+      const resp = await api.patch<StoryJoinedJSON>(
+        `/v1/story/${router.query.id}/`,
         {
-          meta_img: imageNode.url,
+          settings: {
+            meta_img: imageNode.url,
+          },
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -45,7 +49,7 @@ export default function MetaImgSection() {
       );
 
       setStoryData(({ story }) => {
-        story!.settings.meta_img = resp.data.data.meta_img;
+        story!.settings.meta_img = resp.data.settings.meta_img;
       });
     } catch (error) {
       console.error(error);

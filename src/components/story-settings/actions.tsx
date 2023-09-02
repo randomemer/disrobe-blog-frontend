@@ -1,4 +1,6 @@
+import AlertModal from "@/components/alert";
 import useStorySettings from "@/hooks/use-story-settings";
+import { api } from "@/modules/utils";
 import { ActionsBox } from "@/styles/story-settings.styles";
 import {
   DeleteOutlined,
@@ -7,13 +9,11 @@ import {
   UnpublishedOutlined,
 } from "@mui/icons-material";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
-import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { useModal } from "mui-modal-provider";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import AlertModal from "@/components/alert";
 
 export default function StoryActions() {
   const router = useRouter();
@@ -26,8 +26,8 @@ export default function StoryActions() {
     setLoading(true);
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.post(
-        `/api/story/${story?.id}?publish=true`,
+      const resp = await api.patch(
+        `/v1/story/${story?.id}/publish`,
         undefined,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -54,8 +54,8 @@ export default function StoryActions() {
     setLoading(true);
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.post(
-        `/api/story/${story?.id}?publish=false`,
+      const resp = await api.patch(
+        `/v1/story/${story?.id}/unpublish`,
         undefined,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -105,7 +105,7 @@ export default function StoryActions() {
     setLoading(true);
     try {
       const token = await getAuth().currentUser!.getIdToken();
-      await axios.delete(`/api/story/${story?.id}`, {
+      await api.delete(`/v1/story/${story?.id}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

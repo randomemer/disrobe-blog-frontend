@@ -13,6 +13,7 @@ import { SectionHeading, SettingsSection } from "@/styles/me.styles";
 import { InputField } from "@/styles/shared";
 import { AsyncStatus, FormErrors } from "@/types";
 import {
+  api,
   getMediaURL,
   isBlobURL,
   objectDifference,
@@ -163,7 +164,7 @@ function SettingsProfileRoute() {
       }
 
       const token = await getAuth().currentUser!.getIdToken();
-      const resp = await axios.patch("/api/me", diff, {
+      const resp = await api.patch("/v1/me", diff, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
