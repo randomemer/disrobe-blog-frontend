@@ -25,6 +25,12 @@ import { useEffect, useRef } from "react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
+    if (["HEAD", "OPTIONS"].includes(ctx.req.method ?? "")) {
+      return {
+        props: {},
+      };
+    }
+
     ctx.res.setHeader(
       "Cache-Control",
       "public, s-maxage=10, stale-while-revalidate=59"
@@ -33,6 +39,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     console.time("home_feed");
 
     const filter = {
+      where: {
+        ...(process.env.NODE_ENV === "production" && {
+          is_published: { eq: true },
+        }),
+      },
       limit: 25,
       relations: ["author", "draft", "live", "settings"],
     };
@@ -123,7 +134,6 @@ export function StoryCard(props: StoryCardProps) {
 
   const { title, content } =
     process.env.NODE_ENV === "production" ? story.live! : story.draft;
-  // const thumb = getStoryThumb(content);
 
   const path = `/story/${story.id}`;
 

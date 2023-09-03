@@ -3,7 +3,7 @@ import BlogLayout from "@/components/layout/home";
 import StorySocials from "@/components/socials";
 import SuggestedArticles from "@/components/suggested-articles";
 import { serializeToHTML } from "@/modules/slate/serialize";
-import { api, jsonify } from "@/modules/utils";
+import { api } from "@/modules/utils";
 import {
   Article,
   ArticleGrid,
@@ -18,14 +18,20 @@ import Head from "next/head";
 import type { GetServerSideProps } from "next";
 
 export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
-  context
+  ctx
 ) => {
-  const id = context?.params?.id as string;
+  const id = ctx?.params?.id as string;
 
   const storyResp = await api.get<StoryJoinedJSON>(`/v1/story/${id}`);
   const story = storyResp.data;
 
   if (!story) throw new Error("Story Not Found");
+
+  if (["HEAD", "OPTIONS"].includes(ctx.req.method ?? "")) {
+    return {
+      props: {} as StoryRouteProps,
+    };
+  }
 
   const filter = {
     where: { id: { neq: id } },
@@ -36,7 +42,7 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   const query = new URLSearchParams({ filter: JSON.stringify(filter) });
   const otherResp = await api.get<StoryJoinedJSON[]>(`/v1/story/?${query}`);
 
-  context.res.setHeader(
+  ctx.res.setHeader(
     "Cache-Control",
     "public, s-maxage=10, stale-while-revalidate=59"
   );
