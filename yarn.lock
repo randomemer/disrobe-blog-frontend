@@ -1657,7 +1657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*, @types/qs@npm:^6.9.7":
+"@types/qs@npm:*":
   version: 6.9.7
   resolution: "@types/qs@npm:6.9.7"
   checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
@@ -3460,9 +3460,7 @@ __metadata:
     "@types/is-hotkey": ^0.1.7
     "@types/lodash": ^4.14.191
     "@types/node": ^18.15.3
-    "@types/nprogress": ^0.2.0
     "@types/path-browserify": ^1.0.0
-    "@types/qs": ^6.9.7
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@types/uuid": ^9.0.1

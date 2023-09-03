@@ -24,7 +24,6 @@ import type {
   MouseEventHandler,
 } from "react";
 import type { RenderElementProps } from "slate-react";
-import ImageWithFallback from "@/components/image";
 
 export interface EditorImageProps extends RenderElementProps {
   element: ImageElement;

@@ -89,6 +89,7 @@ export default function StoryEditor(props: StoryEditorProps) {
       <ContentRoot>
         <ContentWrapper>
           <StoryTitle
+            fullWidth
             variant="standard"
             placeholder="Title"
             className={classNames({ focused: isTitleFocused })}

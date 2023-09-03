@@ -39,7 +39,7 @@ export const EImage = styled(ImageWithFallback)`
 
 export const ImageWrapper = styled("div")`
   position: relative;
-  width: 100%;
+  /* width: 100%; */
 `;
 
 export const ImageCaption = styled("figcaption")`
@@ -62,6 +62,7 @@ export const ButtonsWrapper = styled("div")`
   gap: 15px;
   flex-direction: row-reverse;
   transition: all 0.3s ease;
+  z-index: 1;
 `;
 
 export const ButtonWrapper = styled("div")`

@@ -86,6 +86,7 @@ export const Code = styled(BaseText)`
 export const Figure = styled("figure")`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2rem;
 
   img {
@@ -93,7 +94,6 @@ export const Figure = styled("figure")`
   }
 
   figcaption {
-    align-self: center;
     font-size: 1.6rem;
     color: rgb(255, 255, 255, 0.75);
   }
