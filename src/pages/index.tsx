@@ -1,8 +1,7 @@
 import StoryAuthor from "@/components/author";
+import DefaultHeadContent from "@/components/head";
 import BlogLayout from "@/components/layout/home";
-import $clamp from "clamp-js";
-import { StoryModel } from "@/modules/backend";
-import { getContentString, getStoryThumb, jsonify } from "@/modules/utils";
+import { api, combineURLQuery, getContentString } from "@/modules/utils";
 import {
   Gist,
   SectionHeading,
@@ -18,13 +17,20 @@ import {
   StoryThumbnail,
   StoryThumbnailLink,
 } from "@/styles/home.styles";
-import { StoryJoinedJSON } from "@/types/backend";
-import { GetServerSidePropsContext } from "next";
-import { useEffect, useRef, useState } from "react";
 import { PlainLink } from "@/styles/shared";
+import { StoryJoinedJSON } from "@/types/backend";
+import $clamp from "clamp-js";
+import { GetServerSidePropsContext } from "next";
+import { useEffect, useRef } from "react";
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
+    if (["HEAD", "OPTIONS"].includes(ctx.req.method ?? "")) {
+      return {
+        props: {},
+      };
+    }
+
     ctx.res.setHeader(
       "Cache-Control",
       "public, s-maxage=10, stale-while-revalidate=59"
@@ -32,15 +38,23 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     console.time("home_feed");
 
-    const results = await StoryModel.query()
-      .withGraphJoined({ author: true, draft: true })
-      .limit(25);
+    const filter = {
+      where: {
+        ...(process.env.NODE_ENV === "production" && {
+          is_published: { eq: true },
+        }),
+      },
+      limit: 25,
+      relations: ["author", "draft", "live", "settings"],
+    };
+    const query = new URLSearchParams({ filter: JSON.stringify(filter) });
+
+    const resp = await api.get<StoryJoinedJSON[]>(
+      `/v1/story/?${query.toString()}`
+    );
 
     console.timeEnd("home_feed");
-
-    const serialized = results.map((r) => jsonify(r.toJSON()));
-
-    return { props: { stories: serialized } };
+    return { props: { stories: resp.data } };
   } catch (error) {
     console.error("Error occured while fetching feed", error);
     return { props: { stories: [] } };
@@ -55,54 +69,58 @@ export default function Home(props: HomeRouteProps) {
   const { stories } = props;
 
   return (
-    <BlogLayout>
-      <SplashSection>
-        <SplashContainer>
-          <SplashContent>
-            <SplashTitle>
-              Stories on <span className="highlight">art</span>,{" "}
-              <span className="highlight">people</span> and the{" "}
-              <span className="highlight">world</span>.
-            </SplashTitle>
-          </SplashContent>
-        </SplashContainer>
-      </SplashSection>
+    <>
+      <DefaultHeadContent />
 
-      <StoriesSection>
-        {/* TODO : Add ads to the site */}
-        {/* <div className="ads"></div> */}
+      <BlogLayout>
+        <SplashSection>
+          <SplashContainer>
+            <SplashContent>
+              <SplashTitle>
+                Stories on <span className="highlight">art</span>,{" "}
+                <span className="highlight">people</span> and the{" "}
+                <span className="highlight">world</span>.
+              </SplashTitle>
+            </SplashContent>
+          </SplashContainer>
+        </SplashSection>
 
-        <div>
-          <SectionHeading>Recently Published</SectionHeading>
+        <StoriesSection>
+          {/* TODO : Add ads to the site */}
+          {/* <div className="ads"></div> */}
+
           <div>
-            {stories.map((story) => (
-              <StoryCard key={story.id} story={story} />
-            ))}
+            <SectionHeading>Recently Published</SectionHeading>
+            <div>
+              {stories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* TODO : Add a mail subscription */}
-        {/* <Sidebar>
+          {/* TODO : Add a mail subscription */}
+          {/* <Sidebar>
           <div className="cta-element">
-            <p className="tagline">Don&apos;t miss anything from us</p>
+          <p className="tagline">Don&apos;t miss anything from us</p>
 
-            <EmailTextField
-              fullWidth
-              hiddenLabel
-              variant="standard"
-              placeholder="Your Email"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <MailRounded className="mail-icon" />
-                  </InputAdornment>
-                ),
-              }}
+          <EmailTextField
+          fullWidth
+          hiddenLabel
+          variant="standard"
+          placeholder="Your Email"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+              <MailRounded className="mail-icon" />
+              </InputAdornment>
+              ),
+            }}
             />
-          </div>
-        </Sidebar> */}
-      </StoriesSection>
-    </BlogLayout>
+            </div>
+          </Sidebar> */}
+        </StoriesSection>
+      </BlogLayout>
+    </>
   );
 }
 
@@ -110,15 +128,19 @@ export interface StoryCardProps {
   story: StoryJoinedJSON;
 }
 
-function StoryCard(props: StoryCardProps) {
+export function StoryCard(props: StoryCardProps) {
   const { story } = props;
   const gistRef = useRef<HTMLDivElement>(null);
 
-  // TODO : change to live in production
-  const { title, content } = story.draft;
-  const thumb = getStoryThumb(content);
+  const { title, content } =
+    process.env.NODE_ENV === "production" ? story.live! : story.draft;
 
-  const path = `/story/${story.id}`;
+  const path = combineURLQuery(`/story/${story.id}`, {
+    utm_source: "website",
+    utm_medium: "homepage_list",
+    utm_campaign: "featured_stories",
+    utm_content: story.id,
+  });
 
   const listener = () => {
     if (gistRef.current) {
@@ -138,16 +160,19 @@ function StoryCard(props: StoryCardProps) {
       <StoryAuthor story={story} />
       <StoryCardContent>
         <StoryThumbnailLink href={path}>
-          <StoryThumbnail ImageProps={{ src: thumb?.url, alt: thumb?.alt }} />
+          <StoryThumbnail
+            ImageProps={{
+              src: story.settings.meta_img ?? undefined,
+              alt: undefined,
+            }}
+          />
         </StoryThumbnailLink>
-        <StoryCardRight>
-          <PlainLink href={path}>
+        <PlainLink href={path} sx={{ display: "flex", flex: 2 }}>
+          <StoryCardRight>
             <StoryCardTitle>{title}</StoryCardTitle>
-          </PlainLink>
-          {/* <PlainLink href={path} style={{ overflow: "hidden" }}> */}
-          <Gist ref={gistRef}>{getContentString(content)}</Gist>
-          {/* </PlainLink> */}
-        </StoryCardRight>
+            <Gist ref={gistRef}>{getContentString(content)}</Gist>
+          </StoryCardRight>
+        </PlainLink>
       </StoryCardContent>
     </StoryCardItem>
   );

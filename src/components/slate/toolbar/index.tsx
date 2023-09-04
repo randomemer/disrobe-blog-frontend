@@ -64,6 +64,11 @@ import type { Element } from "slate";
 import useEditorContext from "@/hooks/use-editor-data";
 import { AsyncStatus } from "@/types";
 import { theme } from "@/modules/mui-config";
+import { getAuth } from "firebase/auth";
+import axios, { AxiosError } from "axios";
+import { useSnackbar } from "material-ui-snackbar-provider";
+import Link from "next/link";
+import { api } from "@/modules/utils";
 
 // ============================================================
 
@@ -108,14 +113,58 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
   const { DrawerProps } = props;
 
   const editor = useSlate();
+  const snackbar = useSnackbar();
+  const [data] = useEditorContext();
   const storyInfo = useWordCount();
 
+  const [isPublishing, setPublishing] = useState(false);
   const [isImageModalOpen, setImageModalOpen] = useState(false);
   const isDownMd = useMediaQuery(theme.breakpoints.down("md"));
 
   const onModalClose = () => {
     setImageModalOpen(false);
   };
+
+  async function publishStory() {
+    setPublishing(true);
+    try {
+      const token = await getAuth().currentUser!.getIdToken();
+
+      if (data.story) {
+        const resp = await api.patch(
+          `/v1/story/${data.story.id}/publish`,
+          undefined,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        console.log(resp.data);
+        snackbar.showMessage("Story published successfully!", "OK", () => {}, {
+          severity: "success",
+        } as any);
+      } else {
+        snackbar.showMessage(
+          "Write something to get started!",
+          "OK",
+          () => {},
+          {
+            severity: "info",
+          } as any
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      let message = (error as Error).message;
+      if (error instanceof AxiosError) {
+        message = error.response?.data.message;
+      }
+      snackbar.showMessage(message, "OK", () => {}, {
+        severity: "error",
+      } as any);
+    }
+    setPublishing(false);
+  }
 
   return (
     <>
@@ -208,14 +257,16 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
             <PublishButton
               type="button"
               variant="outlined"
-              onClick={async () => {
-                // @TODO
-                // await publishStory(editor, storyID);
-              }}
+              loadingPosition="start"
+              loading={isPublishing}
+              onClick={publishStory}
             >
               Publish
             </PublishButton>
-            <SettingsButton>
+            <SettingsButton
+              component={Link}
+              href={`/story/${data.story?.id}/settings`}
+            >
               <SettingsOutlined />
             </SettingsButton>
           </StoryActions>
@@ -248,31 +299,36 @@ export default function ArticleToolbar(props: ArticleToolbarProps) {
 function SavingIndicator() {
   const [{ status }] = useEditorContext();
   let icon: ReactNode, message: string;
+  let color: string;
 
   switch (status) {
     case AsyncStatus.PENDING:
       icon = <CloudUploadOutlined />;
       message = "Saving";
+      color = theme.palette.primary.main;
       break;
 
     case AsyncStatus.FULFILLED:
       icon = <CloudDoneOutlined />;
       message = "Saved";
+      color = theme.palette.success.main;
       break;
 
     case AsyncStatus.REJECTED:
       icon = <ErrorOutlined />;
       message = "Saving Failed";
+      color = theme.palette.error.main;
       break;
 
     default:
       icon = <CloudOffOutlined />;
       message = "Not Saved";
+      color = theme.palette.text.primary;
       break;
   }
 
   return (
-    <SavingIndicatorDiv>
+    <SavingIndicatorDiv sx={{ color }}>
       {icon}
       <Typography>{message}</Typography>
     </SavingIndicatorDiv>

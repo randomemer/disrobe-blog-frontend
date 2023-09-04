@@ -1,7 +1,6 @@
 import { Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-// const EditorBlock = styled
 
 export const EParagraph = styled("p")`
   /* font-size: ; */

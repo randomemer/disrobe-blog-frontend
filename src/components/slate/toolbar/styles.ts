@@ -1,5 +1,6 @@
 import { elevation } from "@/styles/shared";
 import {
+  Box,
   Button,
   Drawer,
   IconButton,
@@ -13,6 +14,8 @@ import { styled } from "@mui/material/styles";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { typographyClasses } from "@mui/material/Typography";
 import { paperClasses } from "@mui/material/Paper";
+import { LoadingButton } from "@mui/lab";
+import Link from "next/link";
 
 export const Aside = styled(Drawer)`
   display: flex;
@@ -81,12 +84,12 @@ export const StoryActions = styled("div")`
   gap: 1rem;
 `;
 
-export const PublishButton = styled(Button)`
+export const PublishButton = styled(LoadingButton)`
   flex: 1;
   font-size: 1.4rem;
 `;
 
-export const SettingsButton = styled(IconButton)`
+export const SettingsButton = styled(IconButton<typeof Link>)`
   .${svgIconClasses.root} {
     font-size: 2.4rem;
   }
@@ -99,8 +102,8 @@ export const ContentInfo = styled("div")`
   font-size: 1.4rem;
 `;
 
-export const SavingIndicatorDiv = styled("div")`
-  align-self: flex-end;
+export const SavingIndicatorDiv = styled(Box)`
+  align-self: flex-start;
   display: flex;
   align-items: center;
   gap: 5px;

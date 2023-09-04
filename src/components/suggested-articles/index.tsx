@@ -1,4 +1,4 @@
-import { getMediaURL, getStoryThumb } from "@/modules/utils";
+import { combineURLQuery, getMediaURL, getStoryThumb } from "@/modules/utils";
 import { StoryJoinedJSON } from "@/types/backend";
 import {
   ArticlesSidebar,
@@ -29,8 +29,15 @@ export default function SuggestedArticles(props: SuggestedArticlesProps) {
           const author = story.author;
           const thumbnail = getStoryThumb(story.draft.content);
 
+          const storyURL = combineURLQuery(`/story/${story.id}`, {
+            utm_source: "website",
+            utm_medium: "sidebar",
+            utm_campaign: "suggested_stories",
+            utm_content: story.id,
+          });
+
           return (
-            <StoryItemLink key={story.id} href={`/story/${story.id}`}>
+            <StoryItemLink key={story.id} href={storyURL}>
               <StoryItem>
                 <StoryItemImage ImageProps={{ src: thumbnail?.url }} />
                 <StoryItemContentWrapper>

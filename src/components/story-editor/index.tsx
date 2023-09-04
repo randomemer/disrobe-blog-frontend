@@ -89,6 +89,7 @@ export default function StoryEditor(props: StoryEditorProps) {
       <ContentRoot>
         <ContentWrapper>
           <StoryTitle
+            fullWidth
             variant="standard"
             placeholder="Title"
             className={classNames({ focused: isTitleFocused })}
@@ -97,8 +98,9 @@ export default function StoryEditor(props: StoryEditorProps) {
             onFocus={() => setTitleFocused(true)}
             onBlur={() => setTitleFocused(false)}
             InputProps={{
-              disableUnderline: true,
               inputRef: titleRef,
+              disableUnderline: true,
+              sx: { typography: "h1", fontWeight: 700 },
             }}
           />
           <StoryEditable />

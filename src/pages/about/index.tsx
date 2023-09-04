@@ -1,3 +1,4 @@
+import DefaultHeadContent from "@/components/head";
 import BlogLayout from "@/components/layout/home";
 import { extractParagraphs } from "@/modules/utils";
 import {
@@ -12,9 +13,7 @@ export default function AboutRoute() {
 
   return (
     <BlogLayout>
-      <Head>
-        <title>About</title>
-      </Head>
+      <DefaultHeadContent />
 
       <AboutBackground />
 

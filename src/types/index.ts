@@ -1,6 +1,4 @@
-import type { AuthorModel } from "@/modules/backend";
 import type { GetServerSidePropsContext } from "next";
-import type { ModelObject } from "objection";
 import type { ReactNode } from "react";
 import { AuthorJSON } from "./backend";
 
@@ -21,7 +19,7 @@ export enum AsyncStatus {
 
 export type User = {
   id: string;
-  data: ModelObject<AuthorModel>;
+  data: AuthorJSON;
 };
 
 // ============================================================

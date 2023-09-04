@@ -1,6 +1,6 @@
 import { theme } from "@/modules/mui-config";
 import { css } from "@emotion/react";
-import { TextField } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 
@@ -18,13 +18,8 @@ export function elevation(value: number) {
 }
 
 export const PlainLink = styled(Link)`
-  &:link,
-  &:visited,
-  &:active,
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
+  color: inherit;
+  text-decoration: none;
 `;
 
 export const InputField = styled(TextField)`
@@ -40,5 +35,18 @@ export const InputField = styled(TextField)`
 
   .${svgIconClasses.root} {
     font-size: 2rem;
+  }
+`;
+
+export const MainWrapper = styled(Box)`
+  width: 100%;
+  padding: 4.8rem 6.4rem;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    padding: 3.6rem 4.8rem;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 3.6rem 3rem;
   }
 `;

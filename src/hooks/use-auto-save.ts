@@ -1,13 +1,13 @@
+import { api } from "@/modules/utils";
+import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON, StorySnapshotJSON } from "@/types/backend";
+import { getAuth } from "firebase/auth";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import { useRouter } from "next/router";
 import { RefObject, useCallback, useRef } from "react";
 import { Editor } from "slate";
-import { useSnackbar } from "material-ui-snackbar-provider";
-import useEditorContext from "./use-editor-data";
 import useAuth from "./use-auth";
-import { AsyncStatus } from "@/types";
-import axios from "axios";
-import { getAuth } from "firebase/auth";
+import useEditorContext from "./use-editor-data";
 
 const DELAY = 5000;
 
@@ -48,13 +48,9 @@ export function useAutoSave(props: AutoSaveHookProps) {
           draft: { title, content },
         };
 
-        const resp = await axios.post<StoryJoinedJSON>(
-          "/api/story",
-          storyData,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const resp = await api.post<StoryJoinedJSON>("/v1/story/", storyData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const story = resp.data;
 
         setData((draft) => {
@@ -63,9 +59,9 @@ export function useAutoSave(props: AutoSaveHookProps) {
         });
         router.replace(`/story/${story.id}/edit`, undefined, { shallow: true });
       } else {
-        const draftData = { title, content };
-        const resp = await axios.put<StorySnapshotJSON>(
-          `/api/story/${data.story.id}/snapshot/${data.story.draft_snap_id}`,
+        const draftData = { draft: { title, content } };
+        const resp = await api.patch<StorySnapshotJSON>(
+          `/v1/story/${data.story.id}/`,
           draftData,
           { headers: { Authorization: `Bearer ${token}` } }
         );

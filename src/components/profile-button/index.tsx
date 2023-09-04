@@ -64,7 +64,7 @@ export default function AccountMenuButton() {
               </Typography>
             </AccountDetails>
             <Divider />
-            <MenuItem href="/settings/profile" component={Link}>
+            <MenuItem href="/me/profile" component={Link}>
               <ListItemIcon>
                 <PersonSharp fontSize="small" />
               </ListItemIcon>

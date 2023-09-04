@@ -1,17 +1,27 @@
-import { randomBytes } from "crypto";
-import humanizeDuration from "humanize-duration";
-import { Descendant, Element, Node } from "slate";
-import createCache from "@emotion/cache";
 import { FormValues } from "@/types";
-import { AnyObject, Maybe, number, Schema, string, ValidationError } from "yup";
-import _ from "lodash";
 import { ImageElement } from "@/types/slate";
+import createCache from "@emotion/cache";
+import axios from "axios";
+import {
+  AnalyticsCallOptions,
+  EventNameString,
+  EventParams,
+  getAnalytics,
+  logEvent as logAnalyticsEvent,
+} from "firebase/analytics";
+import humanizeDuration from "humanize-duration";
+import _ from "lodash";
+import { Descendant, Element, Node } from "slate";
+import { AnyObject, Maybe, Schema, string, ValidationError } from "yup";
+import { META_DESC_LENGTH, META_TITLE_LENGTH } from "./config";
 
 /**
 |--------------------------------------------------
 |                 VALUES / OBJECTS
 |--------------------------------------------------
 */
+
+export const api = axios.create({ baseURL: process.env.API_ENDPOINT });
 
 export const WORD_REGEX = /\b\w+\b/gm;
 
@@ -111,30 +121,6 @@ export function getMediaURL(bucketPath: string) {
   return `/media/${encodeURIComponent(bucketPath)}`;
 }
 
-export function autoId(length: number = 10) {
-  const chars = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`;
-  let autoId = "";
-
-  while (autoId.length < length) {
-    const bytes = randomBytes(40);
-    bytes.forEach((b) => {
-      /**
-       * Length of `chars` is 62. We only take bytes between 0 and (62 * 4 - 1) (both inclusive).
-       * The value is then evenly mapped to indices of `char` via a modulo operation.
-       */
-      const maxValue = 62 * 4 - 1;
-      if (autoId.length < length && b <= maxValue) {
-        autoId += chars.charAt(b % 62);
-      }
-    });
-  }
-  return autoId;
-}
-
-export function jsonify(value: any) {
-  return JSON.parse(JSON.stringify(value));
-}
-
 export function facebookURL(url: string): string {
   return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
     url
@@ -158,14 +144,6 @@ export function extractParagraphs(text: string) {
   return paragraphs;
 }
 
-export function attemptJsonParse(str: any) {
-  try {
-    return JSON.parse(str);
-  } catch (error) {
-    return undefined;
-  }
-}
-
 export function extractBearerToken(header: string | undefined) {
   if (!header) return null;
 
@@ -176,4 +154,39 @@ export function extractBearerToken(header: string | undefined) {
   }
 
   return null;
+}
+
+export function truncateMetaTitle(title: string) {
+  const titleEnd = " | Disrobe";
+  const realTitle = title.replace(titleEnd, "");
+
+  return realTitle.length + titleEnd.length > META_TITLE_LENGTH
+    ? `${realTitle.slice(0, META_TITLE_LENGTH - titleEnd.length - 3)}...` +
+        titleEnd
+    : realTitle + titleEnd;
+}
+
+export function truncateMetaDesc(desc: string) {
+  return desc.length > META_DESC_LENGTH
+    ? desc.slice(0, META_DESC_LENGTH - 3) + "..."
+    : desc;
+}
+
+export function logEvent(
+  eventName: EventNameString,
+  params?: EventParams | undefined,
+  options?: AnalyticsCallOptions | undefined
+) {
+  if (process.env.NODE_ENV !== "production") return;
+  try {
+    const analytics = getAnalytics();
+    logAnalyticsEvent(analytics, eventName as string, params, options);
+  } catch (error) {
+    console.error("google analytics error", error);
+  }
+}
+
+export function combineURLQuery(url: string, params: Record<string, any>) {
+  const urlSearchParams = new URLSearchParams(params);
+  return `${url}?${urlSearchParams}`;
 }

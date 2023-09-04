@@ -142,7 +142,7 @@ export const StoryCardContent = styled("div")`
   }
 `;
 
-export const StoryThumbnailLink = styled(Link)`
+export const StoryThumbnailLink = styled(PlainLink)`
   flex: 1;
   display: block;
   height: 100%;
@@ -156,6 +156,10 @@ export const StoryThumbnail = styled(ImageWithFallback)`
   height: 100%;
   width: 100%;
 
+  &.broken {
+    background-color: unset;
+  }
+
   img {
     height: 100%;
     width: 100%;
@@ -164,7 +168,6 @@ export const StoryThumbnail = styled(ImageWithFallback)`
 `;
 
 export const StoryCardRight = styled(Box)`
-  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 1.8rem;

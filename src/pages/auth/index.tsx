@@ -1,7 +1,6 @@
 import LoginForm from "@/components/auth/login-form";
 import SignupForm from "@/components/auth/signup-form";
 import TabPanel from "@/components/tab-panel";
-import { useSnackbar } from "material-ui-snackbar-provider";
 import {
   AuthPageContainer,
   FormContainer,
@@ -17,12 +16,14 @@ import {
   signInWithCustomToken,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { useSnackbar } from "material-ui-snackbar-provider";
+import { useModal } from "mui-modal-provider";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { useModal } from "mui-modal-provider";
 
+import { api } from "@/modules/utils";
 import type { SyntheticEvent } from "react";
 
 export type LoginFormData = {
@@ -50,7 +51,7 @@ export default function AuthRoute() {
 
   const routerQueryType = (router.query.type as string) || "login";
 
-  const [redirect, setRedirect] = useState("/settings/profile");
+  const [redirect, setRedirect] = useState("/me/profile");
   const [isLoading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(routerQueryType);
 
@@ -111,28 +112,19 @@ export default function AuthRoute() {
     try {
       const auth = getAuth();
 
-      const resp = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          displayName: data.full_name,
-        }),
+      const resp = await api.post("/v1/auth/signup", {
+        email: data.email,
+        password: data.password,
+        displayName: data.full_name,
       });
-      const body = await resp.json();
-      if (!resp.ok) {
-        throw { message: body.error };
-      }
+      const body = resp.data;
 
       await signInWithCustomToken(auth, body.token);
 
       // logEvent(analytics, "sign_up", {
       //   method: "email",
       // });
-      router.push("/settings/profile");
+      router.push("/me/profile");
     } catch (error) {
       snackbar.showMessage((error as Error).message, "OK", () => {}, {
         severity: "error",

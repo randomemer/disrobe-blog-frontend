@@ -1,43 +1,49 @@
-import { Descendant } from "slate";
+import type { Descendant } from "slate";
 
-export abstract class IRepo<T> {
-  abstract fetchId(id: string): Promise<T | undefined>;
-  abstract fetchMany(ids: string[]): Promise<T[]>;
-}
-
-// Base Model Data
-
-export type StoryJSON = {
-  id: string;
-  author_id: string;
-  is_published: boolean;
-  draft_snap_id: string;
-  live_snap_id: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-export type AuthorJSON = {
+export interface AuthorJSON {
   id: string;
   name: string;
-  picture: string | null;
   bio: string | null;
+  picture: string | null;
   created_at: string;
   updated_at: string;
-};
+}
 
-export type StorySnapshotJSON = {
+export interface StoryJoinedJSON {
+  id: string;
+  is_published: boolean;
+
+  author_id: string;
+  author: AuthorJSON;
+
+  draft_snap_id: string;
+  draft: StorySnapshotJSON;
+
+  live_snap_id: string | null;
+  live: StorySnapshotJSON | null;
+
+  settings: StorySettings;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StorySnapshotJSON {
   id: string;
   story_id: string;
   title: string;
   content: Descendant[];
-  timestamp: string;
-};
+  created_at: string;
+  updated_at: string;
+}
 
-// Joined Model Data
-
-export type StoryJoinedJSON = StoryJSON & {
-  author: AuthorJSON;
-  draft: StorySnapshotJSON;
-  live?: StorySnapshotJSON;
-};
+export interface StorySettings {
+  id: string;
+  story_id: string;
+  meta_title: string | null;
+  meta_desc: string | null;
+  meta_img: string | null;
+  author_modified: boolean;
+  created_at: string;
+  updated_at: string;
+}

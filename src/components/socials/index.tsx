@@ -1,10 +1,14 @@
 import FacebookLogo from "@/assets/images/icons/facebook-logo";
 import LinkedinLogo from "@/assets/images/icons/linkedin-logo";
 import TwitterLogo from "@/assets/images/icons/twitter-logo";
-import { app } from "@/modules/backend/client";
-import { facebookURL, linkedinURL, twitterURL } from "@/modules/utils";
+import {
+  combineURLQuery,
+  facebookURL,
+  linkedinURL,
+  logEvent,
+  twitterURL,
+} from "@/modules/utils";
 import { LinkOutlined } from "@mui/icons-material";
-import { getAnalytics } from "firebase/analytics";
 import { useRouter } from "next/router";
 import { MouseEventHandler } from "react";
 import { useImmer } from "use-immer";
@@ -20,9 +24,7 @@ export default function StorySocials() {
 
   const origin = typeof location !== "undefined" ? location.origin : "";
   const id = router.query.id as string;
-  const storyLink = `${origin}${router.asPath}`;
-
-  const analytics = app && getAnalytics(app);
+  const storyURL = `${origin}${router.asPath}`;
 
   const onHover: MouseEventHandler<HTMLDivElement> = (event) => {
     const target = event.target as HTMLDivElement;
@@ -36,42 +38,62 @@ export default function StorySocials() {
   };
 
   const shareTwitter = () => {
-    const shareLink = twitterURL(storyLink);
-    window.open(shareLink, "_blank", "noreferrer");
-    // logEvent(analytics, "share", {
-    //   item_id: id,
-    //   content_type: "story",
-    //   method: "twitter",
-    // });
+    const url = combineURLQuery(storyURL, {
+      utm_source: "x",
+      utm_content: "x_post",
+      utm_campaign: "story_share",
+      utm_medium: "social",
+    });
+    const shareLink = twitterURL(url);
+    window.open(shareLink, "_blank", "noopener");
+    logEvent("share", { item_id: id, content_type: "story", method: "x" });
   };
 
   const shareFacebook = () => {
-    const shareLink = facebookURL(storyLink);
-    window.open(shareLink, "_blank", "noreferrer");
-    // logEvent(analytics, "share", {
-    //   item_id: id,
-    //   content_type: "story",
-    //   method: "facebook",
-    // });
+    const url = combineURLQuery(storyURL, {
+      utm_source: "meta",
+      utm_content: "meta_post",
+      utm_campaign: "story_share",
+      utm_medium: "social",
+    });
+    const shareLink = facebookURL(url);
+    window.open(shareLink, "_blank", "noopener");
+    logEvent("share", {
+      item_id: id,
+      content_type: "story",
+      method: "meta",
+    });
   };
 
   const shareLinkedin = () => {
-    const shareLink = linkedinURL(storyLink);
-    window.open(shareLink, "_blank", "noreferrer");
-    // logEvent(analytics, "share", {
-    //   item_id: id,
-    //   content_type: "story",
-    //   method: "linkedin",
-    // });
+    const url = combineURLQuery(storyURL, {
+      utm_source: "linkedin",
+      utm_content: "linkedin_post",
+      utm_campaign: "story_share",
+      utm_medium: "social",
+    });
+    const shareLink = linkedinURL(url);
+    window.open(shareLink, "_blank", "noopener");
+    logEvent("share", {
+      item_id: id,
+      content_type: "story",
+      method: "linkedin",
+    });
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(storyLink);
-    // logEvent(analytics, "share", {
-    //   item_id: "",
-    //   content_type: "story",
-    //   method: "copy_link",
-    // });
+    const url = combineURLQuery(storyURL, {
+      utm_source: "story_share_btn",
+      utm_medium: "social",
+      utm_campaign: "story_share",
+      utm_content: "copy_link",
+    });
+    navigator.clipboard.writeText(url);
+    logEvent("share", {
+      item_id: id,
+      content_type: "story",
+      method: "copy_link",
+    });
   };
 
   return (

@@ -1,7 +1,7 @@
 import withAuth from "@/components/auth/hoc";
 import SettingsLayout from "@/components/layout/settings";
 import useAuth from "@/hooks/use-auth";
-import { getContentString } from "@/modules/utils";
+import { api, getContentString } from "@/modules/utils";
 import {
   PostContent,
   PostItem,
@@ -9,14 +9,13 @@ import {
   PostItemGist,
   PostItemTitle,
   PostsList,
-} from "@/styles/settings-posts.styles";
-import { SectionHeading, SettingsSection } from "@/styles/settings.styles";
+} from "@/styles/me-posts.styles";
+import { SectionHeading, SettingsSection } from "@/styles/me.styles";
 import { PlainLink } from "@/styles/shared";
 import { AsyncStatus } from "@/types";
 import { StoryJoinedJSON } from "@/types/backend";
 import { SettingsOutlined } from "@mui/icons-material";
 import { IconButton, Skeleton } from "@mui/material";
-import axios from "axios";
 import $clamp from "clamp-js";
 import _ from "lodash";
 import { SquareEditOutline } from "mdi-material-ui";
@@ -32,12 +31,14 @@ export function SettingsPostsRoute() {
     setStatus(AsyncStatus.PENDING);
     try {
       const filter = {
-        eager: { draft: {}, $where: { author_id: auth.uid } },
-        limit: 50,
+        where: { author_id: { eq: auth.uid } },
+        relations: ["draft", "settings"],
       };
-      const query = `filter=${encodeURIComponent(JSON.stringify(filter))}`;
+      const query = new URLSearchParams({ filter: JSON.stringify(filter) });
 
-      const resp = await axios.get<StoryJoinedJSON[]>(`/api/story?${query}`);
+      const resp = await api.get<StoryJoinedJSON[]>(
+        `/v1/story/?${query.toString()}`
+      );
       setStories(resp.data);
       setStatus(AsyncStatus.FULFILLED);
     } catch (error) {
@@ -106,18 +107,16 @@ function PostItemCard(props: PostItemCardProps) {
 
   return (
     <PostItem key={post.id}>
-      <PostContent>
-        <PlainLink href={href}>
+      <PlainLink href={href} sx={{ display: "flex", flex: 1 }}>
+        <PostContent>
           <PostItemTitle variant="h5" component="h2">
             {post.draft.title}
           </PostItemTitle>
-        </PlainLink>
-        {/* <PlainLink href={href} style={{ flex: 1, overflow: "hidden" }}> */}
-        <PostItemGist ref={gistRef}>
-          {getContentString(post.draft.content)}
-        </PostItemGist>
-        {/* </PlainLink> */}
-      </PostContent>
+          <PostItemGist ref={gistRef}>
+            {getContentString(post.draft.content)}
+          </PostItemGist>
+        </PostContent>
+      </PlainLink>
       <PostItemActions>
         <IconButton
           color="primary"
