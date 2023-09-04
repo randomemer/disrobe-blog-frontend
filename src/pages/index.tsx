@@ -1,7 +1,7 @@
 import StoryAuthor from "@/components/author";
 import DefaultHeadContent from "@/components/head";
 import BlogLayout from "@/components/layout/home";
-import { api, getContentString } from "@/modules/utils";
+import { api, combineURLQuery, getContentString } from "@/modules/utils";
 import {
   Gist,
   SectionHeading,
@@ -135,7 +135,12 @@ export function StoryCard(props: StoryCardProps) {
   const { title, content } =
     process.env.NODE_ENV === "production" ? story.live! : story.draft;
 
-  const path = `/story/${story.id}`;
+  const path = combineURLQuery(`/story/${story.id}`, {
+    utm_source: "website",
+    utm_medium: "homepage_list",
+    utm_campaign: "featured_stories",
+    utm_content: story.id,
+  });
 
   const listener = () => {
     if (gistRef.current) {

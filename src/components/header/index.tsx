@@ -24,6 +24,7 @@ import {
 } from "./styles";
 
 import type { PropsWithoutRef } from "react";
+import { PlainLink } from "@/styles/shared";
 
 const links = [
   { href: "/", text: "Home" },
@@ -84,7 +85,7 @@ export default function AppHeader(props: AppHeaderProps) {
       <ScrollContext ref={scrollContextRef} />
 
       <Header ref={headerRef}>
-        <LogoWrapper>
+        <LogoWrapper href="/">
           <Logo>DISROBE</Logo>
         </LogoWrapper>
 

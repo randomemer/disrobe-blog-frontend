@@ -1,4 +1,4 @@
-import { elevation } from "@/styles/shared";
+import { elevation, PlainLink } from "@/styles/shared";
 import { Box, IconButton, ListItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
@@ -58,7 +58,7 @@ export const Header = styled("header")`
   }
 `;
 
-export const LogoWrapper = styled("div")`
+export const LogoWrapper = styled(PlainLink)`
   display: flex;
   align-items: center;
   gap: 10px;

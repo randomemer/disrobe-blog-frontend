@@ -34,7 +34,12 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
   }
 
   const filter = {
-    where: { id: { neq: id } },
+    where: {
+      id: { neq: id },
+      ...(process.env.NODE_ENV === "production" && {
+        is_published: { eq: true },
+      }),
+    },
     relations: ["author", "draft", "live", "settings"],
     limit: 5,
     sort: { created_at: "desc" },
@@ -86,6 +91,7 @@ export default function StoryRoute(props: StoryRouteProps) {
 
         {/* Open Graph - Article */}
         <meta name="article:author" content={story.author.name} />
+        <meta name="article:published_time" content={story.live?.created_at} />
         <meta name="article:modified_time" content={story.live?.updated_at} />
       </Head>
 
