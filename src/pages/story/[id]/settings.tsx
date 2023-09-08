@@ -1,5 +1,6 @@
 import withAuth from "@/components/auth/hoc";
 import AppLayout from "@/components/layout/app";
+import StoryCard from "@/components/story-card";
 import StoryActions from "@/components/story-settings/actions";
 import MetaDescSection from "@/components/story-settings/meta-desc";
 import MetaImgSection from "@/components/story-settings/meta-img";
@@ -9,7 +10,6 @@ import StorySettingsSidebar, {
 } from "@/components/story-settings/sidebar";
 import useStorySettings from "@/hooks/use-story-settings";
 import { api } from "@/modules/utils";
-import { StoryCard } from "@/pages";
 import { MainWrapper } from "@/styles/shared";
 import {
   Content,
@@ -98,7 +98,7 @@ function StorySettingsRoute() {
                   <SectionHeading component="h2" variant="h4">
                     Preview
                   </SectionHeading>
-                  <StoryCard story={story!} />
+                  <StoryCard story={story!} contentMode="draft" />
                 </Section>
 
                 <Section id="story-metadata">
