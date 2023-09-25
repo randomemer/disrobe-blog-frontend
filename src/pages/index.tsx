@@ -67,9 +67,9 @@ export default function Home(props: HomeRouteProps) {
           <SplashContainer>
             <SplashContent>
               <SplashTitle>
-                Stories on <span className="highlight">art</span>,{" "}
-                <span className="highlight">people</span> and the{" "}
-                <span className="highlight">world</span>.
+                <span className="highlight">Observe</span>,{" "}
+                <span className="highlight">Analyze</span> and{" "}
+                <span className="highlight">Unravel</span>.
               </SplashTitle>
             </SplashContent>
           </SplashContainer>

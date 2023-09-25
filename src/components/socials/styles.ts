@@ -5,11 +5,11 @@ import { svgIconClasses } from "@mui/material/SvgIcon";
 export const StorySharing = styled("div")`
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 3px;
 `;
 
 export const ShareButton = styled(IconButton)`
   .${svgIconClasses.root} {
-    font-size: 2.4rem;
+    font-size: 3rem;
   }
 `;

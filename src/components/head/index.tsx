@@ -7,17 +7,11 @@ export default function DefaultHeadContent() {
     <Head>
       <title>Disrobe</title>
       <meta name="title" content="Disrobe" />
-      <meta
-        name="description"
-        content="Stories on art, people and the world."
-      />
+      <meta name="description" content="Observe, Analyze and Unravel." />
 
       <meta property="og:title" content="Disrobe" />
       <meta property="og:type" content="website" />
-      <meta
-        property="og:description"
-        content="Stories on art, people and the world."
-      />
+      <meta property="og:description" content="Observe, Analyze and Unravel." />
 
       <meta
         key="og:image"

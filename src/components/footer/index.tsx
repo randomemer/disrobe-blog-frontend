@@ -1,4 +1,6 @@
-import { INSTA_URL } from "@/modules/utils/config";
+import MediumLogo from "@/assets/images/icons/medium-logo";
+import XLogo from "@/assets/images/icons/x-logo";
+import { FB_URL, INSTA_URL, MEDIUM_URL, X_URL } from "@/modules/utils/config";
 import { PlainLink } from "@/styles/shared";
 import {
   FacebookRounded,
@@ -7,7 +9,7 @@ import {
   Twitter,
 } from "@mui/icons-material";
 import { ListItemIcon, ListItemText } from "@mui/material";
-import { Linkedin, PhoneOutline } from "mdi-material-ui";
+import { Linkedin } from "mdi-material-ui";
 import {
   ContactListItem,
   Contacts,
@@ -32,17 +34,17 @@ export default function Footer() {
           <DisrobeLogo href={"/"}>Disrobe</DisrobeLogo>
 
           <Socials>
-            <SocialLink href={"/"} rel="noopener">
-              <FacebookRounded />
+            <SocialLink target="_blank" href={MEDIUM_URL} rel="noopener">
+              <MediumLogo />
             </SocialLink>
             <SocialLink target="_blank" href={INSTA_URL} rel="noopener">
               <Instagram />
             </SocialLink>
-            <SocialLink href={"/"} rel="noopener">
-              <Twitter />
+            <SocialLink target="_blank" href={FB_URL} rel="noopener">
+              <FacebookRounded />
             </SocialLink>
-            <SocialLink href={"/"} rel="noopener">
-              <Linkedin />
+            <SocialLink target="_blank" href={X_URL} rel="noopener">
+              <XLogo />
             </SocialLink>
           </Socials>
 

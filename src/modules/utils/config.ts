@@ -6,3 +6,6 @@ export const CONTENT_MODE =
   process.env.NODE_ENV === "production" ? "live" : "draft";
 
 export const INSTA_URL = `https://www.instagram.com/disrobe.exe`;
+export const FB_URL = `https://www.facebook.com/profile.php?id=61551932274231`;
+export const MEDIUM_URL = `https://medium.com/@kailashmv`;
+export const X_URL = `https://x.com/disrobe_exe`;

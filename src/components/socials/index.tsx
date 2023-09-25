@@ -1,6 +1,4 @@
-import FacebookLogo from "@/assets/images/icons/facebook-logo";
-import LinkedinLogo from "@/assets/images/icons/linkedin-logo";
-import TwitterLogo from "@/assets/images/icons/twitter-logo";
+import XLogo from "@/assets/images/icons/x-logo";
 import {
   combineURLQuery,
   facebookURL,
@@ -8,36 +6,18 @@ import {
   logEvent,
   twitterURL,
 } from "@/modules/utils";
-import { LinkOutlined } from "@mui/icons-material";
+import { FacebookRounded, LinkedIn, LinkOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import { MouseEventHandler } from "react";
-import { useImmer } from "use-immer";
 import { ShareButton, StorySharing } from "./styles";
 
 export default function StorySocials() {
   const router = useRouter();
-  const [hoverState, setHoverState] = useImmer<Record<string, boolean>>({
-    "share-fb": false,
-    "share-lnkd": false,
-    "share-twt": false,
-  });
 
   const origin = typeof location !== "undefined" ? location.origin : "";
   const id = router.query.id as string;
   const storyURL = `${origin}${router.asPath}`;
 
-  const onHover: MouseEventHandler<HTMLDivElement> = (event) => {
-    const target = event.target as HTMLDivElement;
-
-    for (const id in hoverState) {
-      setHoverState((state) => {
-        const button = document.querySelector(`#${id}`);
-        state[id] = !!button?.contains(target) && event.type === "mouseover";
-      });
-    }
-  };
-
-  const shareTwitter = () => {
+  const shareX = () => {
     const url = combineURLQuery(storyURL, {
       utm_source: "x",
       utm_content: "x_post",
@@ -97,20 +77,20 @@ export default function StorySocials() {
   };
 
   return (
-    <StorySharing onMouseOver={onHover} onMouseOut={onHover}>
-      <ShareButton size="small" id="share-fb" onClick={shareFacebook}>
-        <FacebookLogo colored={hoverState["share-fb"]} />
+    <StorySharing>
+      <ShareButton id="share-twt" onClick={shareX}>
+        <XLogo />
       </ShareButton>
 
-      <ShareButton size="small" id="share-lnkd" onClick={shareLinkedin}>
-        <LinkedinLogo colored={hoverState["share-lnkd"]} />
+      <ShareButton id="share-lnkd" onClick={shareLinkedin}>
+        <LinkedIn />
       </ShareButton>
 
-      <ShareButton size="small" id="share-twt" onClick={shareTwitter}>
-        <TwitterLogo colored={hoverState["share-twt"]} />
+      <ShareButton size="medium" id="share-fb" onClick={shareFacebook}>
+        <FacebookRounded />
       </ShareButton>
 
-      <ShareButton size="small" id="share-url" onClick={copyLink}>
+      <ShareButton id="share-url" onClick={copyLink}>
         <LinkOutlined />
       </ShareButton>
     </StorySharing>
