@@ -1,7 +1,7 @@
 import withAuth from "@/components/auth/hoc";
 import SettingsLayout from "@/components/layout/settings";
 import useAuth from "@/hooks/use-auth";
-import { api, getContentString } from "@/modules/utils";
+import { api, combineURLQuery, getContentString } from "@/modules/utils";
 import {
   PostContent,
   PostItem,
@@ -32,13 +32,13 @@ export function SettingsPostsRoute() {
     try {
       const filter = {
         where: { author_id: { eq: auth.uid } },
-        relations: ["draft", "settings"],
+        relations: { draft: {}, settings: {} },
       };
-      const query = new URLSearchParams({ filter: JSON.stringify(filter) });
+      const url = combineURLQuery("/v1/story/", {
+        filter: JSON.stringify(filter),
+      });
 
-      const resp = await api.get<StoryJoinedJSON[]>(
-        `/v1/story/?${query.toString()}`
-      );
+      const resp = await api.get<StoryJoinedJSON[]>(url);
       setStories(resp.data);
       setStatus(AsyncStatus.FULFILLED);
     } catch (error) {

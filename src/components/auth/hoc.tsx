@@ -1,4 +1,5 @@
 import useAuth from "@/hooks/use-auth";
+import { combineURLQuery } from "@/modules/utils";
 import { AsyncStatus } from "@/types";
 import { useRouter } from "next/router";
 import { FC } from "react";
@@ -20,11 +21,11 @@ export default function withAuth(config: AuthHOCConfig) {
 
       case AsyncStatus.FULFILLED: {
         if (!auth.uid) {
-          const urlParams = new URLSearchParams({
+          const redirect = combineURLQuery("/auth", {
             type: "login",
             redirect: router.asPath,
           });
-          router.push(`/auth?${urlParams.toString()}`);
+          router.push(redirect);
 
           return <config.beforeAuth />;
         } else return <config.whenAuthed />;

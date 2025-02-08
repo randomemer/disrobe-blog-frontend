@@ -27,6 +27,9 @@ import type { PropsWithoutRef } from "react";
 import { PlainLink } from "@/styles/shared";
 
 const links = [
+  { href: "/tags/art", text: "Art" },
+  { href: "/tags/tech", text: "Tech" },
+  { href: "/tags/mental-health", text: "Mental Health" },
   { href: "/", text: "Home" },
   { href: "/about", text: "About" },
 ];

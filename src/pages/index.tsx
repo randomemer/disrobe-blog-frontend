@@ -1,7 +1,7 @@
 import DefaultHeadContent from "@/components/head";
 import BlogLayout from "@/components/layout/home";
 import StoryCard from "@/components/story-card";
-import { api } from "@/modules/utils";
+import { api, combineURLQuery } from "@/modules/utils";
 import {
   SectionHeading,
   SplashContainer,
@@ -35,13 +35,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         }),
       },
       limit: 25,
-      relations: ["author", "draft", "live", "settings"],
+      relations: { author: {}, draft: {}, live: {}, settings: {} },
     };
-    const query = new URLSearchParams({ filter: JSON.stringify(filter) });
 
-    const resp = await api.get<StoryJoinedJSON[]>(
-      `/v1/story/?${query.toString()}`
-    );
+    const url = combineURLQuery("/v1/story/", {
+      filter: JSON.stringify(filter),
+    });
+
+    const resp = await api.get<StoryJoinedJSON[]>(url);
 
     console.timeEnd("home_feed");
     return { props: { stories: resp.data } };
@@ -52,7 +53,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 export interface HomeRouteProps {
-  stories: any[];
+  stories: StoryJoinedJSON[];
 }
 
 export default function Home(props: HomeRouteProps) {

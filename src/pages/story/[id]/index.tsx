@@ -3,7 +3,7 @@ import BlogLayout from "@/components/layout/home";
 import StorySocials from "@/components/socials";
 import SuggestedArticles from "@/components/suggested-articles";
 import { serializeToHTML } from "@/modules/slate/serialize";
-import { api } from "@/modules/utils";
+import { api, combineURLQuery } from "@/modules/utils";
 import {
   Article,
   ArticleGrid,
@@ -40,12 +40,12 @@ export const getServerSideProps: GetServerSideProps<StoryRouteProps> = async (
         is_published: { eq: true },
       }),
     },
-    relations: ["author", "draft", "live", "settings"],
+    relations: { author: {}, draft: {}, live: {}, settings: {} },
     limit: 5,
     sort: { created_at: "desc" },
   };
-  const query = new URLSearchParams({ filter: JSON.stringify(filter) });
-  const otherResp = await api.get<StoryJoinedJSON[]>(`/v1/story/?${query}`);
+  const url = combineURLQuery("/v1/story/", { filter: JSON.stringify(filter) });
+  const otherResp = await api.get<StoryJoinedJSON[]>(url);
 
   ctx.res.setHeader(
     "Cache-Control",

@@ -47,3 +47,19 @@ export interface StorySettings {
   created_at: string;
   updated_at: string;
 }
+
+export enum TagType {
+  Primary = "primary",
+  Secondary = "secondary",
+  Tertiary = "tertiary",
+}
+
+export interface Tag {
+  id: string;
+  slug: string;
+  name: string;
+  type: TagType;
+  created_at: string;
+  updated_at: string;
+  stories?: StoryJoinedJSON[] | null;
+}
